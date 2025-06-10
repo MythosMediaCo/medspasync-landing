@@ -5,12 +5,32 @@ let posData = '';
 let rewardData = '';
 let matchResults = [];
 
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('posFile')?.addEventListener('change', e => {
+    readFile(e.target, text => (posData = text));
+  });
+
+  document.getElementById('rewardFile')?.addEventListener('change', e => {
+    readFile(e.target, text => (rewardData = text));
+  });
+
+  document.getElementById('subscribeBtn')?.addEventListener('click', startCheckout);
+  document.getElementById('exportBtn')?.addEventListener('click', exportCSV);
+
+  document.getElementById('loadPosSample')?.addEventListener('click', () => loadSample('pos'));
+  document.getElementById('loadAlleSample')?.addEventListener('click', () => loadSample('alle'));
+  document.getElementById('loadAspireSample')?.addEventListener('click', () => loadSample('aspire'));
+
+  document.getElementById('runDemoBtn')?.addEventListener('click', runDemo);
+
+  ensureLead();
+});
+
 function selectTier(tier) {
   selectedTier = tier;
   const btn = document.getElementById('subscribeBtn');
   btn.textContent = `Subscribe Now – $${tierPrices[tier]}/month`;
 
-  // Visual tier highlight
   document.getElementById('corePlan')?.classList.remove('border-blue-500');
   document.getElementById('proPlan')?.classList.remove('border-purple-500');
   if (tier === 'core') {
@@ -85,7 +105,7 @@ async function trackUsage() {
     return true;
   } catch (err) {
     console.error('Usage tracking failed:', err);
-    return true; // allow fallback run
+    return true;
   }
 }
 
@@ -107,14 +127,6 @@ function readFile(input, cb) {
   reader.onload = e => cb(e.target.result);
   reader.readAsText(file);
 }
-
-document.getElementById('posFile').addEventListener('change', e => {
-  readFile(e.target, text => (posData = text));
-});
-
-document.getElementById('rewardFile').addEventListener('change', e => {
-  readFile(e.target, text => (rewardData = text));
-});
 
 function parseCSV(text) {
   const rows = text.trim().split(/\r?\n/).map(r => r.split(','));
@@ -262,5 +274,3 @@ async function runDemo() {
     alert('Something went wrong while running the demo.');
   }
 }
-
-ensureLead();

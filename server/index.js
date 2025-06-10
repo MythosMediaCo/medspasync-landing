@@ -25,7 +25,7 @@ app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, '../public')));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/medspasync', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/medspasync', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

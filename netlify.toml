@@ -1,0 +1,12 @@
+[build]
+  publish = "public"
+  command = "npm run build:css"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run start"
+  targetPort = 5000

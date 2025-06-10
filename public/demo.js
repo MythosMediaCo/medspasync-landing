@@ -1,3 +1,4 @@
+const API_BASE = window.API_BASE || '/api';
 const tierPrices = { core: 299, professional: 499 };
 let selectedTier = 'core';
 let posData = '';
@@ -19,8 +20,23 @@ function selectTier(tier) {
   }
 }
 
-function startCheckout() {
-  alert('Demo only – Stripe checkout would launch here.');
+async function startCheckout() {
+  try {
+    const res = await fetch(`${API_BASE}/checkout/start`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tier: selectedTier })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location = data.url;
+    } else {
+      alert('Unable to start checkout.');
+    }
+  } catch (err) {
+    console.error('Checkout failed:', err);
+    alert('Checkout failed.');
+  }
 }
 
 async function ensureLead() {
@@ -33,7 +49,7 @@ async function ensureLead() {
     localStorage.setItem('demoEmail', email);
     localStorage.setItem('demoName', name);
     try {
-      await fetch('/api/leads', {
+      await fetch(`${API_BASE}/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name })
@@ -48,7 +64,7 @@ async function trackUsage() {
   const email = localStorage.getItem('demoEmail');
   if (!email) return true;
   try {
-    const res = await fetch('/api/demo/track', {
+    const res = await fetch(`${API_BASE}/demo/track`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

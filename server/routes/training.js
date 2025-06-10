@@ -10,8 +10,12 @@ router.post('/training/upload', async (req, res) => {
       return res.status(400).json({ error: 'Invalid payload' });
     }
 
-    const filename = path.join(__dirname, `../training_data/${type}-${Date.now()}.json`);
-    fs.writeFileSync(filename, JSON.stringify(records, null, 2));
+    const trainingDir = path.join(__dirname, '../training_data');
+    fs.mkdirSync(trainingDir, { recursive: true });
+
+    const filename = path.join(trainingDir, `${type}-${Date.now()}.json`);
+    await fs.promises.writeFile(filename, JSON.stringify(records, null, 2));
+
     res.json({ saved: true });
   } catch (err) {
     console.error('Training upload failed:', err);

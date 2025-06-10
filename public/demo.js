@@ -8,6 +8,15 @@ function selectTier(tier) {
   selectedTier = tier;
   const btn = document.getElementById('subscribeBtn');
   btn.textContent = `Subscribe Now – $${tierPrices[tier]}/month`;
+
+  // Visual tier highlight
+  document.getElementById('corePlan')?.classList.remove('border-blue-500');
+  document.getElementById('proPlan')?.classList.remove('border-purple-500');
+  if (tier === 'core') {
+    document.getElementById('corePlan')?.classList.add('border-blue-500');
+  } else {
+    document.getElementById('proPlan')?.classList.add('border-purple-500');
+  }
 }
 
 function startCheckout() {
@@ -23,43 +32,56 @@ async function ensureLead() {
     name = prompt('Name (optional):') || '';
     localStorage.setItem('demoEmail', email);
     localStorage.setItem('demoName', name);
-    await fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name })
-    });
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name })
+      });
+    } catch (err) {
+      console.error('Lead capture failed:', err);
+    }
   }
 }
 
 async function trackUsage() {
   const email = localStorage.getItem('demoEmail');
   if (!email) return true;
-  const res = await fetch('/api/demo/track', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
-  });
-  const data = await res.json();
-  const banner = document.getElementById('usageBanner');
-  if (data.blocked) {
-    banner.textContent = 'Demo limit reached. Contact sales for full access.';
-    banner.classList.remove('hidden');
-    return false;
+  try {
+    const res = await fetch('/api/demo/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    const banner = document.getElementById('usageBanner');
+    if (data.blocked) {
+      banner.textContent = 'Demo limit reached. Contact sales for full access.';
+      banner.classList.remove('hidden');
+      return false;
+    }
+    if (data.remaining <= 3) {
+      banner.textContent = `${data.remaining} demo runs remaining`;
+      banner.classList.remove('hidden');
+    } else {
+      banner.classList.add('hidden');
+    }
+    return true;
+  } catch (err) {
+    console.error('Usage tracking failed:', err);
+    return true; // allow fallback run
   }
-  if (data.remaining <= 3) {
-    banner.textContent = `${data.remaining} demo runs remaining`;
-    banner.classList.remove('hidden');
-  } else {
-    banner.classList.add('hidden');
-  }
-  return true;
 }
 
 function loadSample(type) {
-  fetch(`sample/${type}.csv`).then(r => r.text()).then(text => {
-    if (type === 'pos') posData = text; else rewardData = text;
-    alert(`${type} sample loaded`);
-  });
+  fetch(`sample/${type}.csv`)
+    .then(r => r.text())
+    .then(text => {
+      if (type === 'pos') posData = text;
+      else rewardData = text;
+      console.log(`${type} sample loaded`);
+    })
+    .catch(err => console.error('Sample load error:', err));
 }
 
 function readFile(input, cb) {
@@ -71,11 +93,11 @@ function readFile(input, cb) {
 }
 
 document.getElementById('posFile').addEventListener('change', e => {
-  readFile(e.target, text => posData = text);
+  readFile(e.target, text => (posData = text));
 });
 
 document.getElementById('rewardFile').addEventListener('change', e => {
-  readFile(e.target, text => rewardData = text);
+  readFile(e.target, text => (rewardData = text));
 });
 
 function parseCSV(text) {
@@ -83,7 +105,7 @@ function parseCSV(text) {
   const headers = rows.shift();
   return rows.map(r => {
     const obj = {};
-    headers.forEach((h, i) => obj[h.trim()] = (r[i] || '').trim());
+    headers.forEach((h, i) => (obj[h.trim()] = (r[i] || '').trim()));
     return obj;
   });
 }
@@ -117,9 +139,10 @@ function matchRecords(pos, rewards) {
   pos.forEach(p => {
     let bestScore = 0;
     rewards.forEach(r => {
-      const score = similarity(p.Name || '', r.Name || '') +
-                    similarity(p.Email || '', r.Email || '') +
-                    (p.Date === r.Date ? 1 : 0);
+      const score =
+        similarity(p.Name || '', r.Name || '') +
+        similarity(p.Email || '', r.Email || '') +
+        (p.Date === r.Date ? 1 : 0);
       if (score > bestScore) bestScore = score;
     });
     let status = 'unmatched';
@@ -134,7 +157,8 @@ function matchRecords(pos, rewards) {
     }
     results.push({ ...p, status, confidence });
   });
-  const matchRate = (results.filter(r => r.status === 'matched').length / pos.length) * 100;
+  const matchRate =
+    (results.filter(r => r.status === 'matched').length / pos.length) * 100;
   return { results, recovered, matchRate };
 }
 
@@ -142,6 +166,7 @@ function displayResults(data) {
   const container = document.getElementById('results');
   container.innerHTML = '';
   const { results, recovered, matchRate } = data;
+
   const summary = document.createElement('div');
   summary.className = 'grid md:grid-cols-2 gap-4 mb-6';
   summary.innerHTML = `
@@ -158,8 +183,10 @@ function displayResults(data) {
   const table = document.createElement('table');
   table.className = 'min-w-full text-sm';
   const thead = document.createElement('thead');
-  thead.innerHTML = '<tr><th class="border px-2">Name</th><th class="border px-2">Email</th><th class="border px-2">Date</th><th class="border px-2">Amount</th><th class="border px-2">Status</th><th class="border px-2">Confidence</th></tr>';
+  thead.innerHTML =
+    '<tr><th class="border px-2">Name</th><th class="border px-2">Email</th><th class="border px-2">Date</th><th class="border px-2">Amount</th><th class="border px-2">Status</th><th class="border px-2">Confidence</th></tr>';
   table.appendChild(thead);
+
   const tbody = document.createElement('tbody');
   results.forEach(r => {
     const tr = document.createElement('tr');
@@ -168,6 +195,7 @@ function displayResults(data) {
   });
   table.appendChild(tbody);
   container.appendChild(table);
+
   matchResults = results;
   document.getElementById('exportBtn').classList.remove('hidden');
 }
@@ -187,21 +215,36 @@ function exportCSV() {
 }
 
 async function runDemo() {
-  if (!posData && document.getElementById('posFile').files[0]) {
-    await new Promise(res => readFile(document.getElementById('posFile'), t => { posData = t; res(); }));
+  try {
+    if (!posData && document.getElementById('posFile').files[0]) {
+      await new Promise(res =>
+        readFile(document.getElementById('posFile'), t => {
+          posData = t;
+          res();
+        })
+      );
+    }
+    if (!rewardData && document.getElementById('rewardFile').files[0]) {
+      await new Promise(res =>
+        readFile(document.getElementById('rewardFile'), t => {
+          rewardData = t;
+          res();
+        })
+      );
+    }
+    if (!posData || !rewardData) {
+      alert('Please provide both POS and rewards data.');
+      return;
+    }
+    if (!(await trackUsage())) return;
+    const pos = parseCSV(posData);
+    const rew = parseCSV(rewardData);
+    const data = matchRecords(pos, rew);
+    displayResults(data);
+  } catch (err) {
+    console.error('Reconciliation failed:', err);
+    alert('Something went wrong while running the demo.');
   }
-  if (!rewardData && document.getElementById('rewardFile').files[0]) {
-    await new Promise(res => readFile(document.getElementById('rewardFile'), t => { rewardData = t; res(); }));
-  }
-  if (!posData || !rewardData) {
-    alert('Please provide both POS and rewards data.');
-    return;
-  }
-  if (!(await trackUsage())) return;
-  const pos = parseCSV(posData);
-  const rew = parseCSV(rewardData);
-  const data = matchRecords(pos, rew);
-  displayResults(data);
 }
 
 ensureLead();

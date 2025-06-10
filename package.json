@@ -1,15 +1,15 @@
 {
   "name": "medspasync-landing",
   "version": "1.0.0",
-  "description": "",
+  "description": "Production landing and demo app for MedSpaSync Pro",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "build:css": "tailwindcss -i tailwind-input.css -o public/tailwind.css --minify"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "MythosMediaCo",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "express": "^5.1.0",

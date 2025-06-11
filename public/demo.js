@@ -1,4 +1,4 @@
-const API_BASE = window.API_BASE || '/api';
+const API_BASE = window.API_BASE || 'https://api.medspasyncpro.com';
 const tierPrices = { core: 299, professional: 499 };
 let selectedTier = 'core';
 let posData = '';
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('runDemoBtn')?.addEventListener('click', runDemo);
 
-  ensureLead();
+  initLeadForm();
 });
 
 function selectTier(tier) {
@@ -59,30 +59,64 @@ async function startCheckout() {
   }
 }
 
-async function ensureLead() {
-  let email = localStorage.getItem('demoEmail');
-  let name = localStorage.getItem('demoName');
-  if (!email) {
-    email = prompt('Enter your email to start the demo:');
-    if (!email) return;
-    name = prompt('Name (optional):') || '';
-    localStorage.setItem('demoEmail', email);
-    localStorage.setItem('demoName', name);
+function initLeadForm() {
+  const form = document.getElementById('leadForm');
+  if (!form) return;
+  const emailEl = document.getElementById('leadEmail');
+  const nameEl = document.getElementById('leadName');
+  const notice = document.getElementById('leadNotice');
+  const demoTool = document.getElementById('demoTool');
+
+  const storedEmail = localStorage.getItem('demoEmail');
+  if (storedEmail) {
+    form.classList.add('hidden');
+    demoTool.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    notice.textContent = '';
+    const email = emailEl.value.trim();
+    const name = nameEl.value.trim();
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      notice.textContent = 'Please enter a valid email.';
+      return;
+    }
+    emailEl.disabled = true;
+    nameEl.disabled = true;
+    form.querySelector('button').disabled = true;
     try {
-      await fetch(`${API_BASE}/leads`, {
+      const res = await fetch(`${API_BASE}/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name })
       });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Submission failed');
+      }
+      localStorage.setItem('demoEmail', email);
+      localStorage.setItem('demoName', name);
+      form.classList.add('hidden');
+      demoTool.classList.remove('hidden');
+      notice.classList.remove('text-red-600');
+      notice.classList.add('text-green-600');
+      notice.textContent = 'Thank you! You can now run the demo.';
     } catch (err) {
-      console.error('Lead capture failed:', err);
+      notice.textContent = 'Unable to submit. Please try again later.';
+      emailEl.disabled = false;
+      nameEl.disabled = false;
+      form.querySelector('button').disabled = false;
     }
-  }
+  });
 }
 
 async function trackUsage() {
   const email = localStorage.getItem('demoEmail');
-  if (!email) return true;
+  if (!email) {
+    alert('Please submit your email to run the demo.');
+    return false;
+  }
   try {
     const res = await fetch(`${API_BASE}/demo/track`, {
       method: 'POST',
@@ -96,15 +130,11 @@ async function trackUsage() {
       banner.classList.remove('hidden');
       return false;
     }
-    if (data.remaining <= 3) {
-      banner.textContent = `${data.remaining} demo runs remaining`;
-      banner.classList.remove('hidden');
-    } else {
-      banner.classList.add('hidden');
-    }
+    banner.textContent = `${data.remaining} demo runs remaining`;
+    banner.classList.remove('hidden');
     return true;
   } catch (err) {
-    console.error('Usage tracking failed:', err);
+    console.warn('Usage tracking failed:', err);
     return true;
   }
 }
@@ -115,7 +145,6 @@ function loadSample(type) {
     .then(text => {
       if (type === 'pos') posData = text;
       else rewardData = text;
-      console.log(`${type} sample loaded`);
     })
     .catch(err => console.error('Sample load error:', err));
 }
@@ -224,7 +253,12 @@ function displayResults(data) {
   const tbody = document.createElement('tbody');
   results.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td class="border px-2">${r.Name}</td><td class="border px-2">${r.Email}</td><td class="border px-2">${r.Date}</td><td class="border px-2">${r.Amount || ''}</td><td class="border px-2">${r.status}</td><td class="border px-2">${r.confidence}</td>`;
+    ['Name', 'Email', 'Date', 'Amount', 'status', 'confidence'].forEach(key => {
+      const td = document.createElement('td');
+      td.className = 'border px-2';
+      td.textContent = r[key] || '';
+      tr.appendChild(td);
+    });
     tbody.appendChild(tr);
   });
   table.appendChild(tbody);
@@ -250,6 +284,8 @@ function exportCSV() {
 
 async function runDemo() {
   try {
+    const runBtn = document.getElementById('runDemoBtn');
+    if (runBtn) runBtn.disabled = true;
     if (!posData && document.getElementById('posFile').files[0]) {
       await new Promise(res =>
         readFile(document.getElementById('posFile'), t => {
@@ -268,9 +304,19 @@ async function runDemo() {
     }
     if (!posData || !rewardData) {
       alert('Please provide both POS and rewards data.');
+      if (runBtn) runBtn.disabled = false;
       return;
     }
     if (!(await trackUsage())) return;
+    await fetch(`${API_BASE}/reconciliation/demo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: localStorage.getItem('demoEmail'),
+        pos: posData,
+        rewards: rewardData
+      })
+    }).catch(() => {});
     const pos = parseCSV(posData);
     const rew = parseCSV(rewardData);
     const data = matchRecords(pos, rew);
@@ -278,5 +324,8 @@ async function runDemo() {
   } catch (err) {
     console.error('Reconciliation failed:', err);
     alert('Something went wrong while running the demo.');
+  } finally {
+    const runBtn = document.getElementById('runDemoBtn');
+    if (runBtn) runBtn.disabled = false;
   }
 }

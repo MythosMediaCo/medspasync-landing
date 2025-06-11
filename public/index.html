@@ -6,6 +6,7 @@
   <meta name="description" content="MedSpaSync Pro - Automated rewards program reconciliation for medical spas. Try our free demo.">
   <meta name="keywords" content="medical spa, reconciliation, Alle, Aspire, POS, rewards program">
   <title>MedSpaSync Pro - Free Demo | Automated Spa Reconciliation</title>
+  <meta name="theme-color" content="#ffffff">
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self';
@@ -36,6 +37,7 @@
         <h1 class="text-xl font-bold">MedSpaSync Pro</h1>
       </div>
       <span class="text-sm font-semibold text-green-600 hidden md:block">✨ Production Demo</span>
+      <img src="https://status.medspasyncpro.com/badge?theme=light" alt="status" class="h-5 ml-4" />
     </div>
   </nav>
 
@@ -75,7 +77,22 @@
       <p class="text-sm text-gray-500 mt-2">30-day money-back guarantee • Cancel anytime</p>
     </div>
 
-    <div id="demoTool" class="mt-16">
+    <section id="leadCapture" class="max-w-md mx-auto mt-16">
+      <form id="leadForm" class="bg-white p-4 rounded-lg shadow">
+        <div class="mb-3">
+          <label for="leadEmail" class="block text-sm font-medium mb-1">Work Email</label>
+          <input id="leadEmail" type="email" required class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-3">
+          <label for="leadName" class="block text-sm font-medium mb-1">Name <span class="text-gray-400">(optional)</span></label>
+          <input id="leadName" type="text" class="w-full border rounded px-2 py-1" />
+        </div>
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow w-full">Start Demo</button>
+        <p id="leadNotice" class="text-sm mt-2 text-center text-red-600"></p>
+      </form>
+    </section>
+
+    <div id="demoTool" class="mt-16 hidden">
       <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded"></div>
       <div class="mb-4">
         <label for="posFile" class="block font-semibold mb-1">POS Data</label>

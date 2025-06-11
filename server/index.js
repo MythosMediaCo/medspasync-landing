@@ -39,6 +39,7 @@ app.use('/api', require('./routes/demo'));
 app.use('/api', require('./routes/training'));
 app.use('/api/checkout', require('./routes/checkout'));
 app.use('/api/webhook', require('./routes/webhook'));
+app.use('/api', require('./routes/reconciliation'));
 
 // Catch unhandled errors
 app.use((err, req, res, next) => {

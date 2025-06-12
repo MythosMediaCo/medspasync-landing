@@ -7,11 +7,17 @@ let matchResults = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('posFile')?.addEventListener('change', e => {
-    readFile(e.target, text => (posData = text));
+    readFile(e.target, text => {
+      posData = text;
+      window.showPreview('pos', text);
+    });
   });
 
   document.getElementById('rewardFile')?.addEventListener('change', e => {
-    readFile(e.target, text => (rewardData = text));
+    readFile(e.target, text => {
+      rewardData = text;
+      window.showPreview('reward', text);
+    });
   });
 
   document.getElementById('subscribeBtn')?.addEventListener('click', startCheckout);
@@ -142,8 +148,13 @@ function loadSample(type) {
   fetch(`/sample/${type}.csv`)
     .then(r => r.text())
     .then(text => {
-      if (type === 'pos') posData = text;
-      else rewardData = text;
+      if (type === 'pos') {
+        posData = text;
+        window.showPreview('pos', text);
+      } else {
+        rewardData = text;
+        window.showPreview('reward', text);
+      }
     })
     .catch(() => {});
 }

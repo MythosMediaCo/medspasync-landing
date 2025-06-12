@@ -130,14 +130,13 @@ async function trackUsage() {
       body: JSON.stringify({ email })
     });
     const data = await res.json();
-    const banner = document.getElementById('usageBanner');
+    const used = data.remaining != null ? 7 - data.remaining : 7;
+    if (window.renderUsageMeter) {
+      window.renderUsageMeter(used);
+    }
     if (data.blocked) {
-      banner.textContent = 'Demo limit reached. Contact sales for full access.';
-      banner.classList.remove('hidden');
       return false;
     }
-    banner.textContent = `${data.remaining} demo runs remaining`;
-    banner.classList.remove('hidden');
     return true;
   } catch (err) {
     return true;

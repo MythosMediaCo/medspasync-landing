@@ -130,6 +130,8 @@ function initLeadForm() {
       localStorage.setItem('demoName', name);
       form.classList.add('hidden');
       demoTool.classList.remove('hidden');
+      // show usage meter immediately after successful signup
+      trackUsage();
       notice.classList.remove('text-red-600');
       notice.classList.add('text-green-600');
       notice.textContent = 'Thank you! You can now run the demo.';
@@ -160,10 +162,12 @@ async function trackUsage() {
       window.renderUsageMeter(used);
     }
     if (data.blocked) {
+      showToast('Demo limit reached. Please sign up for full access.', 'error');
       return false;
     }
     return true;
   } catch (err) {
+    showToast('Unable to check demo usage.', 'error');
     return true;
   }
 }
@@ -179,8 +183,11 @@ function loadSample(type) {
         rewardData = text;
         if (window.updatePreview) window.updatePreview('rew', text);
       }
+      showToast('Sample loaded.', 'success');
     })
-    .catch(() => {});
+    .catch(() => {
+      showToast('Unable to load sample file.', 'error');
+    });
 }
 
 function readFile(input, cb) {
@@ -314,6 +321,7 @@ function exportCSV() {
   link.href = URL.createObjectURL(blob);
   link.download = 'reconciliation.csv';
   link.click();
+  showToast('Results exported.', 'success');
 }
 
 async function runDemo() {

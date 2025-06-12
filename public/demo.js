@@ -54,7 +54,6 @@ async function startCheckout() {
       alert('Unable to start checkout.');
     }
   } catch (err) {
-    console.error('Checkout failed:', err);
     alert('Checkout failed.');
   }
 }
@@ -71,6 +70,7 @@ function initLeadForm() {
   if (storedEmail) {
     form.classList.add('hidden');
     demoTool.classList.remove('hidden');
+    trackUsage();
   }
 
   form.addEventListener('submit', async e => {
@@ -134,7 +134,6 @@ async function trackUsage() {
     banner.classList.remove('hidden');
     return true;
   } catch (err) {
-    console.warn('Usage tracking failed:', err);
     return true;
   }
 }
@@ -146,7 +145,7 @@ function loadSample(type) {
       if (type === 'pos') posData = text;
       else rewardData = text;
     })
-    .catch(err => console.error('Sample load error:', err));
+    .catch(() => {});
 }
 
 function readFile(input, cb) {
@@ -322,7 +321,6 @@ async function runDemo() {
     const data = matchRecords(pos, rew);
     displayResults(data);
   } catch (err) {
-    console.error('Reconciliation failed:', err);
     alert('Something went wrong while running the demo.');
   } finally {
     const runBtn = document.getElementById('runDemoBtn');

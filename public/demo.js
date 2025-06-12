@@ -5,22 +5,41 @@ let posData = '';
 let rewardData = '';
 let matchResults = [];
 
-document.getElementById('posFile')?.addEventListener('change', e => {
-  readFile(e.target, text => {
-    posData = text;
-    if (window.updatePreview) window.updatePreview('pos', text);
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast');
+  if (!container) return;
+  const note = document.createElement('div');
+  note.className = `px-3 py-2 rounded shadow text-white mb-2 ${
+    type === 'error' ? 'bg-red-600' : 'bg-green-600'
+  }`;
+  note.textContent = message;
+  container.appendChild(note);
+  setTimeout(() => {
+    note.classList.add('opacity-0');
+    setTimeout(() => note.remove(), 300);
+  }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('posFile')?.addEventListener('change', e => {
+    readFile(e.target, text => {
+      posData = text;
+      if (window.updatePreview) window.updatePreview('pos', text);
     });
   });
 
-document.getElementById('rewardFile')?.addEventListener('change', e => {
-  readFile(e.target, text => {
-    rewardData = text;
-    if (window.updatePreview) window.updatePreview('rew', text);
+  document.getElementById('rewardFile')?.addEventListener('change', e => {
+    readFile(e.target, text => {
+      rewardData = text;
+      if (window.updatePreview) window.updatePreview('rew', text);
+    });
   });
-});
 
   document.getElementById('subscribeBtn')?.addEventListener('click', startCheckout);
   document.getElementById('exportBtn')?.addEventListener('click', exportCSV);
+
+  document.getElementById('corePlan')?.addEventListener('click', () => selectTier('core'));
+  document.getElementById('proPlan')?.addEventListener('click', () => selectTier('professional'));
 
   document.getElementById('loadPosSample')?.addEventListener('click', () => loadSample('pos'));
   document.getElementById('loadAlleSample')?.addEventListener('click', () => loadSample('alle'));
@@ -36,6 +55,9 @@ function selectTier(tier) {
   const btn = document.getElementById('subscribeBtn');
   btn.textContent = `Subscribe Now – $${tierPrices[tier]}/month`;
 
+  const radio = document.querySelector(`input[name="plan"][value="${tier}"]`);
+  if (radio) radio.checked = true;
+
   document.getElementById('corePlan')?.classList.remove('border-blue-500');
   document.getElementById('proPlan')?.classList.remove('border-purple-500');
   if (tier === 'core') {
@@ -46,6 +68,8 @@ function selectTier(tier) {
 }
 
 async function startCheckout() {
+  const btn = document.getElementById('subscribeBtn');
+  if (btn) btn.disabled = true;
   try {
     const res = await fetch(`${API_BASE}/checkout/start`, {
       method: 'POST',
@@ -56,10 +80,12 @@ async function startCheckout() {
     if (data.url) {
       window.location = data.url;
     } else {
-      alert('Unable to start checkout.');
+      showToast('Unable to start checkout.', 'error');
     }
   } catch (err) {
-    alert('Checkout failed.');
+    showToast('Checkout failed.', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
@@ -119,7 +145,7 @@ function initLeadForm() {
 async function trackUsage() {
   const email = localStorage.getItem('demoEmail');
   if (!email) {
-    alert('Please submit your email to run the demo.');
+    showToast('Please submit your email to run the demo.', 'error');
     return false;
   }
   try {
@@ -311,7 +337,7 @@ async function runDemo() {
       );
     }
     if (!posData || !rewardData) {
-      alert('Please provide both POS and rewards data.');
+      showToast('Please provide both POS and rewards data.', 'error');
       if (runBtn) runBtn.disabled = false;
       return;
     }
@@ -329,8 +355,9 @@ async function runDemo() {
     const rew = parseCSV(rewardData);
     const data = matchRecords(pos, rew);
     displayResults(data);
+    showToast('Reconciliation complete!', 'success');
   } catch (err) {
-    alert('Something went wrong while running the demo.');
+    showToast('Something went wrong while running the demo.', 'error');
   } finally {
     const runBtn = document.getElementById('runDemoBtn');
     if (runBtn) runBtn.disabled = false;

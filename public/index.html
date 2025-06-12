@@ -19,7 +19,8 @@
   <link rel="stylesheet" href="tailwind.css">
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="usageMeter.js"></script>
+<script defer src="csvPreview.js"></script>
+<script defer src="usageMeter.js"></script>
 
   <script defer src="demo.js"></script>
   <script defer src="preview.js"></script>
@@ -103,12 +104,14 @@
         <label for="posFile" class="block font-semibold mb-1">POS Data</label>
         <input type="file" id="posFile" accept=".csv" class="mb-2">
         <button type="button" id="loadPosSample" class="text-blue-600 underline text-sm">Load Sample</button>
+        <div id="posPreview" class="mt-2"></div>
       </div>
       <div class="mb-4">
         <label for="rewardFile" class="block font-semibold mb-1">Rewards Data</label>
         <input type="file" id="rewardFile" accept=".csv" class="mb-2">
         <button type="button" id="loadAlleSample" class="text-blue-600 underline text-sm">Load Alle Sample</button>
         <button type="button" id="loadAspireSample" class="text-blue-600 underline text-sm ml-2">Load Aspire Sample</button>
+        <div id="rewardPreview" class="mt-2"></div>
       </div>
       <div id="preview" class="mb-4"></div>
       <button id="runDemoBtn" class="bg-blue-600 text-white px-5 py-2 rounded">Run Reconciliation</button>

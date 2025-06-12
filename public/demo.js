@@ -5,20 +5,19 @@ let posData = '';
 let rewardData = '';
 let matchResults = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('posFile')?.addEventListener('change', e => {
-    readFile(e.target, text => {
-      posData = text;
-      if (window.updatePreview) window.updatePreview('pos', text);
+document.getElementById('posFile')?.addEventListener('change', e => {
+  readFile(e.target, text => {
+    posData = text;
+    if (window.updatePreview) window.updatePreview('pos', text);
     });
   });
 
-  document.getElementById('rewardFile')?.addEventListener('change', e => {
-    readFile(e.target, text => {
-      rewardData = text;
-      if (window.updatePreview) window.updatePreview('rew', text);
-    });
+document.getElementById('rewardFile')?.addEventListener('change', e => {
+  readFile(e.target, text => {
+    rewardData = text;
+    if (window.updatePreview) window.updatePreview('rew', text);
   });
+});
 
   document.getElementById('subscribeBtn')?.addEventListener('click', startCheckout);
   document.getElementById('exportBtn')?.addEventListener('click', exportCSV);

@@ -5,20 +5,19 @@ let posData = '';
 let rewardData = '';
 let matchResults = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('posFile')?.addEventListener('change', e => {
-    readFile(e.target, text => {
-      posData = text;
-      window.showPreview('pos', text);
+document.getElementById('posFile')?.addEventListener('change', e => {
+  readFile(e.target, text => {
+    posData = text;
+    if (window.updatePreview) window.updatePreview('pos', text);
     });
   });
 
-  document.getElementById('rewardFile')?.addEventListener('change', e => {
-    readFile(e.target, text => {
-      rewardData = text;
-      window.showPreview('reward', text);
-    });
+document.getElementById('rewardFile')?.addEventListener('change', e => {
+  readFile(e.target, text => {
+    rewardData = text;
+    if (window.updatePreview) window.updatePreview('rew', text);
   });
+});
 
   document.getElementById('subscribeBtn')?.addEventListener('click', startCheckout);
   document.getElementById('exportBtn')?.addEventListener('click', exportCSV);
@@ -130,14 +129,13 @@ async function trackUsage() {
       body: JSON.stringify({ email })
     });
     const data = await res.json();
-    const banner = document.getElementById('usageBanner');
+    const used = data.remaining != null ? 7 - data.remaining : 7;
+    if (window.renderUsageMeter) {
+      window.renderUsageMeter(used);
+    }
     if (data.blocked) {
-      banner.textContent = 'Demo limit reached. Contact sales for full access.';
-      banner.classList.remove('hidden');
       return false;
     }
-    banner.textContent = `${data.remaining} demo runs remaining`;
-    banner.classList.remove('hidden');
     return true;
   } catch (err) {
     return true;
@@ -150,10 +148,10 @@ function loadSample(type) {
     .then(text => {
       if (type === 'pos') {
         posData = text;
-        window.showPreview('pos', text);
+        if (window.updatePreview) window.updatePreview('pos', text);
       } else {
         rewardData = text;
-        window.showPreview('reward', text);
+        if (window.updatePreview) window.updatePreview('rew', text);
       }
     })
     .catch(() => {});

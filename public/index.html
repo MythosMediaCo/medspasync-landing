@@ -17,7 +17,10 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="tailwind.css">
+  <script src="react.production.min.js"></script>
+  <script src="react-dom.production.min.js"></script>
   <script defer src="demo.js"></script>
+  <script defer src="preview.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
   <noscript>
@@ -105,6 +108,7 @@
         <button type="button" id="loadAlleSample" class="text-blue-600 underline text-sm">Load Alle Sample</button>
         <button type="button" id="loadAspireSample" class="text-blue-600 underline text-sm ml-2">Load Aspire Sample</button>
       </div>
+      <div id="preview" class="mb-4"></div>
       <button id="runDemoBtn" class="bg-blue-600 text-white px-5 py-2 rounded">Run Reconciliation</button>
       <p class="text-xs text-gray-500 mt-1">By running the demo you agree to our <a href="privacy.html" class="underline">Privacy Policy</a>.</p>
       <button id="exportBtn" class="bg-gray-700 text-white px-5 py-2 rounded ml-3 hidden">Export CSV</button>

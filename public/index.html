@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#ffffff">
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self';
+    script-src 'self' https://unpkg.com;
     style-src 'self';
     img-src 'self' data:;
     connect-src 'self' https://api.medspasyncpro.com">
@@ -17,6 +17,9 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="tailwind.css">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="usageMeter.js"></script>
   <script defer src="demo.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -93,7 +96,7 @@
     </section>
 
     <div id="demoTool" class="mt-16 hidden">
-      <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded"></div>
+      <div id="usageMeter" class="mb-4"></div>
       <div class="mb-4">
         <label for="posFile" class="block font-semibold mb-1">POS Data</label>
         <input type="file" id="posFile" accept=".csv" class="mb-2">

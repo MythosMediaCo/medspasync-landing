@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
+    "start:dev": "nodemon server/index.js",
     "build:css": "tailwindcss -i tailwind-input.css -o public/tailwind.css --minify"
   },
   "keywords": [],
   "author": "MythosMediaCo",
   "license": "MIT",
   "type": "commonjs",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "mongoose": "^8.15.1",

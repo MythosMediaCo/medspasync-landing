@@ -8,6 +8,4 @@ const LeadSchema = new mongoose.Schema({
   timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
-LeadSchema.index({ email: 1 }, { unique: true });
-
 module.exports = mongoose.model('Lead', LeadSchema);

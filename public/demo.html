@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSpaSync Pro Demo - Enterprise Reconciliation Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1e40af;
+            --primary-blue-light: #3b82f6;
+            --secondary-blue: #1e293b;
+            --accent-green: #059669;
+            --accent-green-light: #10b981;
+            --neutral-50: #f8fafc;
+            --neutral-100: #f1f5f9;
+            --neutral-200: #e2e8f0;
+            --neutral-300: #cbd5e1;
+            --neutral-400: #94a3b8;
+            --neutral-500: #64748b;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1e293b;
+            --neutral-900: #0f172a;
+            --white: #ffffff;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, var(--neutral-50) 0%, var(--white) 100%);
+            min-height: 100vh;
+            color: var(--neutral-800);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Professional Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-blue);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .brand-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            letter-spacing: -0.025em;
+        }
+
+        .demo-badge {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--neutral-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Professional Card Design */
+        .main-card {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--neutral-200);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 3rem;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--neutral-200);
+            background: var(--white);
+            color: var(--neutral-500);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .step.active {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+
+        .step.completed {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--neutral-600);
+        }
+
+        .step.active .step-number,
+        .step.completed .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .step-connector {
+            width: 2rem;
+            height: 1px;
+            background: var(--neutral-200);
+        }
+
+        /* Professional Benefits Section */
+        .benefits-section {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .benefits-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .benefit-check {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+        .benefit-text {
+            color: var(--neutral-700);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        /* Upload Areas */
+        .upload-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            background: var(--white);
+            border: 2px dashed var(--neutral-300);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-blue);
+            background: var(--neutral-50);
+        }
+
+        .upload-area.active {
+            border-color: var(--accent-green);
+            border-style: solid;
+            background: #f0fdf4;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.7;
+        }
+
+        .upload-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-description {
+            color: var(--neutral-600);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-status {
+            font-size: 0.875rem;
+            color: var(--neutral-500);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .upload-status.success {
+            color: var(--accent-green);
+        }
+
+        .sample-btn {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sample-btn:hover {
+            background: var(--neutral-200);
+            border-color: var(--neutral-400);
+        }
+
+        /* Professional Action Button */
+        .action-section {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .action-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            min-width: 200px;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:disabled {
+            background: var(--neutral-400);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Processing Section */
+        .processing-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            display: none;
+        }
+
+        .processing-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            border: 3px solid var(--neutral-300);
+            border-left-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .processing-subtitle {
+            color: var(--neutral-600);
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--neutral-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-blue);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+            font-weight: 500;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .results-subtitle {
+            color: var(--neutral-600);
+            font-size: 0.9375rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--neutral-600);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Match Results */
+        .matches-section {
+            margin-bottom: 2rem;
+        }
+
+        .matches-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 1rem;
+        }
+
+        .match-item {
+            background: var(--white);
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid;
+        }
+
+        .match-exact { border-left-color: var(--accent-green); }
+        .match-fuzzy { border-left-color: var(--amber-500); }
+        .match-unmatched { border-left-color: var(--red-500); }
+
+        .match-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .match-details {
+            flex: 1;
+        }
+
+        .match-primary {
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 0.25rem;
+            font-size: 0.9375rem;
+        }
+
+        .match-secondary {
+            color: var(--neutral-600);
+            font-size: 0.8125rem;
+        }
+
+        .confidence-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            white-space: nowrap;
+        }
+
+        .confidence-high {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .confidence-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .confidence-low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Export Section */
+        .export-section {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .export-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--neutral-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .export-subtitle {
+            color: var(--neutral-600);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .export-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn:hover {
+            background: #047857;
+        }
+
+        .export-btn.secondary {
+            background: var(--primary-blue);
+        }
+
+        .export-btn.secondary:hover {
+            background: #1d4ed8;
+        }
+
+        .export-note {
+            color: var(--neutral-500);
+            font-size: 0.8125rem;
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--neutral-900);
+            color: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .cta-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            font-size: 1.0625rem;
+        }
+
+        .cta-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            background: #047857;
+        }
+
+        .cta-note {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8125rem;
+            margin-top: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: var(--neutral-600);
+            font-size: 0.9375rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--neutral-300);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: none;
+            border: none;
+            color: var(--neutral-600);
+            cursor: pointer;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            color: var(--neutral-800);
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .error-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .error-text {
+            color: var(--red-600);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-close {
+            background: none;
+            border: none;
+            color: var(--red-500);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .main-card { padding: 1.5rem; }
+            .upload-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .export-buttons { flex-direction: column; align-items: center; }
+            .step-indicator { flex-wrap: wrap; }
+            .hero-title { font-size: 2rem; }
+        }
+
+        /* Professional animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Utility classes */
+        .hidden { display: none !important; }
+        
+        .text-center { text-align: center; }
+        
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">M</div>
+                <div>
+                    <div class="brand-name">MedSpaSync Pro</div>
+                    <div class="demo-badge">Live Demo</div>
+                </div>
+            </div>
+            <h1 class="hero-title">Enterprise Reconciliation Platform</h1>
+            <p class="hero-subtitle">
+                Experience our AI-powered reconciliation engine designed specifically for medical spa operations. 
+                Process Allé, Aspire, and POS data with enterprise-grade accuracy and reliability.
+            </p>
+        </header>
+
+        <!-- Step Progress Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <span>Upload Data</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <span>Process</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <span>Results</span>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message">
+            <div class="error-content">
+                <div class="error-text">
+                    <span>⚠</span>
+                    <span id="errorText"></span>
+                </div>
+                <button class="error-close" id="errorClose">&times;</button>
+            </div>
+        </div>
+
+        <!-- Main Content Card -->
+        <div class="main-card">
+            <!-- Benefits Overview -->
+            <div class="benefits-section">
+                <div class="benefits-header">
+                    <div class="benefits-icon">✓</div>
+                    <div class="benefits-title">Enterprise-Grade Reconciliation</div>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-column">
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">90% automatic matching accuracy with proprietary AI algorithms</div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">Process thousands of transactions in under 2 minutes</div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">Reduce reconciliation time from hours to minutes</div>
+                        </div>
+                    </div>
+                    <div class="benefit-column">
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">Built by medical spa industry experts with 10+ years experience</div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">Export professional reports ready for accounting teams</div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-check">✓</div>
+                            <div class="benefit-text">Enterprise security with HIPAA-conscious data handling</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div id="uploadSection" class="upload-section">
+                <h2 class="section-title">Upload Transaction Data</h2>
+                
+                <div class="upload-grid">
+                    <!-- POS Upload -->
+                    <div class="upload-area" id="posUpload">
+                        <input type="file" id="posFile" accept=".csv" style="display: none;">
+                        <div class="upload-icon">📊</div>
+                        <div class="upload-title">POS System Export</div>
+                        <div class="upload-description">Point-of-sale transaction data</div>
+                        <div id="posStatus" class="upload-status">Click to select CSV file</div>
+                        <button type="button" id="posSample" class="sample-btn">
+                            Load Sample Data
+                        </button>
+                    </div>
+
+                    <!-- Allé Upload -->
+                    <div class="upload-area" id="alleUpload">
+                        <input type="file" id="alleFile" accept=".csv" style="display: none;">
+                        <div class="upload-icon">💎</div>
+                        <div class="upload-title">Allé Rewards Data</div>
+                        <div class="upload-description">Allergan Allé redemption export</div>
+                        <div id="alleStatus" class="upload-status">Click to select CSV file</div>
+                        <button type="button" id="alleSample" class="sample-btn">
+                            Load Sample Data
+                        </button>
+                    </div>
+
+                    <!-- Aspire Upload -->
+                    <div class="upload-area" id="aspireUpload">
+                        <input type="file" id="aspireFile" accept=".csv" style="display: none;">
+                        <div class="upload-icon">⭐</div>
+                        <div class="upload-title">Aspire Rewards Data</div>
+                        <div class="upload-description">Galderma Aspire redemption export</div>
+                        <div id="aspireStatus" class="upload-status">Click to select CSV file</div>
+                        <button type="button" id="aspireSample" class="sample-btn">
+                            Load Sample Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Section -->
+                <div class="action-section">
+                    <button id="reconcileBtn" disabled class="action-btn">
+                        Select all 3 files to begin reconciliation
+                    </button>
+                </div>
+            </div>
+
+            <!-- Processing Section -->
+            <div id="processingSection" class="processing-section">
+                <div class="processing-icon"></div>
+                <div class="processing-title">Processing Transaction Data</div>
+                <div class="processing-subtitle">Our AI engine is analyzing your data and finding matches</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <div id="progressText" class="progress-text">Initializing...</div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section">
+                <div class="results-header">
+                    <div class="results-title">Reconciliation Complete</div>
+                    <div id="resultsSubtitle" class="results-subtitle">Processing completed successfully</div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div id="totalTransactions" class="stat-number">0</div>
+                        <div class="stat-label">Total Transactions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="exactMatches" class="stat-number">0</div>
+                        <div class="stat-label">Exact Matches</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="fuzzyMatches" class="stat-number">0</div>
+                        <div class="stat-label">AI Fuzzy Matches</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="matchAccuracy" class="stat-number">0%</div>
+                        <div class="stat-label">Match Accuracy</div>
+                    </div>
+                </div>
+
+                <!-- Sample Matches -->
+                <div class="matches-section">
+                    <div class="matches-title">Transaction Matching Results</div>
+                    <div id="matchesList"></div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="export-section">
+                    <div class="export-title">Export Professional Reports</div>
+                    <div class="export-subtitle">Download detailed reconciliation reports for your accounting team</div>
+                    
+                    <div class="export-buttons">
+                        <button id="exportCsv" class="export-btn">
+                            <span>📄</span>
+                            CSV Report
+                        </button>
+                        <button id="exportExcel" class="export-btn secondary">
+                            <span>📊</span>
+                            Excel Report
+                        </button>
+                    </div>
+                    
+                    <div class="export-note">
+                        Reports include detailed match confidence scores, reconciliation summaries, and audit trails ready for your bookkeeping team.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call-to-Action Section -->
+        <div class="cta-section">
+            <div class="cta-title">Ready to Streamline Your Reconciliation Process?</div>
+            <div class="cta-subtitle">Join leading medical spas saving 15+ hours per month with automated reconciliation</div>
+            <button id="ctaBtn" class="cta-btn">
+                Start Your Free Trial - $299/month
+            </button>
+            <div class="cta-note">30-day money-back guarantee • No setup fees • Dedicated support</div>
+        </div>
+    </div>
+
+    <!-- Lead Capture Modal -->
+    <div id="leadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Demo Complete!</div>
+                <div class="modal-subtitle">Get personalized pricing and implementation timeline for your practice</div>
+            </div>
+            
+            <form id="leadForm">
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Business email address" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="company" placeholder="Practice name (optional)" class="form-input">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Get Pricing</button>
+                    <button type="button" id="skipBtn" class="btn-secondary">Skip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- External JavaScript file -->
+    <script src="demo.js"></script>
+</body>
+</html>

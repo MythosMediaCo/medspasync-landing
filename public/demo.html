@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; img-src 'self' data:;">
+  <title>MedSpaSync Pro Demo</title>
+  <link rel="stylesheet" href="tailwind.css">
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-center mb-4">MedSpaSync Pro Reconciliation Demo</h1>
+
+    <div id="step1" class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">Step 1: Upload Files</h2>
+      <input type="file" id="filePos" accept=".csv,.txt" class="mb-2 block" />
+      <input type="file" id="fileAlle" accept=".csv,.txt" class="mb-2 block" />
+      <input type="file" id="fileAspire" accept=".csv,.txt" class="mb-2 block" />
+      <button id="sampleBtn" class="px-4 py-2 bg-blue-600 text-white mr-2">Load Sample Data</button>
+      <button id="startBtn" class="px-4 py-2 bg-green-600 text-white">Start Processing</button>
+    </div>
+
+    <div id="step2" class="mb-6 hidden">
+      <h2 class="text-xl font-semibold mb-2">Step 2: Processing</h2>
+      <div id="progressText" class="mb-2">Preparing...</div>
+      <div class="w-full bg-gray-200 rounded">
+        <div id="progressBar" class="bg-blue-600 h-4 rounded" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="step3" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Step 3: Results</h2>
+      <div id="results" class="mb-2 text-sm"></div>
+      <button id="exportBtn" class="px-4 py-2 bg-blue-600 text-white">Export CSV</button>
+    </div>
+  </div>
+
+  <div id="leadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-4 rounded w-80">
+      <h3 class="text-lg font-semibold mb-2">Get Personalized Pricing</h3>
+      <input type="email" id="leadEmail" placeholder="Business Email" class="border p-1 mb-2 w-full" />
+      <input type="text" id="leadCompany" placeholder="Company Name (optional)" class="border p-1 mb-2 w-full" />
+      <button id="leadSubmit" class="px-3 py-2 bg-green-600 text-white mr-2">Submit</button>
+      <button id="leadCancel" class="px-3 py-2 bg-gray-300">Cancel</button>
+    </div>
+  </div>
+
+  <script src="demo.js" defer></script>
+</body>
+</html>

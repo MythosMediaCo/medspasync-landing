@@ -344,7 +344,7 @@
 
   // Update progress bar
 
-  function updateProgressBar(progress) {
+  function updateProgressBar(progress) {
 
     const fill = $('progressFill');
 
@@ -352,7 +352,8 @@
 
       fill.style.width = `${progress}%`;
 
-    }
+  }
+
 
     const stages = ['stage1', 'stage2', 'stage3', 'stage4'];
 
@@ -379,6 +380,18 @@
     });
 
   }
+
+
+  // Simulate processing stage with messaging and progress update
+  async function simulateStage(label, delay, stageNumber) {
+    const stageEl = $('stageMessage');
+    if (stageEl) {
+      stageEl.textContent = label;
+    }
+    state.currentStage = stageNumber;
+    updateProgressBar(stageNumber * 25);
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
 
 
 
@@ -540,37 +553,21 @@
 
 
 
-    state.processing = true;
+    state.processing = true;
+    const startBtn = $('startReconciliationBtn');
+    let originalBtnHtml;
+    if (startBtn) {
+      originalBtnHtml = startBtn.innerHTML;
+      startBtn.disabled = true;
+      startBtn.innerHTML = '<span class="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>Processing...';
+    }
 
-    showSection('processingSection');
+    showSection('processingSection');
 
-    state.currentStage = 1;
-
-    updateProgressBar(20);
-
-
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    state.currentStage = 2;
-
-    updateProgressBar(50);
-
-
-
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    state.currentStage = 3;
-
-    updateProgressBar(80);
-
-
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    state.currentStage = 4;
-
-    updateProgressBar(100);
+    await simulateStage('Parsing POS Data', 800, 1);
+    await simulateStage('Processing Alle Rewards', 1000, 2);
+    await simulateStage('Matching Transactions', 1500, 3);
+    await simulateStage('Finalizing Report', 1000, 4);
 
 
 
@@ -632,11 +629,15 @@
 
       showSection('uploadSection');
 
-    } finally {
+    } finally {
 
-      state.processing = false;
+      state.processing = false;
+      if (startBtn && originalBtnHtml) {
+        startBtn.disabled = false;
+        startBtn.innerHTML = originalBtnHtml;
+      }
 
-    }
+    }
 
   }
 

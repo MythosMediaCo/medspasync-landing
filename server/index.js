@@ -21,18 +21,17 @@ app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 // Normal JSON parser for everything else
 app.use(express.json({ limit: '2mb' }));
 
-// Serve static demo frontend
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve static demo frontend with demo.html as default
+app.use(express.static(path.join(__dirname, '../public'), { index: 'demo.html' }));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/medspasync', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('✅ Connected to MongoDB');
-}).catch(err => {
-  console.error('❌ MongoDB connection error:', err);
-});
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/medspasync')
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+  });
 
 // API routes
 app.use('/api', require('./routes/demo'));

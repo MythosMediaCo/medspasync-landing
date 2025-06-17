@@ -1,1 +1,16 @@
 node_modules
+.env
+.env.*
+*.log
+npm-debug.log*
+.DS_Store
+coverage
+public/tailwind.css
+
+# Local env overrides
+local.env
+
+# Build artifacts
+build/
+audit.json
+

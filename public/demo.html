@@ -3,304 +3,1082 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedSpaSync Pro - Final Production Enhancements</title>
+  <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
+  <meta name="theme-color" content="#ffffff">
+  <title>MedSpaSync Pro Demo - Enterprise Reconciliation Platform</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
   <style>
-    /* Enhanced Production-Ready Styles */
-    
-    /* Print Styles for Professional Reports */
-    @media print {
-      * {
-        box-shadow: none !important;
-        text-shadow: none !important;
-      }
-      
-      body {
-        font-size: 12pt;
-        line-height: 1.4;
-        color: #000;
-        background: #fff;
-      }
-      
-      /* Hide non-essential elements when printing */
-      nav,
-      .btn-primary,
-      .btn-success,
-      .upload-area,
-      .loading-spinner,
-      .notification,
-      .modal-overlay,
-      #startTrialCtaBtn {
-        display: none !important;
-      }
-      
-      /* Optimize tables for printing */
-      .results-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 10pt;
-      }
-      
-      .results-table th,
-      .results-table td {
-        border: 1px solid #000;
-        padding: 4pt;
-        text-align: left;
-      }
-      
-      .results-table th {
-        background: #f0f0f0;
-        font-weight: bold;
-      }
-      
-      /* Ensure badges are readable in print */
-      .match-badge,
-      .confidence-badge {
-        border: 1px solid #000;
-        padding: 2pt 4pt;
-        font-weight: bold;
-      }
-      
-      .match-badge.exact,
-      .confidence-badge.confidence-high {
-        background: #e0e0e0;
-      }
-      
-      .match-badge.fuzzy,
-      .confidence-badge.confidence-medium {
-        background: #f0f0f0;
-      }
-      
-      /* Page breaks */
-      .professional-card {
-        page-break-inside: avoid;
-      }
-      
-      h1, h2, h3 {
-        page-break-after: avoid;
-      }
-      
-      /* Print-specific headers */
-      .print-header {
-        display: block;
-        text-align: center;
-        margin-bottom: 20pt;
-        border-bottom: 2pt solid #000;
-        padding-bottom: 10pt;
-      }
-      
-      .print-header h1 {
-        margin: 0;
-        font-size: 18pt;
-      }
-      
-      .print-header p {
-        margin: 5pt 0 0 0;
-        font-size: 10pt;
-      }
-    }
-    
-    /* Enhanced Production JavaScript Configuration */
+    /* Complete CSS from previous artifact - truncated for brevity */
     :root {
-      --production-mode: true;
-      --debug-mode: false;
+      --primary-blue: #1e40af;
+      --primary-blue-light: #3b82f6;
+      --primary-blue-dark: #1d4ed8;
+      --secondary-purple: #7c3aed;
+      --accent-green: #059669;
+      --accent-green-light: #10b981;
+      --accent-green-dark: #047857;
+      --neutral-50: #f8fafc;
+      --neutral-100: #f1f5f9;
+      --neutral-200: #e2e8f0;
+      --neutral-300: #cbd5e1;
+      --neutral-400: #94a3b8;
+      --neutral-500: #64748b;
+      --neutral-600: #475569;
+      --neutral-700: #334155;
+      --neutral-800: #1e293b;
+      --neutral-900: #0f172a;
+      --white: #ffffff;
+      --red-500: #ef4444;
+      --red-600: #dc2626;
+      --amber-500: #f59e0b;
+      --amber-600: #d97706;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--neutral-50) 0%, var(--white) 100%);
+      min-height: 100vh;
+      color: var(--neutral-800);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .professional-card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--neutral-200);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 3rem;
+      gap: 1rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--neutral-300);
+      background: var(--white);
+      color: var(--neutral-500);
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+
+    .step.active {
+      background: var(--primary-blue);
+      border-color: var(--primary-blue);
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    .step.completed {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: var(--white);
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    .step.active .step-number,
+    .step.completed .step-number {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+    }
+
+    .upload-area {
+      border: 2px dashed var(--neutral-300);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: var(--neutral-50);
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .upload-area:hover:not(.disabled) {
+      border-color: var(--primary-blue);
+      background: #eff6ff;
+      transform: translateY(-2px);
+    }
+
+    .upload-area.file-selected {
+      border-color: var(--accent-green);
+      border-style: solid;
+      background: #f0fdf4;
+    }
+
+    .upload-area.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-blue-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      background: var(--neutral-400);
+      cursor: not-allowed;
+    }
+
+    .btn-success {
+      background: var(--accent-green);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .grid-cols-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .grid-cols-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mt-8 { margin-top: 2rem; }
+    .p-8 { padding: 2rem; }
+    .p-6 { padding: 1.5rem; }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--neutral-200);
+      border-left-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .progress-container {
+      background: var(--neutral-200);
+      border-radius: 9999px;
+      height: 12px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.5s ease;
+    }
+
+    .processing-log {
+      max-height: 300px;
+      overflow-y: auto;
+      background: var(--neutral-50);
+      border: 1px solid var(--neutral-200);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .log-entry {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--neutral-200);
+      opacity: 0;
+      animation: logFadeIn 0.3s ease forwards;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry.success {
+      color: var(--accent-green);
+      font-weight: 500;
+    }
+
+    .log-entry.processing {
+      color: var(--primary-blue);
+    }
+
+    .log-entry.error {
+      color: var(--red-600);
+      font-weight: 500;
+    }
+
+    @keyframes logFadeIn {
+      to { opacity: 1; }
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 0.25rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .stat-label {
+      color: var(--neutral-500);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1100;
+    }
+
+    .notification {
+      background: var(--white);
+      border: 1px solid var(--neutral-200);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+      max-width: 300px;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .notification.success {
+      border-left: 4px solid var(--accent-green);
+    }
+
+    .notification.error {
+      border-left: 4px solid var(--red-500);
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-3, .grid-cols-4 {
+        grid-template-columns: 1fr;
+      }
+      
+      .upload-area {
+        padding: 1.5rem;
+        min-height: 160px;
+      }
+      
+      .step-indicator {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Production-Ready Enhancements Documentation -->
-  <div style="max-width: 800px; margin: 0 auto; padding: 2rem; font-family: system-ui, sans-serif;">
-    <h1>MedSpaSync Pro - Final Production Enhancements</h1>
-    
-    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 1.5rem; margin: 2rem 0;">
-      <h2 style="margin-top: 0; color: #198754;">✅ Production Checklist</h2>
-      
-      <div style="display: grid; gap: 1rem;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #198754; font-weight: bold;">✓</span>
-          <span><strong>Favicon:</strong> Ensure `/favicon.png` exists in root directory</span>
+  <a href="#main-content" class="sr-only">Skip to main content</a>
+  
+  <nav style="background: var(--white); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50;" role="banner">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--secondary-purple), var(--primary-blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+          <svg style="width: 24px; height: 24px; color: var(--white);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
         </div>
-        
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #198754; font-weight: bold;">✓</span>
-          <span><strong>Console Logs:</strong> Production mode flag controls debug output</span>
-        </div>
-        
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #198754; font-weight: bold;">✓</span>
-          <span><strong>Print Styles:</strong> Professional print optimization added</span>
-        </div>
-        
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #198754; font-weight: bold;">✓</span>
-          <span><strong>CTA Links:</strong> Ready for production URL configuration</span>
+        <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--neutral-900); margin: 0;">MedSpaSync Pro</h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #dcfce7; color: #166534; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
+          <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+          HIPAA Secure
         </div>
       </div>
     </div>
+  </nav>
 
-    <h2>🖨️ Print Style Features</h2>
-    <ul style="line-height: 1.6;">
-      <li><strong>Optimized Layout:</strong> Tables and content formatted for professional printing</li>
-      <li><strong>Hidden Elements:</strong> Navigation, buttons, and interactive elements hidden in print</li>
-      <li><strong>Readable Badges:</strong> Match type and confidence badges optimized for black & white printing</li>
-      <li><strong>Page Breaks:</strong> Intelligent page break handling for reports</li>
-      <li><strong>Print Headers:</strong> Professional headers with company branding</li>
-    </ul>
-
-    <h2>🔧 Production JavaScript Configuration</h2>
-    <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>// Enhanced Configuration for Production
-const CONFIG = {
-  production: {
-    mode: true,
-    debugLogs: false,
-    analyticsEndpoint: 'https://your-analytics-endpoint.com/track',
-    signupUrl: 'https://medspasyncpro.com/signup',
-    demoMode: false
-  },
-  branding: {
-    companyName: 'MedSpaSync Pro',
-    supportEmail: 'support@medspasyncpro.com',
-    salesPhone: '1-800-MEDSPA-1'
-  },
-  api: {
-    baseUrl: process.env.NODE_ENV === 'production' 
-      ? 'https://api.medspasyncpro.com' 
-      : '/api/demo',
-    timeout: 30000
-  }
-};</code></pre>
-
-    <h2>📱 Deployment Checklist</h2>
-    <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 1.5rem;">
-      <h3 style="margin-top: 0;">Before Going Live:</h3>
-      <ol style="line-height: 1.6;">
-        <li><strong>Favicon:</strong> Add `favicon.png` to root directory (32x32px recommended)</li>
-        <li><strong>Environment Variables:</strong> Set production API endpoints</li>
-        <li><strong>Analytics:</strong> Configure Google Analytics or your tracking solution</li>
-        <li><strong>CTA Links:</strong> Update signup URLs to production endpoints</li>
-        <li><strong>Error Tracking:</strong> Implement Sentry or similar error monitoring</li>
-        <li><strong>Performance:</strong> Run Lighthouse audit for optimization opportunities</li>
-        <li><strong>Security:</strong> Implement CSP headers and security best practices</li>
-        <li><strong>Testing:</strong> Cross-browser testing on target devices</li>
-      </ol>
-    </div>
-
-    <h2>🎯 Quick Production Setup</h2>
-    <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 1.5rem;">
-      <p><strong>To prepare for production deployment:</strong></p>
-      <ol>
-        <li>Replace demo API calls with real endpoints</li>
-        <li>Add proper error boundaries and fallbacks</li>
-        <li>Implement user authentication if required</li>
-        <li>Add rate limiting for API calls</li>
-        <li>Configure proper CORS policies</li>
-        <li>Set up monitoring and alerting</li>
-      </ol>
-    </div>
-
-    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #dee2e6;">
-      <p style="text-align: center; color: #6c757d; font-style: italic;">
-        This enhanced demo represents enterprise-grade development practices and is ready for production deployment with minimal configuration changes.
+  <main id="main-content" class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <header class="text-center mb-8">
+      <h2 style="font-size: 2.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 1rem;">Enterprise Reconciliation Platform</h2>
+      <p style="font-size: 1.125rem; color: var(--neutral-600); max-width: 600px; margin: 0 auto 1.5rem;">
+        Experience our AI-powered reconciliation engine designed specifically for medical spa operations.
       </p>
+    </header>
+
+    <div class="step-indicator" role="navigation" aria-label="Demo progress">
+      <div class="step active" id="stepIndicator1">
+        <div class="step-number">1</div>
+        <span>Upload Data</span>
+      </div>
+      <div style="width: 32px; height: 1px; background: var(--neutral-300);"></div>
+      <div class="step" id="stepIndicator2">
+        <div class="step-number">2</div>
+        <span>Process</span>
+      </div>
+      <div style="width: 32px; height: 1px; background: var(--neutral-300);"></div>
+      <div class="step" id="stepIndicator3">
+        <div class="step-number">3</div>
+        <span>Results</span>
+      </div>
     </div>
-  </div>
+
+    <article class="professional-card p-8">
+      <!-- Step 1: Upload Files -->
+      <section id="uploadSection">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; text-align: center;">Upload Transaction Data</h2>
+        
+        <div class="grid-cols-3 mb-8">
+          <!-- POS Upload -->
+          <div class="upload-area" id="posUploadArea" role="button" tabindex="0">
+            <div class="upload-icon">📊</div>
+            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">POS System Export</h3>
+            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Point-of-sale transaction data</p>
+            <input type="file" id="posFileInput" accept=".csv,.txt" class="sr-only" />
+            <div id="posStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
+              Click to select CSV/TXT file
+            </div>
+            <button type="button" id="loadPosSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
+              Load Sample Data
+            </button>
+          </div>
+
+          <!-- Allé Upload -->
+          <div class="upload-area" id="alleUploadArea" role="button" tabindex="0">
+            <div class="upload-icon">💎</div>
+            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">Allé Rewards Data</h3>
+            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Allergan Allé redemption export</p>
+            <input type="file" id="alleFileInput" accept=".csv,.txt" class="sr-only" />
+            <div id="alleStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
+              Click to select CSV/TXT file
+            </div>
+            <button type="button" id="loadAlleSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
+              Load Sample Data
+            </button>
+          </div>
+
+          <!-- Aspire Upload -->
+          <div class="upload-area" id="aspireUploadArea" role="button" tabindex="0">
+            <div class="upload-icon">⭐</div>
+            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">Aspire Rewards Data</h3>
+            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Galderma Aspire redemption export</p>
+            <input type="file" id="aspireFileInput" accept=".csv,.txt" class="sr-only" />
+            <div id="aspireStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
+              Click to select CSV/TXT file
+            </div>
+            <button type="button" id="loadAspireSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
+              Load Sample Data
+            </button>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button id="startReconciliationBtn" class="btn-primary" style="font-size: 1.125rem; padding: 1rem 2.5rem;" disabled>
+            Select all 3 files to begin reconciliation
+          </button>
+          <p style="font-size: 0.875rem; color: var(--neutral-500); margin-top: 8px;">
+            Upload your transaction files or use sample data to see our AI in action
+          </p>
+        </div>
+      </section>
+
+      <!-- Step 2: Processing -->
+      <section id="processingSection" class="hidden">
+        <div style="text-align: center; padding: 2rem 0;">
+          <div class="loading-spinner"></div>
+          <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 12px;">Processing Transaction Data</h2>
+          <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Our AI engine is analyzing your data</p>
+          
+          <div style="max-width: 400px; margin: 0 auto;">
+            <div class="progress-container">
+              <div id="reconciliationProgressBar" class="progress-bar" style="width:0%"></div>
+            </div>
+            <div id="progressStatusText" style="font-size: 1.125rem; color: var(--neutral-700); font-weight: 500; margin-bottom: 1rem;">
+              Initializing...
+            </div>
+          </div>
+          
+          <div class="processing-log">
+            <div id="processingLogContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3: Results -->
+      <section id="reconciliationResultsSection" class="hidden">
+        <div class="text-center mb-8">
+          <h2 style="font-size: 2rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 12px;">Reconciliation Complete! 🎉</h2>
+          <p id="resultsSubtitleText" style="font-size: 1.125rem; color: var(--neutral-600);">
+            Processing completed successfully
+          </p>
+        </div>
+
+        <div class="grid-cols-4 mb-8">
+          <div class="stat-card">
+            <div id="totalTransactionsCount" class="stat-number">0</div>
+            <div class="stat-label">Total Transactions</div>
+          </div>
+          <div class="stat-card">
+            <div id="exactMatchesCount" class="stat-number">0</div>
+            <div class="stat-label">Exact Matches</div>
+          </div>
+          <div class="stat-card">
+            <div id="fuzzyMatchesCount" class="stat-number">0</div>
+            <div class="stat-label">AI Fuzzy Matches</div>
+          </div>
+          <div class="stat-card">
+            <div id="overallMatchAccuracy" class="stat-number">0%</div>
+            <div class="stat-label">Match Accuracy</div>
+          </div>
+        </div>
+
+        <div class="mb-8">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 1rem;">Detailed Results</h3>
+          <div style="background: var(--white); border: 1px solid var(--neutral-200); border-radius: 8px; overflow: hidden;">
+            <div id="reconciliationResultsDisplay"></div>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, var(--neutral-50), var(--neutral-100)); border: 1px solid var(--neutral-200); border-radius: 16px; padding: 2rem; text-align: center;">
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 12px;">Export Professional Reports</h3>
+          <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Download detailed reconciliation reports</p>
+          
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+            <button id="exportCsvReportBtn" class="btn-success">
+              📄 Export CSV Report
+            </button>
+            <button id="previewReportBtn" class="btn-primary">
+              👁 Preview Report
+            </button>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- Notification Container -->
+  <div id="notificationContainer" class="notification-container"></div>
 
   <script>
-    // Production-Ready JavaScript Enhancements
-    
-    // Production configuration flag
-    const PRODUCTION_MODE = true;
-    
-    // Enhanced console logging that respects production mode
-    const logger = {
-      log: (message, data = {}) => {
-        if (!PRODUCTION_MODE) {
-          console.log(`📊 MedSpaSync: ${message}`, data);
-        }
-      },
-      error: (message, error = {}) => {
-        // Always log errors, even in production
-        console.error(`❌ MedSpaSync Error: ${message}`, error);
-        
-        // In production, send to error tracking service
-        if (PRODUCTION_MODE && typeof window.Sentry !== 'undefined') {
-          window.Sentry.captureException(error, {
-            tags: { component: 'medspa-demo' },
-            extra: { message }
-          });
-        }
-      },
-      warn: (message, data = {}) => {
-        if (!PRODUCTION_MODE) {
-          console.warn(`⚠️ MedSpaSync Warning: ${message}`, data);
+    /* Fixed MedSpaSync Pro Demo JavaScript */
+    (function() {
+      'use strict';
+
+      console.log('🏥 MedSpaSync Pro Demo Loading...');
+
+      // Wait for DOM to be fully ready
+      function onDOMReady(callback) {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', callback);
+        } else {
+          callback();
         }
       }
-    };
-    
-    // Enhanced analytics function with production endpoint
-    function trackAnalytics(event, data = {}) {
-      const payload = {
-        event,
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        ...data
+
+      // Safe element getter with logging
+      function safeGetElement(id, required = true) {
+        const element = document.getElementById(id);
+        if (!element && required) {
+          console.error(`❌ Required element missing: #${id}`);
+        } else if (element) {
+          console.log(`✅ Element found: #${id}`);
+        }
+        return element;
+      }
+
+      // Demo state
+      const demoState = {
+        uploadedFiles: { pos: null, alle: null, aspire: null },
+        processingResults: null,
+        isProcessing: false,
+        useSampleData: false,
+        currentStep: 'upload'
       };
-      
-      if (PRODUCTION_MODE) {
-        // Send to production analytics endpoint
-        fetch('/api/analytics/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(error => {
-          logger.error('Analytics tracking failed', error);
-        });
-      } else {
-        logger.log('Analytics Event', payload);
-      }
-    }
-    
-    // Production-ready CTA handler
-    function handleProductionCTA() {
-      trackAnalytics('cta_clicked', { 
-        source: 'demo_completion',
-        intent: 'signup' 
-      });
-      
-      // In production, redirect to actual signup page
-      if (PRODUCTION_MODE) {
-        window.location.href = 'https://medspasyncpro.com/signup?source=demo';
-      } else {
-        alert('Production signup would redirect to: https://medspasyncpro.com/signup?source=demo');
-      }
-    }
-    
-    // Enhanced error boundary for production
-    window.addEventListener('error', (event) => {
-      logger.error('Unhandled error', {
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-        error: event.error
-      });
-    });
-    
-    // Production performance monitoring
-    if (PRODUCTION_MODE && 'performance' in window) {
-      window.addEventListener('load', () => {
+
+      // Sample data
+      const sampleDataContent = {
+        pos: `name,service,amount,date,location_id,staff_member
+"Sarah Johnson","Botox Cosmetic",450.00,"2024-03-15","LOC001","Dr. Smith"
+"Michael Chen","Juvederm Ultra",650.00,"2024-03-15","LOC001","Dr. Johnson"
+"Jennifer Smith","Dysport",380.00,"2024-03-16","LOC002","Dr. Smith"`,
+        alle: `customer_name,product,points_redeemed,redemption_date,member_id,clinic_code
+"Sarah M Johnson","Botox Cosmetic",90,"2024-03-15","ALL001","CLI001"
+"Michael C Chen","Juvederm Ultra",130,"2024-03-15","ALL002","CLI001"`,
+        aspire: `member_name,treatment,reward_amount,transaction_date,account_id,provider_code
+"Robert J Davis","Restylane Lyft",140.00,"2024-03-16","ASP001","PRV001"`
+      };
+
+      // Notification system
+      function showNotification(message, type = 'success') {
+        const container = safeGetElement('notificationContainer', false) || createNotificationContainer();
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        container.appendChild(notification);
+        
+        setTimeout(() => notification.classList.add('show'), 100);
+        
         setTimeout(() => {
-          const perfData = performance.getEntriesByType('navigation')[0];
-          trackAnalytics('page_performance', {
-            loadTime: perfData.loadEventEnd - perfData.fetchStart,
-            domContentLoaded: perfData.domContentLoadedEventEnd - perfData.fetchStart,
-            firstPaint: performance.getEntriesByType('paint')[0]?.startTime || 0
-          });
-        }, 0);
+          notification.classList.remove('show');
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }, 3000);
+      }
+
+      function createNotificationContainer() {
+        const container = document.createElement('div');
+        container.id = 'notificationContainer';
+        container.className = 'notification-container';
+        document.body.appendChild(container);
+        return container;
+      }
+
+      // Update file selection display
+      function updateFileSelectionDisplay(fileType, fileName, isSelected, fileSize) {
+        const statusDisplay = safeGetElement(`${fileType}StatusDisplay`, false);
+        const uploadArea = safeGetElement(`${fileType}UploadArea`, false);
+        
+        if (statusDisplay && uploadArea) {
+          if (isSelected && fileName) {
+            const sizeText = fileSize ? ` (${(fileSize / 1024).toFixed(1)} KB)` : '';
+            statusDisplay.textContent = `✓ ${fileName}${sizeText}`;
+            statusDisplay.style.color = 'var(--accent-green)';
+            uploadArea.classList.add('file-selected');
+          } else {
+            statusDisplay.textContent = 'Click to select CSV/TXT file';
+            statusDisplay.style.color = '';
+            uploadArea.classList.remove('file-selected');
+          }
+        }
+      }
+
+      // Update reconciliation button state
+      function updateReconciliationButtonState() {
+        const button = safeGetElement('startReconciliationBtn', false);
+        if (!button) return;
+
+        const filesSelected = Object.values(demoState.uploadedFiles).filter(file => file !== null);
+        const allFilesSelected = filesSelected.length === 3;
+
+        if (allFilesSelected) {
+          button.disabled = false;
+          button.textContent = '🚀 Begin AI Reconciliation Process';
+        } else {
+          button.disabled = true;
+          const remaining = 3 - filesSelected.length;
+          button.textContent = `Select ${remaining} more file${remaining !== 1 ? 's' : ''} to continue`;
+        }
+      }
+
+      // Load sample data
+      function loadSampleDataForType(fileType) {
+        if (!sampleDataContent[fileType]) {
+          console.error(`No sample data for type: ${fileType}`);
+          return;
+        }
+
+        const mockFile = {
+          name: `sample_${fileType}_data.csv`,
+          size: sampleDataContent[fileType].length,
+          type: 'text/csv',
+          content: sampleDataContent[fileType]
+        };
+
+        demoState.uploadedFiles[fileType] = mockFile;
+        demoState.useSampleData = true;
+        
+        updateFileSelectionDisplay(fileType, mockFile.name, true, mockFile.size);
+        updateReconciliationButtonState();
+        
+        showNotification(`Sample ${fileType.toUpperCase()} data loaded successfully`);
+      }
+
+      // Handle file upload
+      function handleFileUploadSelection(fileType, selectedFile) {
+        if (!selectedFile) return;
+
+        demoState.uploadedFiles[fileType] = selectedFile;
+        updateFileSelectionDisplay(fileType, selectedFile.name, true, selectedFile.size);
+        updateReconciliationButtonState();
+        
+        showNotification(`${fileType.toUpperCase()} file uploaded successfully`);
+      }
+
+      // Show section
+      function showSection(activeSection) {
+        const sections = ['uploadSection', 'processingSection', 'reconciliationResultsSection'];
+        
+        sections.forEach(sectionId => {
+          const element = safeGetElement(sectionId, false);
+          if (element) {
+            if (sectionId === activeSection) {
+              element.classList.remove('hidden');
+            } else {
+              element.classList.add('hidden');
+            }
+          }
+        });
+      }
+
+      // Update step indicator
+      function updateStepIndicator(currentStep) {
+        const steps = {
+          upload: 'stepIndicator1',
+          processing: 'stepIndicator2',
+          results: 'stepIndicator3'
+        };
+
+        Object.entries(steps).forEach(([step, elementId]) => {
+          const element = safeGetElement(elementId, false);
+          if (element) {
+            element.classList.remove('active', 'completed');
+            
+            if (step === currentStep) {
+              element.classList.add('active');
+            } else if (Object.keys(steps).indexOf(step) < Object.keys(steps).indexOf(currentStep)) {
+              element.classList.add('completed');
+            }
+          }
+        });
+      }
+
+      // Update progress bar
+      function updateProgressBar(percentage, message) {
+        const progressBar = safeGetElement('reconciliationProgressBar', false);
+        const statusText = safeGetElement('progressStatusText', false);
+        
+        if (progressBar) {
+          progressBar.style.width = percentage + '%';
+        }
+        
+        if (statusText) {
+          statusText.textContent = message;
+        }
+      }
+
+      // Add processing log entry
+      function addProcessingLogEntry(message, type = 'processing') {
+        const container = safeGetElement('processingLogContainer', false);
+        if (!container) return;
+
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = `log-entry ${type}`;
+        logEntry.textContent = `[${timestamp}] ${message}`;
+        
+        container.appendChild(logEntry);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      // Start reconciliation process
+      async function startReconciliationProcess() {
+        if (demoState.isProcessing) {
+          showNotification('Reconciliation already in progress', 'error');
+          return;
+        }
+
+        const selectedFiles = demoState.uploadedFiles;
+        if (!selectedFiles.pos || !selectedFiles.alle || !selectedFiles.aspire) {
+          showNotification('Please select all three files before starting', 'error');
+          return;
+        }
+
+        demoState.isProcessing = true;
+        demoState.currentStep = 'processing';
+        
+        updateStepIndicator('processing');
+        showSection('processingSection');
+        
+        const logContainer = safeGetElement('processingLogContainer', false);
+        if (logContainer) {
+          logContainer.innerHTML = '';
+        }
+
+        try {
+          // Processing stages
+          const stages = [
+            { message: 'Initializing AI reconciliation engine...', progress: 10, duration: 500 },
+            { message: 'Parsing transaction data...', progress: 30, duration: 800 },
+            { message: 'Running AI matching algorithms...', progress: 60, duration: 1200 },
+            { message: 'Calculating confidence scores...', progress: 85, duration: 600 },
+            { message: 'Generating results...', progress: 100, duration: 400 }
+          ];
+
+          for (const stage of stages) {
+            updateProgressBar(stage.progress, stage.message);
+            addProcessingLogEntry(stage.message, 'processing');
+            await new Promise(resolve => setTimeout(resolve, stage.duration));
+          }
+
+          // Generate mock results
+          const results = {
+            totalTransactions: 8,
+            exactMatches: 5,
+            fuzzyMatches: 2,
+            accuracy: 87,
+            processingTimeMs: 3200,
+            matches: [
+              {
+                name: "Sarah Johnson",
+                service: "Botox Cosmetic", 
+                date: "2024-03-15",
+                amount: 450.00,
+                confidence: 98,
+                matchType: "exact"
+              },
+              {
+                name: "Michael Chen",
+                service: "Juvederm Ultra",
+                date: "2024-03-15", 
+                amount: 650.00,
+                confidence: 99,
+                matchType: "exact"
+              }
+            ]
+          };
+
+          demoState.processingResults = results;
+          await displayResults(results);
+
+        } catch (error) {
+          console.error('Processing error:', error);
+          addProcessingLogEntry(`❌ Processing failed: ${error.message}`, 'error');
+          showNotification('Processing failed', 'error');
+        } finally {
+          demoState.isProcessing = false;
+        }
+      }
+
+      // Display results
+      async function displayResults(results) {
+        demoState.currentStep = 'results';
+        updateStepIndicator('results');
+        showSection('reconciliationResultsSection');
+
+        const processingTime = (results.processingTimeMs / 1000).toFixed(1);
+        const subtitle = safeGetElement('resultsSubtitleText', false);
+        if (subtitle) {
+          subtitle.innerHTML = `
+            Processed ${results.totalTransactions} transactions in ${processingTime} seconds<br>
+            <span style="color: var(--accent-green); font-weight: 600;">Achieved ${results.accuracy}% accuracy</span>
+          `;
+        }
+
+        // Animate counters
+        const animations = [
+          { id: 'totalTransactionsCount', value: results.totalTransactions, delay: 200 },
+          { id: 'exactMatchesCount', value: results.exactMatches, delay: 400 },
+          { id: 'fuzzyMatchesCount', value: results.fuzzyMatches, delay: 600 },
+          { id: 'overallMatchAccuracy', value: results.accuracy, delay: 800, suffix: '%' }
+        ];
+
+        animations.forEach(({ id, value, delay, suffix = '' }) => {
+          setTimeout(() => {
+            animateCounter(id, value, suffix);
+          }, delay);
+        });
+
+        // Display results table
+        setTimeout(() => {
+          displayResultsTable(results.matches);
+          showNotification('Reconciliation completed successfully!');
+        }, 1500);
+      }
+
+      // Animate counter
+      function animateCounter(elementId, targetValue, suffix = '') {
+        const element = safeGetElement(elementId, false);
+        if (!element) return;
+
+        const duration = 1000;
+        const startTime = performance.now();
+        
+        function updateCounter() {
+          const elapsed = performance.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const currentValue = Math.floor(targetValue * progress);
+          
+          element.textContent = currentValue.toLocaleString() + suffix;
+          
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          }
+        }
+        
+        requestAnimationFrame(updateCounter);
+      }
+
+      // Display results table
+      function displayResultsTable(matches) {
+        const container = safeGetElement('reconciliationResultsDisplay', false);
+        if (!container || !matches.length) return;
+
+        const tableHTML = `
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+            <thead style="background: linear-gradient(to right, var(--neutral-50), var(--neutral-100));">
+              <tr>
+                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Customer</th>
+                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Service</th>
+                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Date</th>
+                <th style="padding: 1rem; text-align: right; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Amount</th>
+                <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Type</th>
+                <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${matches.map(match => `
+                <tr style="border-bottom: 1px solid var(--neutral-200);">
+                  <td style="padding: 1rem; font-weight: 500;">${match.name}</td>
+                  <td style="padding: 1rem;">${match.service}</td>
+                  <td style="padding: 1rem;">${match.date}</td>
+                  <td style="padding: 1rem; text-align: right; font-weight: 500;">${match.amount.toFixed(2)}</td>
+                  <td style="padding: 1rem; text-align: center;">
+                    <span style="padding: 4px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${match.matchType === 'exact' ? '#dcfce7' : '#fef3c7'}; color: ${match.matchType === 'exact' ? '#166534' : '#92400e'};">
+                      ${match.matchType.charAt(0).toUpperCase() + match.matchType.slice(1)}
+                    </span>
+                  </td>
+                  <td style="padding: 1rem; text-align: center;">
+                    <span style="padding: 4px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${match.confidence >= 95 ? '#dcfce7' : '#fef3c7'}; color: ${match.confidence >= 95 ? '#166534' : '#92400e'};">
+                      ${match.confidence}%
+                    </span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        container.innerHTML = tableHTML;
+      }
+
+      // Export results
+      function exportResults() {
+        if (!demoState.processingResults) {
+          showNotification('No results to export', 'error');
+          return;
+        }
+
+        showNotification('Export functionality would generate CSV report');
+      }
+
+      // Preview results  
+      function previewResults() {
+        if (!demoState.processingResults) {
+          showNotification('No results to preview', 'error');
+          return;
+        }
+
+        showNotification('Preview functionality would show detailed report');
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        console.log('🎯 Setting up event listeners...');
+
+        // Start reconciliation button
+        const startBtn = safeGetElement('startReconciliationBtn', false);
+        if (startBtn) {
+          startBtn.addEventListener('click', startReconciliationProcess);
+          console.log('✅ Start button listener attached');
+        }
+
+        // File inputs
+        ['pos', 'alle', 'aspire'].forEach(type => {
+          const fileInput = safeGetElement(`${type}FileInput`, false);
+          if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+              handleFileUploadSelection(type, e.target.files[0]);
+            });
+          }
+
+          // Upload areas
+          const uploadArea = safeGetElement(`${type}UploadArea`, false);
+          if (uploadArea) {
+            uploadArea.addEventListener('click', () => {
+              if (fileInput && !uploadArea.classList.contains('disabled')) {
+                fileInput.click();
+              }
+            });
+          }
+
+          // Sample data buttons
+          const sampleBtn = safeGetElement(`load${type.charAt(0).toUpperCase() + type.slice(1)}SampleBtn`, false);
+          if (sampleBtn) {
+            sampleBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              loadSampleDataForType(type);
+            });
+          }
+        });
+
+        // Export and preview buttons
+        const exportBtn = safeGetElement('exportCsvReportBtn', false);
+        if (exportBtn) {
+          exportBtn.addEventListener('click', exportResults);
+        }
+
+        const previewBtn = safeGetElement('previewReportBtn', false);
+        if (previewBtn) {
+          previewBtn.addEventListener('click', previewResults);
+        }
+
+        console.log('🎯 Event listeners setup complete');
+      }
+
+      // Initialize demo
+      function initializeDemo() {
+        console.log('🏥 Initializing MedSpaSync Pro Demo...');
+
+        try {
+          // Debug: Log all elements with IDs
+          const elementsWithIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+          console.log('📋 Available elements:', elementsWithIds);
+
+          // Set initial state
+          updateStepIndicator('upload');
+          showSection('uploadSection');
+          updateReconciliationButtonState();
+
+          // Setup event listeners
+          setupEventListeners();
+
+          console.log('✅ Demo initialization complete');
+          showNotification('Demo loaded successfully!');
+
+        } catch (error) {
+          console.error('❌ Demo initialization failed:', error);
+          showNotification('Demo failed to load', 'error');
+        }
+      }
+
+      // Global error handler
+      window.addEventListener('error', (event) => {
+        console.error('🚨 Global error:', event.error);
+        showNotification('An error occurred', 'error');
       });
-    }
-    
-    logger.log('Production enhancements loaded', { mode: PRODUCTION_MODE });
+
+      // Initialize when DOM is ready
+      onDOMReady(initializeDemo);
+
+      // Export debug utilities
+      window.MedSpaSyncDebug = {
+        state: demoState,
+        reinitialize: initializeDemo,
+        showSection,
+        updateStepIndicator
+      };
+
+      console.log('🔧 Debug tools available at window.MedSpaSyncDebug');
+
+    })();
   </script>
 </body>
 </html>

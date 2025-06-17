@@ -1,169 +1,177 @@
 /* MedSpaSync Pro Demo JavaScript */
 (function(){
-  'use strict';
+  'use strict';
 
-  const step1 = document.getElementById('step1');
-  const step2 = document.getElementById('step2');
-  const step3 = document.getElementById('step3');
-  const progressBar = document.getElementById('progressBar');
-  const progressText = document.getElementById('progressText');
-  const resultsDiv = document.getElementById('results');
-  const exportBtn = document.getElementById('exportBtn');
-  const sampleBtn = document.getElementById('sampleBtn');
-  const startBtn = document.getElementById('startBtn');
-  const leadModal = document.getElementById('leadModal');
-  const leadEmail = document.getElementById('leadEmail');
-  const leadCompany = document.getElementById('leadCompany');
-  const leadSubmit = document.getElementById('leadSubmit');
-  const leadCancel = document.getElementById('leadCancel');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+  const resultsDiv = document.getElementById('results');
+  const exportBtn = document.getElementById('exportBtn');
+  const startBtn = document.getElementById('runDemoBtn');
+  const leadModal = document.getElementById('leadModal');
+  const leadEmail = document.getElementById('leadEmail');
+  const leadCompany = document.getElementById('leadCompany');
+  const leadSubmit = document.getElementById('leadSubmit');
+  const leadCancel = document.getElementById('leadCancel');
 
-  let demoResults = null;
-  let useSample = false;
+  let demoResults = null;
+  let useSample = false;
+  let sampleType = null; // To track which sample data is being used
 
-  function trackEvent(name, data){
-    if(window.console){
-      console.log('trackEvent', name, data || {});
-    }
-  }
+  function trackEvent(name, data){
+    if(window.console){
+      console.log('trackEvent', name, data || {});
+    }
+  }
 
-  sampleBtn.addEventListener('click', () => {
-    useSample = true;
-    trackEvent('sample_data_used');
-    startProcessing();
-  });
+  document.getElementById('loadPosSample').addEventListener('click', () => loadSampleData('pos'));
+  document.getElementById('loadAlleSample').addEventListener('click', () => loadSampleData('alle'));
+  document.getElementById('loadAspireSample').addEventListener('click', () => loadSampleData('aspire'));
 
-  startBtn.addEventListener('click', () => {
-    useSample = false;
-    startProcessing();
-  });
+  startBtn.addEventListener('click', () => {
+    useSample = false;
+    sampleType = null;
+    trackEvent('start_reconciliation_uploaded_data');
+    startProcessing();
+  });
 
-  function startProcessing(){
-    const files = {
-      pos: document.getElementById('filePos').files[0],
-      alle: document.getElementById('fileAlle').files[0],
-      aspire: document.getElementById('fileAspire').files[0]
-    };
+  function loadSampleData(type) {
+    useSample = true;
+    sampleType = type;
+    trackEvent(`load_sample_data_${type}`);
+    startProcessing();
+  }
 
-    step1.classList.add('hidden');
-    step2.classList.remove('hidden');
-    progressBar.style.width = '0%';
-    progressText.textContent = 'Starting...';
+  function startProcessing(){
+    const files = {
+      pos: document.getElementById('posFile').files[0],
+      alle: document.getElementById('rewardFile').files[0],
+      aspire: document.getElementById('rewardFile').files[0] // Assuming Aspire also uses rewardFile input for now
+    };
 
-    const stages = [
-      'Validating data',
-      'Cross-checking records',
-      'Fuzzy matching',
-      'Calculating accuracy',
-      'Generating report',
-      'Finalizing'
-    ];
-    const totalDuration = 120000; // 2 minutes
-    const stageDuration = totalDuration / stages.length;
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+    progressBar.style.width = '0%';
+    progressText.textContent = 'Starting...';
 
-    let stageIndex = 0;
+    const stages = [
+      'Validating data',
+      'Cross-checking records',
+      'Fuzzy matching',
+      'Calculating accuracy',
+      'Generating report',
+      'Finalizing'
+    ];
+    const totalDuration = 120000; // 2 minutes
+    const stageDuration = totalDuration / stages.length;
 
-    function updateStage(){
-      progressText.textContent = stages[stageIndex];
-      progressBar.style.width = ((stageIndex)/stages.length*100) + '%';
-      if(stageIndex < stages.length){
-        setTimeout(() => {
-          stageIndex++;
-          if(stageIndex === stages.length){
-            progressBar.style.width = '100%';
-          }
-          updateStage();
-        }, stageDuration);
-      }
-    }
-    updateStage();
+    let stageIndex = 0;
 
-    readFiles(files).then(payload => {
-      if(useSample) payload.sample = true;
-      fetch('/api/demo/reconcile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(r => r.json())
-      .then(data => {
-        demoResults = data;
-        trackEvent('processing_completed', { accuracy: data.accuracy });
-        setTimeout(() => showResults(data), totalDuration);
-      })
-      .catch(err => {
-        console.error('Process error', err);
-        progressText.textContent = 'Error processing files';
-      });
-    });
-  }
+    function updateStage(){
+      progressText.textContent = stages[stageIndex];
+      progressBar.style.width = ((stageIndex)/stages.length*100) + '%';
+      if(stageIndex < stages.length){
+        setTimeout(() => {
+          stageIndex++;
+          if(stageIndex === stages.length){
+            progressBar.style.width = '100%';
+          }
+          updateStage();
+        }, stageDuration);
+      }
+    }
+    updateStage();
 
-  function readFiles(files){
-    if(useSample) return Promise.resolve({ sample: true });
-    return Promise.all(Object.keys(files).map(key => {
-      return new Promise(resolve => {
-        if(!files[key]) return resolve([key, null]);
-        const reader = new FileReader();
-        reader.onload = () => resolve([key, reader.result]);
-        reader.readAsText(files[key]);
-      });
-    })).then(entries => {
-      const obj = {};
-      entries.forEach(([k,v])=>{ if(v) obj[k] = v; });
-      return obj;
-    });
-  }
+    readFiles(files).then(payload => {
+      if(useSample) payload.sample = true;
+      if(sampleType) payload.sampleType = sampleType;
+      fetch('/api/demo/reconcile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(data => {
+        demoResults = data;
+        trackEvent('processing_completed', { accuracy: data.accuracy });
+        setTimeout(() => showResults(data), totalDuration);
+      })
+      .catch(err => {
+        console.error('Process error', err);
+        progressText.textContent = 'Error processing files';
+      });
+    });
+  }
 
-  function showResults(data){
-    step2.classList.add('hidden');
-    step3.classList.remove('hidden');
-    const { matches, accuracy } = data;
-    const tableRows = matches.map(m => `<tr><td class="border px-2">${m.name}</td><td class="border px-2">${m.service}</td><td class="border px-2">${m.date}</td><td class="border px-2 text-right">${m.amount}</td><td class="border px-2 text-right">${m.confidence}%</td></tr>`).join('');
-    const table = `<p class="mb-2">Accuracy: <strong>${accuracy}%</strong></p><table class="w-full text-xs"><thead><tr><th class="border px-2">Name</th><th class="border px-2">Service</th><th class="border px-2">Date</th><th class="border px-2">Amount</th><th class="border px-2">Confidence</th></tr></thead><tbody>${tableRows}</tbody></table>`;
-    resultsDiv.innerHTML = table;
-    trackEvent('processing_completed', { accuracy });
-  }
+  function readFiles(files){
+    if(useSample) return Promise.resolve({ sample: true, sampleType: sampleType });
+    return Promise.all(Object.keys(files).map(key => {
+      return new Promise(resolve => {
+        if(!files[key]) return resolve([key, null]);
+        const reader = new FileReader();
+        reader.onload = () => resolve([key, reader.result]);
+        reader.readAsText(files[key]);
+      });
+    })).then(entries => {
+      const obj = {};
+      entries.forEach(([k,v])=>{ if(v) obj[k] = v; });
+      return obj;
+    });
+  }
 
-  exportBtn.addEventListener('click', () => {
-    if(!demoResults) return;
-    fetch('/api/demo/export', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ matches: demoResults.matches })
-    })
-      .then(r => r.text())
-      .then(csv => {
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'reconciliation.csv';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        trackEvent('report_exported', { format: 'csv' });
-        leadModal.classList.remove('hidden');
-      });
-  });
+  function showResults(data){
+    step2.classList.add('hidden');
+    step3.classList.remove('hidden');
+    const { matches, accuracy } = data;
+    const tableRows = matches.map(m => `<tr><td class="border px-2">${m.name}</td><td class="border px-2">${m.service}</td><td class="border px-2">${m.date}</td><td class="border px-2 text-right">${m.amount}</td><td class="border px-2 text-right">${m.confidence}%</td></tr>`).join('');
+    const table = `<p class="mb-2">Accuracy: <strong>${accuracy}%</strong></p><table class="w-full text-xs"><thead><tr><th class="border px-2">Name</th><th class="border px-2">Service</th><th class="border px-2">Date</th><th class="border px-2">Amount</th><th class="border px-2">Confidence</th></tr></thead><tbody>${tableRows}</tbody></table>`;
+    resultsDiv.innerHTML = table;
+    trackEvent('processing_completed', { accuracy });
+  }
 
-  leadSubmit.addEventListener('click', () => {
-    const email = leadEmail.value.trim();
-    const company = leadCompany.value.trim();
-    if(!email) return alert('Email required');
-    fetch('/api/demo/capture-lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, name: company })
-    }).then(() => {
-      trackEvent('lead_captured', { email });
-      leadModal.classList.add('hidden');
-      alert('Thank you!');
-    }).catch(() => {
-      alert('Error saving lead');
-    });
-  });
+  exportBtn.addEventListener('click', () => {
+    if(!demoResults) return;
+    fetch('/api/demo/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ matches: demoResults.matches })
+    })
+      .then(r => r.text())
+      .then(csv => {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reconciliation.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        trackEvent('report_exported', { format: 'csv' });
+        leadModal.classList.remove('hidden');
+      });
+  });
 
-  leadCancel.addEventListener('click', () => {
-    leadModal.classList.add('hidden');
-  });
+  leadSubmit.addEventListener('click', () => {
+    const email = leadEmail.value.trim();
+    const company = leadCompany.value.trim();
+    if(!email) return alert('Email required');
+    fetch('/api/demo/capture-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name: company })
+    }).then(() => {
+      trackEvent('lead_captured', { email });
+      leadModal.classList.add('hidden');
+      alert('Thank you!');
+    }).catch(() => {
+      alert('Error saving lead');
+    });
+  });
+
+  leadCancel.addEventListener('click', () => {
+    leadModal.classList.add('hidden');
+  });
 })();

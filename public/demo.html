@@ -3,440 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedSpaSync Pro - Live Revenue Recovery Demo</title>
-  <meta name="description" content="Experience enterprise-grade medical spa reconciliation that finds lost revenue in seconds. Try our live demo with real AI-powered matching.">
-  <meta name="theme-color" content="#1e40af">
-  <meta name="robots" content="index, follow">
-  
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-    <title>MedSpaSync Pro - AI-Powered Revenue Recovery Demo</title>
-  <meta property="og:title" content="MedSpaSync Pro - AI Revenue Recovery Demo">
-  <meta property="og:description" content="See how AI finds missing revenue in your medical spa transactions. Live demo with real matching capabilities.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://demo.medspasyncpro.com">
-  <meta name="twitter:card" content="summary_large_image">
-  
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
-  
-  <style>
-    /* Critical CSS - Above the fold styles */
-:root {
-  --primary-blue: #1e40af;
-  --primary-blue-hover: #1d4ed8;
-  --primary-blue-light: #3b82f6;
-  --accent-green: #059669;
-  --accent-green-hover: #047857;
-  --accent-purple: #7c3aed;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --success: #10b981;
-  --neutral-50: #f8fafc;
-  --neutral-100: #f1f5f9;
-  --neutral-200: #e2e8f0;
-  --neutral-300: #cbd5e1;
-  --neutral-400: #94a3b8;
-  --neutral-500: #64748b;
-  --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
-  --white: #ffffff;
-  --gradient-brand: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
-  --gradient-success: linear-gradient(135deg, var(--accent-green), #10b981);
-  --gradient-warning: linear-gradient(135deg, var(--warning), #fbbf24);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-  --transition-fast: 0.15s ease;
-  --transition-base: 300ms ease;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-}
-
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(180deg, var(--neutral-50) 0%, var(--white) 100%);
-  min-height: 100vh;
-  color: var(--neutral-800);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-    /* Loading state */
-.loading-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  opacity: 1;
-  transition: opacity 300ms ease;
-}
-
-.loading-screen.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--neutral-200);
-  border-top-color: var(--primary-blue);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-    /* Navigation */
-.nav {
-  background: var(--white);
-  box-shadow: var(--shadow-md);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid var(--neutral-200);
-}
-
-.nav-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-md) var(--space-lg);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  background: var(--gradient-brand);
-  border-radius: var(--radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.logo-text {
-  font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--neutral-900);
-}
-
-.demo-badge {
-  background: #dcfce7;
-  color: #166534;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: 9999px;
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  border: 1px solid #bbf7d0;
-}
-
-    /* Main layout */
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg);
-}
-
-.section {
-  margin-bottom: var(--space-2xl);
-}
-
-.section-center {
-  text-align: center;
-}
-
-.hero-title {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--neutral-900);
-  margin-bottom: var(--space-md);
-}
-
-.hero-subtitle {
-  font-size: var(--font-size-lg);
-  color: var(--neutral-600);
-  margin-bottom: var(--space-lg);
-}
-
-    /* Buttons */
-.btn {
-  border: none;
-  border-radius: var(--radius-lg);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  font-size: var(--font-size-base);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  text-decoration: none;
-  min-height: 44px;
-  padding: var(--space-md) var(--space-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  transform: none !important;
-}
-
-.btn-primary {
-  background: var(--gradient-brand);
-  color: white;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-success {
-  background: var(--gradient-success);
-  color: white;
-  box-shadow: var(--shadow-md);
-}
-
-.btn-success:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn-full {
-  width: 100%;
-}
-
-    /* Cards */
-.card {
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--neutral-200);
-  padding: var(--space-lg);
-  transition: all var(--transition-base);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-    /* Form elements */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.form-label {
-  font-weight: 600;
-  color: var(--neutral-700);
-  font-size: var(--font-size-sm);
-}
-
-.form-input {
-  padding: var(--space-md);
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  transition: all var(--transition-fast);
-  background: var(--white);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-}
-
-.form-help {
-  font-size: var(--font-size-xs);
-  color: var(--neutral-500);
-}
-
-.form-error {
-  font-size: var(--font-size-xs);
-  color: var(--error);
-  font-weight: 500;
-}
-
-    /* Utility classes */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.hidden { 
-  display: none !important; 
-}
-
-.text-center { 
-  text-align: center; 
-}
-
-.max-w-md { 
-  max-width: 28rem; 
-  margin-left: auto; 
-  margin-right: auto; 
-}
-  </style>
+  <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
+  <meta name="theme-color" content="#ffffff">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.medspasyncpro.com">
+  <title>MedSpaSync Pro Demo 2.0</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="tailwind.css">
+  <script defer src="preview.js"></script>
+  <script defer src="usageMeter.js"></script>
+  <script defer src="demo.js"></script>
 </head>
-<body>
-    <div class="loading-screen" id="loadingScreen" aria-hidden="true">
-    <div class="spinner" role="status" aria-label="Loading demo"></div>
-  </div>
+<body class="bg-gray-50 text-gray-900">
+  <noscript>
+    <div class="bg-red-100 text-red-800 p-4 text-center">
+      JavaScript is required to run this demo. Please enable it in your browser.
+    </div>
+  </noscript>
 
-    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-blue text-white p-2 rounded">
-    Skip to main content
-  </a>
-
-    <nav class="nav" role="banner">
-    <div class="nav-content">
-      <div class="logo-section">
-        <div class="logo" aria-hidden="true">
-          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <nav class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
           </svg>
         </div>
-        <span class="logo-text">MedSpaSync Pro</span>
-        <span class="demo-badge">Demo 3.0</span>
+        <h1 class="text-xl font-bold">MedSpaSync Pro</h1>
       </div>
+      <span class="text-sm font-semibold text-green-600 hidden md:block">✨ Production Demo</span>
+      <img src="https://status.medspasyncpro.com/badge?theme=light" alt="status" class="h-5 ml-4" />
     </div>
   </nav>
 
-    <main class="main" id="main">
-        <section id="heroSection" class="section section-center">
-      <h1 class="hero-title">See your missing revenue in real time</h1>
-      <p class="hero-subtitle">Upload a few sample files and watch AI find the matches instantly.</p>
-      <button id="heroCtaBtn" 
-              class="btn btn-primary" 
-              aria-describedby="hero-cta-description">
-        🚀 Start Revenue Recovery Demo
-      </button>
-      <div id="hero-cta-description" class="sr-only">
-        Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
+  <main class="max-w-5xl mx-auto py-10 px-4">
+    <section id="heroSection" class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-3">Live Revenue Recovery Demo</h2>
+      <p class="text-lg text-gray-600 mb-3">Instantly detect unmatched rewards from POS, Alle, and Aspire data.</p>
+      <div class="inline-block px-4 py-2 rounded-full text-white bg-gradient-to-r from-yellow-400 to-yellow-500 font-semibold animate-pulse">
+        💰 See lost revenue in real time
       </div>
-    </section>
-
-        <section id="leadCapture" class="section">
-      <div class="max-w-md">
-        <div class="card">
-          <div class="text-center" style="margin-bottom: var(--space-lg);">
-            <h2 style="font-size: var(--font-size-xl); font-weight: 700; margin-bottom: var(--space-sm);">
-              Try the Demo
-            </h2>
-            <p style="color: var(--neutral-600);">
-              Enter your email to access the full demo with real reconciliation capabilities
-            </p>
-          </div>
-
-          <form id="leadForm" class="form" novalidate>
-            <div class="form-group">
-              <label for="leadEmail" class="form-label">Work Email</label>
-              <input 
-                id="leadEmail" 
-                type="email" 
-                required 
-                class="form-input"
-                placeholder="you@yourmedspa.com"
-                aria-describedby="email-help email-error"
-                autocomplete="email"
-              >
-              <div id="email-help" class="form-help">We'll never share your email or send spam</div>
-              <div id="email-error" class="form-error hidden" role="alert"></div>
-            </div>
-            
-            <div class="form-group">
-              <label for="leadName" class="form-label">
-                Name <span style="color: var(--neutral-400); font-weight: 400;">(optional)</span>
-              </label>
-              <input 
-                id="leadName" 
-                type="text" 
-                class="form-input"
-                placeholder="Your name"
-                autocomplete="name"
-              >
-            </div>
-            
-            <button type="submit" class="btn btn-primary btn-full" aria-describedby="lead-submit-status">
-              <span id="leadSubmitText">🚀 Start Demo</span>
-              <span class="loading hidden" aria-hidden="true"></span>
-            </button>
-            
-            <p id="leadNotice" class="text-center form-help hidden" role="status"></p>
-            <div id="lead-submit-status" class="sr-only">Submit form to begin demo experience</div>
-          </form>
+      <div class="mt-4">
+        <a href="#leadCapture" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg" aria-describedby="hero-cta-description">
+          🚀 Start Revenue Recovery Demo
+        </a>
+        <div id="hero-cta-description" class="sr-only">
+          Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
         </div>
+    </div>
+    </section>
+
+    <section id="pricingSection" class="grid md:grid-cols-2 gap-6 mb-12">
+      <div id="corePlan" class="p-6 bg-white rounded-xl shadow border border-blue-500 hover:border-blue-500 cursor-pointer">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-semibold">Core Reconciliation</h3>
+          <input type="radio" id="coreRadio" name="plan" value="core" checked aria-describedby="corePlanDescription" class="sr-only">
+        </div>
+        <label for="coreRadio" class="block text-2xl font-bold text-blue-600 mb-1">$299/month</label>
+        <p class="text-sm text-gray-600">Ideal for small to medium spas</p>
+        <p id="corePlanDescription" class="text-sm text-gray-500 hidden">Core plan includes essential reconciliation features.</p>
+      </div>
+
+      <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer opacity-60">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-semibold">Professional Suite <span class="ml-2 px-2 py-1 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white text-xs font-bold">Coming Soon</span></h3>
+          <input type="radio" id="proRadio" name="plan" value="professional" disabled aria-describedby="proPlanDescription" class="sr-only">
+        </div>
+        <label for="proRadio" class="block text-2xl font-bold text-purple-600 mb-1">$499/month</label>
+        <p class="text-sm text-gray-600">Advanced tools for scaling medspas</p>
+        <p id="proPlanDescription" class="text-sm text-gray-500 hidden">Professional Suite with advanced features coming soon.</p>
       </div>
     </section>
 
-        <section id="demoTool" class="section hidden">
-      <div class="text-center" style="margin-bottom: var(--space-xl);">
-        <h2 style="font-size: var(--font-size-2xl); font-weight: 700; margin-bottom: var(--space-sm);">
-          AI Revenue Recovery Demo
+    <div class="text-center">
+      <a href="#leadCapture" id="subscribeBtn" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg">
+        Subscribe Now – $299/month
+      </a>
+      <p class="text-sm text-gray-500 mt-2">30-day money-back guarantee • Cancel anytime</p>
+    </div>
+
+    <section id="leadCapture" class="max-w-md mx-auto mt-16">
+      <form id="leadForm" class="bg-white p-4 rounded-lg shadow">
+        <div class="mb-3">
+          <label for="leadEmail" class="block text-sm font-medium mb-1">Work Email</label>
+          <input id="leadEmail" type="email" required class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-3">
+          <label for="leadName" class="block text-sm font-medium mb-1">Name <span class="text-gray-400">(optional)</span></label>
+          <input id="leadName" type="text" class="w-full border rounded px-2 py-1" />
+        </div>
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow w-full">Start Demo</button>
+        <p id="leadNotice" class="text-sm mt-2 text-center text-red-600"></p>
+      </form>
+    </section>
+
+    <div id="demoTool" class="mt-16 hidden">
+      <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded"></div>
+      <div class="mb-4">
+        <label for="posFile" class="block font-semibold mb-1">POS Data</label>
+        <input type="file" id="posFile" accept=".csv" class="mb-2">
+        <button type="button" id="loadPosSample" class="text-blue-600 underline text-sm">Load Sample</button>
+      </div>
+      <div class="mb-4">
+        <label for="rewardFile" class="block font-semibold mb-1">Rewards Data</label>
+        <input type="file" id="rewardFile" accept=".csv" class="mb-2">
+        <button type="button" id="loadAlleSample" class="text-blue-600 underline text-sm">Load Alle Sample</button>
+        <button type="button" id="loadAspireSample" class="text-blue-600 underline text-sm ml-2">Load Aspire Sample</button>
+      </div>
+      <button id="runDemoBtn" class="bg-blue-600 text-white px-5 py-2 rounded">Run Reconciliation</button>
+      <p class="text-xs text-gray-500 mt-1">By running the demo you agree to our <a href="privacy.html" class="underline">Privacy Policy</a>.</p>
+      <button id="exportBtn" class="bg-gray-700 text-white px-5 py-2 rounded ml-3 hidden">Export CSV</button>
+      <div id="results" class="mt-8"></div>
+    </div>
+  </main>
+
+  <footer class="text-center text-sm text-gray-400 py-6 border-t">
+    &copy; 2025 MedSpaSync Pro. All rights reserved.
+  </footer>
+
+  <script defer src="demo.js"></script>
+</body>
+</html>

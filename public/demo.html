@@ -1,4 +1,455 @@
-<!DOCTYPE html>
+/* Debug Script for MedSpaSync Pro - Identify Conflicts */
+
+// Add this as the FIRST script in your HTML to debug the issue
+(function() {
+  'use strict';
+  
+  console.log('🔍 DEBUGGING SCRIPT CONFLICTS');
+  console.log('='.repeat(60));
+  
+  // 1. Check which scripts are loading
+  console.log('📜 Scripts detected:');
+  const scripts = Array.from(document.scripts);
+  scripts.forEach((script, index) => {
+    console.log(`  ${index + 1}. ${script.src || 'inline script'}`);
+    if (script.src) {
+      console.log(`     - Loading: ${script.src.split('/').pop()}`);
+    }
+  });
+  
+  // 2. Monitor DOM state
+  console.log('\n📋 DOM State Check:');
+  console.log(`  - Document ready state: ${document.readyState}`);
+  console.log(`  - Elements with IDs: ${document.querySelectorAll('[id]').length}`);
+  
+  // 3. List all element IDs
+  const elementsWithIds = Array.from(document.querySelectorAll('[id]')).map(el => ({
+    id: el.id,
+    tag: el.tagName.toLowerCase(),
+    classes: el.className
+  }));
+  
+  console.log('\n🆔 All elements with IDs:');
+  elementsWithIds.forEach(el => {
+    console.log(`  - #${el.id} (${el.tag}${el.classes ? '.' + el.classes.split(' ').join('.') : ''})`);
+  });
+  
+  // 4. Check for the specific element causing the error
+  const problematicElements = [
+    'startReconciliationBtn',
+    'posUploadArea', 
+    'alleUploadArea',
+    'aspireUploadArea',
+    'uploadSection',
+    'processingSection'
+  ];
+  
+  console.log('\n❓ Checking problematic elements:');
+  problematicElements.forEach(id => {
+    const element = document.getElementById(id);
+    console.log(`  - #${id}: ${element ? '✅ FOUND' : '❌ MISSING'}`);
+    if (!element) {
+      console.log(`    🔍 Similar IDs found:`, 
+        elementsWithIds.filter(el => el.id.toLowerCase().includes(id.toLowerCase().substring(0, 5)))
+      );
+    }
+  });
+  
+  // 5. Check for timing issues
+  console.log('\n⏰ Timing Analysis:');
+  console.log(`  - Script execution time: ${new Date().toISOString()}`);
+  console.log(`  - DOM ready: ${document.readyState === 'complete' ? 'YES' : 'NO'}`);
+  
+  // 6. Watch for additional scripts loading
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.tagName === 'SCRIPT') {
+          console.log(`🆕 New script added: ${node.src || 'inline'}`);
+        }
+      });
+    });
+  });
+  
+  observer.observe(document, { childList: true, subtree: true });
+  
+  // 7. Override addEventListener to catch the error
+  const originalAddEventListener = Element.prototype.addEventListener;
+  Element.prototype.addEventListener = function(type, listener, options) {
+    if (this === null) {
+      console.error('🚨 Trying to add event listener to NULL element!');
+      console.trace('Stack trace:');
+      return;
+    }
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+  
+  // 8. Wait and check again after DOM loads
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('\n🎯 POST-DOM-LOAD CHECK:');
+    console.log(`  - Elements with IDs now: ${document.querySelectorAll('[id]').length}`);
+    
+    problematicElements.forEach(id => {
+      const element = document.getElementById(id);
+      console.log(`  - #${id}: ${element ? '✅ NOW FOUND' : '❌ STILL MISSING'}`);
+    });
+  });
+  
+  // 9. Check for multiple demo scripts
+  window.addEventListener('load', () => {
+    console.log('\n🔄 FINAL CHECK - Multiple Demo Scripts:');
+    if (window.MedSpaSyncDemo) {
+      console.log('  ⚠️ MedSpaSyncDemo already exists - possible conflict!');
+    }
+    
+    // Look for global variables that might indicate other demo scripts
+    const potentialConflicts = ['demoState', 'CONFIG', 'domElements'];
+    potentialConflicts.forEach(varName => {
+      if (window[varName]) {
+        console.log(`  ⚠️ Global variable ${varName} exists - possible conflict!`);
+      }
+    });
+  });
+  
+  console.log('\n🔧 Debug script loaded. Check console output above.');
+  console.log('='.repeat(60));
+  
+})();
+
+/* SOLUTION: Replace your demo.js with this safe version */
+
+// Safe Demo Script - No Conflicts
+(function() {
+  'use strict';
+  
+  // Prevent multiple initialization
+  if (window.MedSpaSyncDemo) {
+    console.warn('⚠️ MedSpaSync Demo already initialized');
+    return;
+  }
+  
+  console.log('🏥 Starting MedSpaSync Pro Demo (Safe Version)');
+  
+  // Wait for DOM to be completely ready
+  function waitForDOM(callback) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback);
+    } else {
+      // DOM is already ready
+      setTimeout(callback, 0); // Let other scripts finish
+    }
+  }
+  
+  // Safe element getter with detailed error reporting
+  function safeGetElement(id, required = false) {
+    const element = document.getElementById(id);
+    
+    if (!element) {
+      const message = `Element #${id} not found`;
+      if (required) {
+        console.error(`❌ ${message} (REQUIRED)`);
+        
+        // Show helpful suggestions
+        const similar = Array.from(document.querySelectorAll('[id]'))
+          .map(el => el.id)
+          .filter(existingId => 
+            existingId.toLowerCase().includes(id.toLowerCase().substring(0, 4)) ||
+            id.toLowerCase().includes(existingId.toLowerCase().substring(0, 4))
+          );
+        
+        if (similar.length > 0) {
+          console.log(`💡 Similar elements found: ${similar.join(', ')}`);
+        }
+        
+        console.log('📋 All available IDs:', 
+          Array.from(document.querySelectorAll('[id]')).map(el => el.id)
+        );
+      } else {
+        console.warn(`⚠️ ${message} (optional)`);
+      }
+    } else {
+      console.log(`✅ Found #${id}`);
+    }
+    
+    return element;
+  }
+  
+  // Safe event listener attachment
+  function safeAddEventListener(elementId, event, handler, required = false) {
+    const element = safeGetElement(elementId, required);
+    
+    if (element && typeof handler === 'function') {
+      try {
+        element.addEventListener(event, handler);
+        console.log(`🎯 Event attached: ${elementId}.${event}`);
+        return true;
+      } catch (error) {
+        console.error(`❌ Failed to attach ${event} to #${elementId}:`, error);
+        return false;
+      }
+    } else if (required) {
+      console.error(`❌ Cannot attach required event ${event} to #${elementId}`);
+      return false;
+    }
+    
+    return false;
+  }
+  
+  // Demo state
+  const demoState = {
+    initialized: false,
+    uploadedFiles: { pos: null, alle: null, aspire: null },
+    currentStep: 'upload'
+  };
+  
+  // Initialize demo safely
+  function initializeDemo() {
+    if (demoState.initialized) {
+      console.warn('⚠️ Demo already initialized');
+      return;
+    }
+    
+    console.log('🎯 Initializing demo...');
+    
+    try {
+      // Check critical elements first
+      const criticalElements = ['startReconciliationBtn'];
+      const missingCritical = criticalElements.filter(id => !document.getElementById(id));
+      
+      if (missingCritical.length > 0) {
+        console.error(`❌ Critical elements missing: ${missingCritical.join(', ')}`);
+        console.log('🔍 This usually means:');
+        console.log('  1. Wrong HTML file loaded');
+        console.log('  2. Element IDs don\'t match between HTML and JS');
+        console.log('  3. Elements are dynamically created later');
+        
+        // Try to help identify the issue
+        showElementMismatchHelp();
+        return;
+      }
+      
+      // Set up event listeners for existing elements only
+      setupEventListeners();
+      
+      // Update initial state
+      updateUI();
+      
+      demoState.initialized = true;
+      console.log('✅ Demo initialized successfully');
+      
+      // Show success message
+      showNotification('Demo loaded successfully!', 'success');
+      
+    } catch (error) {
+      console.error('❌ Demo initialization failed:', error);
+      showNotification('Demo failed to load', 'error');
+    }
+  }
+  
+  // Show help for element mismatch
+  function showElementMismatchHelp() {
+    console.log('\n🆘 TROUBLESHOOTING HELP:');
+    console.log('='.repeat(50));
+    
+    const currentElements = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+    const expectedElements = [
+      'startReconciliationBtn', 'posUploadArea', 'alleUploadArea', 
+      'aspireUploadArea', 'uploadSection', 'processingSection'
+    ];
+    
+    console.log('📋 Expected elements:', expectedElements);
+    console.log('📋 Found elements:', currentElements);
+    
+    const missing = expectedElements.filter(id => !currentElements.includes(id));
+    const unexpected = currentElements.filter(id => !expectedElements.includes(id));
+    
+    if (missing.length > 0) {
+      console.log('❌ Missing elements:', missing);
+    }
+    
+    if (unexpected.length > 0) {
+      console.log('➕ Extra elements:', unexpected);
+    }
+    
+    console.log('\n💡 POSSIBLE SOLUTIONS:');
+    console.log('1. Make sure you\'re using the correct HTML file');
+    console.log('2. Check that element IDs match exactly (case-sensitive)');
+    console.log('3. Ensure all required elements are in the HTML');
+    console.log('4. Try refreshing the page');
+    
+    // Create a visual error message for the user
+    createErrorMessage();
+  }
+  
+  // Create error message for user
+  function createErrorMessage() {
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'demo-error-message';
+    errorDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      background: #fee;
+      border: 2px solid #fcc;
+      border-radius: 8px;
+      padding: 20px;
+      z-index: 9999;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    `;
+    
+    errorDiv.innerHTML = `
+      <h3 style="color: #c53030; margin: 0 0 10px 0;">Demo Load Error</h3>
+      <p style="margin: 0 0 15px 0;">
+        The demo couldn't find required HTML elements. This usually means:<br>
+        • Wrong HTML file loaded<br>
+        • Element ID mismatch between HTML and JavaScript<br>
+        • Page still loading
+      </p>
+      <button onclick="location.reload()" style="
+        background: #3182ce;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+      ">Reload Page</button>
+      <button onclick="this.parentElement.remove()" style="
+        background: #718096;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      ">Dismiss</button>
+    `;
+    
+    document.body.appendChild(errorDiv);
+  }
+  
+  // Setup event listeners
+  function setupEventListeners() {
+    console.log('🎯 Setting up event listeners...');
+    
+    // Only attach listeners to elements that exist
+    const handlers = [
+      { id: 'startReconciliationBtn', event: 'click', handler: handleStartClick, required: true },
+      { id: 'posUploadArea', event: 'click', handler: () => handleUploadClick('pos'), required: false },
+      { id: 'alleUploadArea', event: 'click', handler: () => handleUploadClick('alle'), required: false },
+      { id: 'aspireUploadArea', event: 'click', handler: () => handleUploadClick('aspire'), required: false }
+    ];
+    
+    let attachedCount = 0;
+    handlers.forEach(({ id, event, handler, required }) => {
+      if (safeAddEventListener(id, event, handler, required)) {
+        attachedCount++;
+      }
+    });
+    
+    console.log(`🎯 Attached ${attachedCount}/${handlers.length} event listeners`);
+  }
+  
+  // Event handlers
+  function handleStartClick() {
+    console.log('🚀 Start reconciliation clicked');
+    showNotification('Starting reconciliation...', 'info');
+  }
+  
+  function handleUploadClick(type) {
+    console.log(`📁 Upload area clicked: ${type}`);
+    showNotification(`Upload ${type.toUpperCase()} clicked`, 'info');
+  }
+  
+  // Update UI
+  function updateUI() {
+    // Only update elements that exist
+    const button = safeGetElement('startReconciliationBtn');
+    if (button) {
+      button.textContent = '🚀 Begin AI Reconciliation Process';
+    }
+  }
+  
+  // Simple notification system
+  function showNotification(message, type = 'info') {
+    console.log(`📢 ${type.toUpperCase()}: ${message}`);
+    
+    // Create notification if container doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'notification-container';
+      container.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      `;
+      document.body.appendChild(container);
+    }
+    
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 250px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+    `;
+    
+    // Style based on type
+    if (type === 'success') {
+      notification.style.borderLeft = '4px solid #48bb78';
+    } else if (type === 'error') {
+      notification.style.borderLeft = '4px solid #f56565';
+    } else {
+      notification.style.borderLeft = '4px solid #4299e1';
+    }
+    
+    notification.textContent = message;
+    container.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Hide notification
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      notification.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
+  }
+  
+  // Initialize when DOM is ready
+  waitForDOM(initializeDemo);
+  
+  // Mark as initialized
+  window.MedSpaSyncDemo = {
+    version: '1.0.0',
+    initialized: () => demoState.initialized,
+    reinitialize: initializeDemo,
+    state: demoState
+  };
+  
+  console.log('🔧 Safe demo script loaded');
+  
+})()
+
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">

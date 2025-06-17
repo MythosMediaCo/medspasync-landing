@@ -1,1535 +1,406 @@
-/* Debug Script for MedSpaSync Pro - Identify Conflicts */
-
-// Add this as the FIRST script in your HTML to debug the issue
+/* Enhanced MedSpaSync Pro Demo with improved functionality */
 (function() {
   'use strict';
-  
-  console.log('🔍 DEBUGGING SCRIPT CONFLICTS');
-  console.log('='.repeat(60));
-  
-  // 1. Check which scripts are loading
-  console.log('📜 Scripts detected:');
-  const scripts = Array.from(document.scripts);
-  scripts.forEach((script, index) => {
-    console.log(`  ${index + 1}. ${script.src || 'inline script'}`);
-    if (script.src) {
-      console.log(`     - Loading: ${script.src.split('/').pop()}`);
-    }
-  });
-  
-  // 2. Monitor DOM state
-  console.log('\n📋 DOM State Check:');
-  console.log(`  - Document ready state: ${document.readyState}`);
-  console.log(`  - Elements with IDs: ${document.querySelectorAll('[id]').length}`);
-  
-  // 3. List all element IDs
-  const elementsWithIds = Array.from(document.querySelectorAll('[id]')).map(el => ({
-    id: el.id,
-    tag: el.tagName.toLowerCase(),
-    classes: el.className
-  }));
-  
-  console.log('\n🆔 All elements with IDs:');
-  elementsWithIds.forEach(el => {
-    console.log(`  - #${el.id} (${el.tag}${el.classes ? '.' + el.classes.split(' ').join('.') : ''})`);
-  });
-  
-  // 4. Check for the specific element causing the error
-  const problematicElements = [
-    'startReconciliationBtn',
-    'posUploadArea', 
-    'alleUploadArea',
-    'aspireUploadArea',
-    'uploadSection',
-    'processingSection'
-  ];
-  
-  console.log('\n❓ Checking problematic elements:');
-  problematicElements.forEach(id => {
-    const element = document.getElementById(id);
-    console.log(`  - #${id}: ${element ? '✅ FOUND' : '❌ MISSING'}`);
-    if (!element) {
-      console.log(`    🔍 Similar IDs found:`, 
-        elementsWithIds.filter(el => el.id.toLowerCase().includes(id.toLowerCase().substring(0, 5)))
-      );
-    }
-  });
-  
-  // 5. Check for timing issues
-  console.log('\n⏰ Timing Analysis:');
-  console.log(`  - Script execution time: ${new Date().toISOString()}`);
-  console.log(`  - DOM ready: ${document.readyState === 'complete' ? 'YES' : 'NO'}`);
-  
-  // 6. Watch for additional scripts loading
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node.tagName === 'SCRIPT') {
-          console.log(`🆕 New script added: ${node.src || 'inline'}`);
-        }
-      });
-    });
-  });
-  
-  observer.observe(document, { childList: true, subtree: true });
-  
-  // 7. Override addEventListener to catch the error
-  const originalAddEventListener = Element.prototype.addEventListener;
-  Element.prototype.addEventListener = function(type, listener, options) {
-    if (this === null) {
-      console.error('🚨 Trying to add event listener to NULL element!');
-      console.trace('Stack trace:');
-      return;
-    }
-    return originalAddEventListener.call(this, type, listener, options);
-  };
-  
-  // 8. Wait and check again after DOM loads
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('\n🎯 POST-DOM-LOAD CHECK:');
-    console.log(`  - Elements with IDs now: ${document.querySelectorAll('[id]').length}`);
-    
-    problematicElements.forEach(id => {
-      const element = document.getElementById(id);
-      console.log(`  - #${id}: ${element ? '✅ NOW FOUND' : '❌ STILL MISSING'}`);
-    });
-  });
-  
-  // 9. Check for multiple demo scripts
-  window.addEventListener('load', () => {
-    console.log('\n🔄 FINAL CHECK - Multiple Demo Scripts:');
-    if (window.MedSpaSyncDemo) {
-      console.log('  ⚠️ MedSpaSyncDemo already exists - possible conflict!');
-    }
-    
-    // Look for global variables that might indicate other demo scripts
-    const potentialConflicts = ['demoState', 'CONFIG', 'domElements'];
-    potentialConflicts.forEach(varName => {
-      if (window[varName]) {
-        console.log(`  ⚠️ Global variable ${varName} exists - possible conflict!`);
-      }
-    });
-  });
-  
-  console.log('\n🔧 Debug script loaded. Check console output above.');
-  console.log('='.repeat(60));
-  
-})();
 
-/* SOLUTION: Replace your demo.js with this safe version */
+  console.log('🏥 MedSpaSync Pro Demo - Enhanced Version');
 
-// Safe Demo Script - No Conflicts
-(function() {
-  'use strict';
-  
   // Prevent multiple initialization
   if (window.MedSpaSyncDemo) {
-    console.warn('⚠️ MedSpaSync Demo already initialized');
+    console.warn('Demo already initialized');
     return;
   }
-  
-  console.log('🏥 Starting MedSpaSync Pro Demo (Safe Version)');
-  
-  // Wait for DOM to be completely ready
-  function waitForDOM(callback) {
+
+  // Wait for DOM
+  function ready(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback);
     } else {
-      // DOM is already ready
-      setTimeout(callback, 0); // Let other scripts finish
+      callback();
     }
   }
-  
-  // Safe element getter with detailed error reporting
-  function safeGetElement(id, required = false) {
+
+  // Safe element getter with error handling
+  function $(id) {
     const element = document.getElementById(id);
-    
     if (!element) {
-      const message = `Element #${id} not found`;
-      if (required) {
-        console.error(`❌ ${message} (REQUIRED)`);
-        
-        // Show helpful suggestions
-        const similar = Array.from(document.querySelectorAll('[id]'))
-          .map(el => el.id)
-          .filter(existingId => 
-            existingId.toLowerCase().includes(id.toLowerCase().substring(0, 4)) ||
-            id.toLowerCase().includes(existingId.toLowerCase().substring(0, 4))
-          );
-        
-        if (similar.length > 0) {
-          console.log(`💡 Similar elements found: ${similar.join(', ')}`);
-        }
-        
-        console.log('📋 All available IDs:', 
-          Array.from(document.querySelectorAll('[id]')).map(el => el.id)
-        );
-      } else {
-        console.warn(`⚠️ ${message} (optional)`);
-      }
-    } else {
-      console.log(`✅ Found #${id}`);
+      console.warn(`Element #${id} not found`);
     }
-    
     return element;
   }
-  
-  // Safe event listener attachment
-  function safeAddEventListener(elementId, event, handler, required = false) {
-    const element = safeGetElement(elementId, required);
-    
-    if (element && typeof handler === 'function') {
-      try {
-        element.addEventListener(event, handler);
-        console.log(`🎯 Event attached: ${elementId}.${event}`);
-        return true;
-      } catch (error) {
-        console.error(`❌ Failed to attach ${event} to #${elementId}:`, error);
-        return false;
-      }
-    } else if (required) {
-      console.error(`❌ Cannot attach required event ${event} to #${elementId}`);
-      return false;
-    }
-    
-    return false;
-  }
-  
-  // Demo state
-  const demoState = {
-    initialized: false,
-    uploadedFiles: { pos: null, alle: null, aspire: null },
-    currentStep: 'upload'
+
+  // Enhanced demo state
+  const state = {
+    files: { pos: null, alle: null, aspire: null },
+    processing: false,
+    results: null,
+    currentStage: 0
   };
-  
-  // Initialize demo safely
-  function initializeDemo() {
-    if (demoState.initialized) {
-      console.warn('⚠️ Demo already initialized');
-      return;
-    }
-    
-    console.log('🎯 Initializing demo...');
-    
-    try {
-      // Check critical elements first
-      const criticalElements = ['startReconciliationBtn'];
-      const missingCritical = criticalElements.filter(id => !document.getElementById(id));
-      
-      if (missingCritical.length > 0) {
-        console.error(`❌ Critical elements missing: ${missingCritical.join(', ')}`);
-        console.log('🔍 This usually means:');
-        console.log('  1. Wrong HTML file loaded');
-        console.log('  2. Element IDs don\'t match between HTML and JS');
-        console.log('  3. Elements are dynamically created later');
-        
-        // Try to help identify the issue
-        showElementMismatchHelp();
-        return;
-      }
-      
-      // Set up event listeners for existing elements only
-      setupEventListeners();
-      
-      // Update initial state
-      updateUI();
-      
-      demoState.initialized = true;
-      console.log('✅ Demo initialized successfully');
-      
-      // Show success message
-      showNotification('Demo loaded successfully!', 'success');
-      
-    } catch (error) {
-      console.error('❌ Demo initialization failed:', error);
-      showNotification('Demo failed to load', 'error');
-    }
-  }
-  
-  // Show help for element mismatch
-  function showElementMismatchHelp() {
-    console.log('\n🆘 TROUBLESHOOTING HELP:');
-    console.log('='.repeat(50));
-    
-    const currentElements = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
-    const expectedElements = [
-      'startReconciliationBtn', 'posUploadArea', 'alleUploadArea', 
-      'aspireUploadArea', 'uploadSection', 'processingSection'
-    ];
-    
-    console.log('📋 Expected elements:', expectedElements);
-    console.log('📋 Found elements:', currentElements);
-    
-    const missing = expectedElements.filter(id => !currentElements.includes(id));
-    const unexpected = currentElements.filter(id => !expectedElements.includes(id));
-    
-    if (missing.length > 0) {
-      console.log('❌ Missing elements:', missing);
-    }
-    
-    if (unexpected.length > 0) {
-      console.log('➕ Extra elements:', unexpected);
-    }
-    
-    console.log('\n💡 POSSIBLE SOLUTIONS:');
-    console.log('1. Make sure you\'re using the correct HTML file');
-    console.log('2. Check that element IDs match exactly (case-sensitive)');
-    console.log('3. Ensure all required elements are in the HTML');
-    console.log('4. Try refreshing the page');
-    
-    // Create a visual error message for the user
-    createErrorMessage();
-  }
-  
-  // Create error message for user
-  function createErrorMessage() {
-    const errorDiv = document.createElement('div');
-    errorDiv.id = 'demo-error-message';
-    errorDiv.style.cssText = `
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      right: 20px;
-      background: #fee;
-      border: 2px solid #fcc;
-      border-radius: 8px;
-      padding: 20px;
-      z-index: 9999;
-      text-align: center;
-      font-family: Arial, sans-serif;
-    `;
-    
-    errorDiv.innerHTML = `
-      <h3 style="color: #c53030; margin: 0 0 10px 0;">Demo Load Error</h3>
-      <p style="margin: 0 0 15px 0;">
-        The demo couldn't find required HTML elements. This usually means:<br>
-        • Wrong HTML file loaded<br>
-        • Element ID mismatch between HTML and JavaScript<br>
-        • Page still loading
-      </p>
-      <button onclick="location.reload()" style="
-        background: #3182ce;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-      ">Reload Page</button>
-      <button onclick="this.parentElement.remove()" style="
-        background: #718096;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-      ">Dismiss</button>
-    `;
-    
-    document.body.appendChild(errorDiv);
-  }
-  
-  // Setup event listeners
-  function setupEventListeners() {
-    console.log('🎯 Setting up event listeners...');
-    
-    // Only attach listeners to elements that exist
-    const handlers = [
-      { id: 'startReconciliationBtn', event: 'click', handler: handleStartClick, required: true },
-      { id: 'posUploadArea', event: 'click', handler: () => handleUploadClick('pos'), required: false },
-      { id: 'alleUploadArea', event: 'click', handler: () => handleUploadClick('alle'), required: false },
-      { id: 'aspireUploadArea', event: 'click', handler: () => handleUploadClick('aspire'), required: false }
-    ];
-    
-    let attachedCount = 0;
-    handlers.forEach(({ id, event, handler, required }) => {
-      if (safeAddEventListener(id, event, handler, required)) {
-        attachedCount++;
-      }
-    });
-    
-    console.log(`🎯 Attached ${attachedCount}/${handlers.length} event listeners`);
-  }
-  
-  // Event handlers
-  function handleStartClick() {
-    console.log('🚀 Start reconciliation clicked');
-    showNotification('Starting reconciliation...', 'info');
-  }
-  
-  function handleUploadClick(type) {
-    console.log(`📁 Upload area clicked: ${type}`);
-    showNotification(`Upload ${type.toUpperCase()} clicked`, 'info');
-  }
-  
-  // Update UI
-  function updateUI() {
-    // Only update elements that exist
-    const button = safeGetElement('startReconciliationBtn');
-    if (button) {
-      button.textContent = '🚀 Begin AI Reconciliation Process';
-    }
-  }
-  
-  // Simple notification system
-  function showNotification(message, type = 'info') {
-    console.log(`📢 ${type.toUpperCase()}: ${message}`);
-    
-    // Create notification if container doesn't exist
-    let container = document.getElementById('notification-container');
+
+  // Enhanced sample data with more realistic content
+  const sampleData = {
+    pos: `name,service,amount,date,provider
+"Sarah Johnson","Botox Cosmetic",450.00,"2024-03-15","Dr. Smith"
+"Michael Chen","Juvederm Ultra",650.00,"2024-03-15","Dr. Johnson"
+"Jennifer Smith","Dysport",380.00,"2024-03-16","Dr. Smith"
+"Robert Davis","Restylane Lyft",700.00,"2024-03-16","Dr. Johnson"
+"Lisa Anderson","Botox Cosmetic",525.00,"2024-03-17","Dr. Smith"
+"David Williams","CoolSculpting Elite",1200.00,"2024-03-17","Tech Sarah"
+"Emma Thompson","Juvéderm Voluma XC",800.00,"2024-03-18","Dr. Johnson"
+"James Wilson","Laser Hair Removal",350.00,"2024-03-18","Tech Mike"`,
+
+    alle: `customer_name,product,points_redeemed,redemption_date,transaction_id
+"Sarah M Johnson","Botox Cosmetic",90,"2024-03-15","ALL001"
+"Michael C Chen","Juvederm Ultra",130,"2024-03-15","ALL002"
+"Jenny Smith","Dysport",76,"2024-03-16","ALL003"
+"Lisa A Anderson","Botox Cosmetic",105,"2024-03-17","ALL004"
+"Emma Thompson","Juvéderm Voluma XC",160,"2024-03-18","ALL005"`,
+
+    aspire: `member_name,treatment,reward_amount,transaction_date,account_id
+"Robert J Davis","Restylane Lyft",140.00,"2024-03-16","ASP001"
+"David R Williams","Radiesse",96.00,"2024-03-19","ASP002"
+"Emma J Thompson","Belotero Balance",84.00,"2024-03-20","ASP003"
+"James W Wilson","GentleYAG Laser",70.00,"2024-03-20","ASP004"`
+  };
+
+  // Show notification
+  function notify(message, type = 'success') {
+    let container = $('notificationContainer');
     if (!container) {
       container = document.createElement('div');
-      container.id = 'notification-container';
-      container.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1000;
-      `;
+      container.id = 'notificationContainer';
       document.body.appendChild(container);
     }
-    
+
     const notification = document.createElement('div');
-    notification.style.cssText = `
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 12px;
-      margin-bottom: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      max-width: 250px;
-      font-size: 14px;
-      opacity: 0;
-      transform: translateX(100%);
-      transition: all 0.3s ease;
-    `;
-    
-    // Style based on type
-    if (type === 'success') {
-      notification.style.borderLeft = '4px solid #48bb78';
-    } else if (type === 'error') {
-      notification.style.borderLeft = '4px solid #f56565';
-    } else {
-      notification.style.borderLeft = '4px solid #4299e1';
-    }
-    
+    notification.className = `notification ${type}`;
     notification.textContent = message;
     container.appendChild(notification);
-    
-    // Show notification
+
+    setTimeout(() => notification.classList.add('show'), 100);
     setTimeout(() => {
-      notification.style.opacity = '1';
-      notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Hide notification
-    setTimeout(() => {
-      notification.style.opacity = '0';
-      notification.style.transform = 'translateX(100%)';
+      notification.classList.remove('show');
       setTimeout(() => {
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
       }, 300);
     }, 3000);
+
+    console.log(`${type.toUpperCase()}: ${message}`);
   }
-  
-  // Initialize when DOM is ready
-  waitForDOM(initializeDemo);
-  
-  // Mark as initialized
-  window.MedSpaSyncDemo = {
-    version: '1.0.0',
-    initialized: () => demoState.initialized,
-    reinitialize: initializeDemo,
-    state: demoState
-  };
-  
-  console.log('🔧 Safe demo script loaded');
-  
-})()
 
-!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
-  <meta name="theme-color" content="#ffffff">
-  <title>MedSpaSync Pro Demo - Enterprise Reconciliation Platform</title>
-  <link rel="icon" type="image/png" href="/favicon.png">
-  <style>
-    /* Complete CSS from previous artifact - truncated for brevity */
-    :root {
-      --primary-blue: #1e40af;
-      --primary-blue-light: #3b82f6;
-      --primary-blue-dark: #1d4ed8;
-      --secondary-purple: #7c3aed;
-      --accent-green: #059669;
-      --accent-green-light: #10b981;
-      --accent-green-dark: #047857;
-      --neutral-50: #f8fafc;
-      --neutral-100: #f1f5f9;
-      --neutral-200: #e2e8f0;
-      --neutral-300: #cbd5e1;
-      --neutral-400: #94a3b8;
-      --neutral-500: #64748b;
-      --neutral-600: #475569;
-      --neutral-700: #334155;
-      --neutral-800: #1e293b;
-      --neutral-900: #0f172a;
-      --white: #ffffff;
-      --red-500: #ef4444;
-      --red-600: #dc2626;
-      --amber-500: #f59e0b;
-      --amber-600: #d97706;
+  // Update file status
+  function updateFileStatus(type, fileName, selected) {
+    const statusEl = $(`${type}StatusDisplay`);
+    const areaEl = $(`${type}UploadArea`);
+
+    if (statusEl) {
+      statusEl.textContent = selected ? `✓ ${fileName}` : 'Click to select CSV/TXT file';
+      statusEl.style.color = selected ? 'var(--accent-green)' : 'var(--neutral-500)';
     }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(180deg, var(--neutral-50) 0%, var(--white) 100%);
-      min-height: 100vh;
-      color: var(--neutral-800);
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
+    if (areaEl) {
+      areaEl.classList.toggle('selected', selected);
+    }
+  }
+
+  // Update button state
+  function updateButton() {
+    const btn = $('startReconciliationBtn');
+    if (!btn) return;
+
+    const fileCount = Object.values(state.files).filter(f => f).length;
+    const allSelected = fileCount === 3;
+
+    btn.disabled = !allSelected;
+    btn.textContent = allSelected
+      ? `🚀 Begin AI Reconciliation Process`
+      : `Select ${3 - fileCount} more file${3 - fileCount !== 1 ? 's' : ''} to continue`;
+  }
+
+  // Load sample data
+  function loadSample(type) {
+    if (!sampleData[type]) return;
+
+    const mockFile = {
+      name: `sample_${type}_data.csv`,
+      size: sampleData[type].length,
+      content: sampleData[type]
+    };
+
+    state.files[type] = mockFile;
+    updateFileStatus(type, mockFile.name, true);
+    updateButton();
+    notify(`Sample ${type.toUpperCase()} data loaded`);
+  }
+
+  // Handle file upload with enhanced drag and drop
+  function handleFile(type, file) {
+    if (!file) return;
+
+    const validExts = ['.csv', '.txt'];
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+    if (!validExts.includes(ext)) {
+      notify('Invalid file type. Please select CSV or TXT files.', 'error');
+      return;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
+    if (file.size > 10 * 1024 * 1024) {
+      notify('File too large. Maximum size is 10MB.', 'error');
+      return;
     }
 
-    .professional-card {
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      border: 1px solid var(--neutral-200);
-      transition: box-shadow 0.3s ease;
-    }
+    state.files[type] = file;
+    updateFileStatus(type, file.name, true);
+    updateButton();
+    notify(`${type.toUpperCase()} file uploaded successfully`);
+  }
 
-    .step-indicator {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 3rem;
-      gap: 1rem;
-    }
-
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--neutral-300);
-      background: var(--white);
-      color: var(--neutral-500);
-      font-weight: 500;
-      font-size: 0.875rem;
-      transition: all 0.3s ease;
-    }
-
-    .step.active {
-      background: var(--primary-blue);
-      border-color: var(--primary-blue);
-      color: var(--white);
-      transform: scale(1.05);
-    }
-
-    .step.completed {
-      background: var(--accent-green);
-      border-color: var(--accent-green);
-      color: var(--white);
-    }
-
-    .step-number {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--neutral-200);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.75rem;
-    }
-
-    .step.active .step-number,
-    .step.completed .step-number {
-      background: rgba(255, 255, 255, 0.2);
-      color: var(--white);
-    }
-
-    .upload-area {
-      border: 2px dashed var(--neutral-300);
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      background: var(--neutral-50);
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .upload-area:hover:not(.disabled) {
-      border-color: var(--primary-blue);
-      background: #eff6ff;
-      transform: translateY(-2px);
-    }
-
-    .upload-area.file-selected {
-      border-color: var(--accent-green);
-      border-style: solid;
-      background: #f0fdf4;
-    }
-
-    .upload-area.disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .upload-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      opacity: 0.7;
-    }
-
-    .btn-primary {
-      background: var(--primary-blue);
-      color: var(--white);
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-blue-dark);
-      transform: translateY(-1px);
-    }
-
-    .btn-primary:disabled {
-      background: var(--neutral-400);
-      cursor: not-allowed;
-    }
-
-    .btn-success {
-      background: var(--accent-green);
-      color: var(--white);
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-    }
-
-    .grid-cols-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .grid-cols-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .mb-8 { margin-bottom: 2rem; }
-    .mb-6 { margin-bottom: 1.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mb-3 { margin-bottom: 0.75rem; }
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mt-8 { margin-top: 2rem; }
-    .p-8 { padding: 2rem; }
-    .p-6 { padding: 1.5rem; }
-
-    .loading-spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid var(--neutral-200);
-      border-left-color: var(--primary-blue);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1.5rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .progress-container {
-      background: var(--neutral-200);
-      border-radius: 9999px;
-      height: 12px;
-      overflow: hidden;
-      position: relative;
-      margin-bottom: 1rem;
-    }
-
-    .progress-bar {
-      background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
-      height: 100%;
-      border-radius: 9999px;
-      transition: width 0.5s ease;
-    }
-
-    .processing-log {
-      max-height: 300px;
-      overflow-y: auto;
-      background: var(--neutral-50);
-      border: 1px solid var(--neutral-200);
-      border-radius: 6px;
-      padding: 1rem;
-      margin-top: 1rem;
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-
-    .log-entry {
-      padding: 0.25rem 0;
-      border-bottom: 1px solid var(--neutral-200);
-      opacity: 0;
-      animation: logFadeIn 0.3s ease forwards;
-    }
-
-    .log-entry:last-child {
-      border-bottom: none;
-    }
-
-    .log-entry.success {
-      color: var(--accent-green);
-      font-weight: 500;
-    }
-
-    .log-entry.processing {
-      color: var(--primary-blue);
-    }
-
-    .log-entry.error {
-      color: var(--red-600);
-      font-weight: 500;
-    }
-
-    @keyframes logFadeIn {
-      to { opacity: 1; }
-    }
-
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--neutral-200);
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary-blue);
-      margin-bottom: 0.25rem;
-      font-family: 'Courier New', monospace;
-    }
-
-    .stat-label {
-      color: var(--neutral-500);
-      font-size: 0.75rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .notification-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1100;
-    }
-
-    .notification {
-      background: var(--white);
-      border: 1px solid var(--neutral-200);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      transform: translateX(100%);
-      transition: all 0.3s ease;
-      max-width: 300px;
-    }
-
-    .notification.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .notification.success {
-      border-left: 4px solid var(--accent-green);
-    }
-
-    .notification.error {
-      border-left: 4px solid var(--red-500);
-    }
-
-    @media (max-width: 768px) {
-      .grid-cols-3, .grid-cols-4 {
-        grid-template-columns: 1fr;
+  // Show section with enhanced visual feedback
+  function showSection(sectionId) {
+    const sections = ['uploadSection', 'processingSection', 'resultsSection'];
+    sections.forEach(id => {
+      const el = $(id);
+      if (el) {
+        el.classList.toggle('hidden', id !== sectionId);
       }
-      
-      .upload-area {
-        padding: 1.5rem;
-        min-height: 160px;
-      }
-      
-      .step-indicator {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-      }
+    });
+    state.currentStage = sections.indexOf(sectionId);
+    updateProgressBar(0);
+  }
+
+  // Update progress bar
+  function updateProgressBar(progress) {
+    const fill = $('progressFill');
+    if (fill) {
+      fill.style.width = `${progress}%`;
     }
-  </style>
-</head>
-<body>
-  <a href="#main-content" class="sr-only">Skip to main content</a>
-  
-  <nav style="background: var(--white); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 50;" role="banner">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--secondary-purple), var(--primary-blue)); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-          <svg style="width: 24px; height: 24px; color: var(--white);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-        </div>
-        <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--neutral-900); margin: 0;">MedSpaSync Pro</h1>
-      </div>
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: #dcfce7; color: #166534; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;">
-          <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-          </svg>
-          HIPAA Secure
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <main id="main-content" class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
-    <header class="text-center mb-8">
-      <h2 style="font-size: 2.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 1rem;">Enterprise Reconciliation Platform</h2>
-      <p style="font-size: 1.125rem; color: var(--neutral-600); max-width: 600px; margin: 0 auto 1.5rem;">
-        Experience our AI-powered reconciliation engine designed specifically for medical spa operations.
-      </p>
-    </header>
-
-    <div class="step-indicator" role="navigation" aria-label="Demo progress">
-      <div class="step active" id="stepIndicator1">
-        <div class="step-number">1</div>
-        <span>Upload Data</span>
-      </div>
-      <div style="width: 32px; height: 1px; background: var(--neutral-300);"></div>
-      <div class="step" id="stepIndicator2">
-        <div class="step-number">2</div>
-        <span>Process</span>
-      </div>
-      <div style="width: 32px; height: 1px; background: var(--neutral-300);"></div>
-      <div class="step" id="stepIndicator3">
-        <div class="step-number">3</div>
-        <span>Results</span>
-      </div>
-    </div>
-
-    <article class="professional-card p-8">
-      <!-- Step 1: Upload Files -->
-      <section id="uploadSection">
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; text-align: center;">Upload Transaction Data</h2>
-        
-        <div class="grid-cols-3 mb-8">
-          <!-- POS Upload -->
-          <div class="upload-area" id="posUploadArea" role="button" tabindex="0">
-            <div class="upload-icon">📊</div>
-            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">POS System Export</h3>
-            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Point-of-sale transaction data</p>
-            <input type="file" id="posFileInput" accept=".csv,.txt" class="sr-only" />
-            <div id="posStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
-              Click to select CSV/TXT file
-            </div>
-            <button type="button" id="loadPosSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
-              Load Sample Data
-            </button>
-          </div>
-
-          <!-- Allé Upload -->
-          <div class="upload-area" id="alleUploadArea" role="button" tabindex="0">
-            <div class="upload-icon">💎</div>
-            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">Allé Rewards Data</h3>
-            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Allergan Allé redemption export</p>
-            <input type="file" id="alleFileInput" accept=".csv,.txt" class="sr-only" />
-            <div id="alleStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
-              Click to select CSV/TXT file
-            </div>
-            <button type="button" id="loadAlleSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
-              Load Sample Data
-            </button>
-          </div>
-
-          <!-- Aspire Upload -->
-          <div class="upload-area" id="aspireUploadArea" role="button" tabindex="0">
-            <div class="upload-icon">⭐</div>
-            <h3 style="font-weight: 600; color: var(--neutral-900); margin-bottom: 8px;">Aspire Rewards Data</h3>
-            <p style="color: var(--neutral-600); font-size: 0.875rem; margin-bottom: 12px;">Galderma Aspire redemption export</p>
-            <input type="file" id="aspireFileInput" accept=".csv,.txt" class="sr-only" />
-            <div id="aspireStatusDisplay" style="font-size: 0.875rem; color: var(--neutral-500); margin-bottom: 12px;">
-              Click to select CSV/TXT file
-            </div>
-            <button type="button" id="loadAspireSampleBtn" class="btn-primary" style="padding: 8px 16px; font-size: 0.875rem;">
-              Load Sample Data
-            </button>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <button id="startReconciliationBtn" class="btn-primary" style="font-size: 1.125rem; padding: 1rem 2.5rem;" disabled>
-            Select all 3 files to begin reconciliation
-          </button>
-          <p style="font-size: 0.875rem; color: var(--neutral-500); margin-top: 8px;">
-            Upload your transaction files or use sample data to see our AI in action
-          </p>
-        </div>
-      </section>
-
-      <!-- Step 2: Processing -->
-      <section id="processingSection" class="hidden">
-        <div style="text-align: center; padding: 2rem 0;">
-          <div class="loading-spinner"></div>
-          <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 12px;">Processing Transaction Data</h2>
-          <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Our AI engine is analyzing your data</p>
-          
-          <div style="max-width: 400px; margin: 0 auto;">
-            <div class="progress-container">
-              <div id="reconciliationProgressBar" class="progress-bar" style="width:0%"></div>
-            </div>
-            <div id="progressStatusText" style="font-size: 1.125rem; color: var(--neutral-700); font-weight: 500; margin-bottom: 1rem;">
-              Initializing...
-            </div>
-          </div>
-          
-          <div class="processing-log">
-            <div id="processingLogContainer"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Step 3: Results -->
-      <section id="reconciliationResultsSection" class="hidden">
-        <div class="text-center mb-8">
-          <h2 style="font-size: 2rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 12px;">Reconciliation Complete! 🎉</h2>
-          <p id="resultsSubtitleText" style="font-size: 1.125rem; color: var(--neutral-600);">
-            Processing completed successfully
-          </p>
-        </div>
-
-        <div class="grid-cols-4 mb-8">
-          <div class="stat-card">
-            <div id="totalTransactionsCount" class="stat-number">0</div>
-            <div class="stat-label">Total Transactions</div>
-          </div>
-          <div class="stat-card">
-            <div id="exactMatchesCount" class="stat-number">0</div>
-            <div class="stat-label">Exact Matches</div>
-          </div>
-          <div class="stat-card">
-            <div id="fuzzyMatchesCount" class="stat-number">0</div>
-            <div class="stat-label">AI Fuzzy Matches</div>
-          </div>
-          <div class="stat-card">
-            <div id="overallMatchAccuracy" class="stat-number">0%</div>
-            <div class="stat-label">Match Accuracy</div>
-          </div>
-        </div>
-
-        <div class="mb-8">
-          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 1rem;">Detailed Results</h3>
-          <div style="background: var(--white); border: 1px solid var(--neutral-200); border-radius: 8px; overflow: hidden;">
-            <div id="reconciliationResultsDisplay"></div>
-          </div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, var(--neutral-50), var(--neutral-100)); border: 1px solid var(--neutral-200); border-radius: 16px; padding: 2rem; text-align: center;">
-          <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 12px;">Export Professional Reports</h3>
-          <p style="color: var(--neutral-600); margin-bottom: 1.5rem;">Download detailed reconciliation reports</p>
-          
-          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
-            <button id="exportCsvReportBtn" class="btn-success">
-              📄 Export CSV Report
-            </button>
-            <button id="previewReportBtn" class="btn-primary">
-              👁 Preview Report
-            </button>
-          </div>
-        </div>
-      </section>
-    </article>
-  </main>
-
-  <!-- Notification Container -->
-  <div id="notificationContainer" class="notification-container"></div>
-
-  <script>
-    /* Fixed MedSpaSync Pro Demo JavaScript */
-    (function() {
-      'use strict';
-
-      console.log('🏥 MedSpaSync Pro Demo Loading...');
-
-      // Wait for DOM to be fully ready
-      function onDOMReady(callback) {
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', callback);
-        } else {
-          callback();
+    const stages = ['stage1', 'stage2', 'stage3', 'stage4'];
+    stages.forEach((id, index) => {
+      const el = $(id);
+      if (el) {
+        el.classList.remove('active', 'completed');
+        if (index < state.currentStage) {
+          el.classList.add('completed');
+        } else if (index === state.currentStage) {
+          el.classList.add('active');
         }
       }
+    });
+  }
 
-      // Safe element getter with logging
-      function safeGetElement(id, required = true) {
-        const element = document.getElementById(id);
-        if (!element && required) {
-          console.error(`❌ Required element missing: #${id}`);
-        } else if (element) {
-          console.log(`✅ Element found: #${id}`);
-        }
-        return element;
+  // Animate counter with improved easing
+  function animateCounter(elementId, target, suffix = '') {
+    const el = $(elementId);
+    if (!el) return;
+
+    const duration = 1500;
+    const start = performance.now();
+
+    function update() {
+      const elapsed = performance.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = (t) => t * t * t * (t * (6 * t - 15) + 10); // Easing function
+      const current = Math.floor(target * easedProgress(progress));
+
+      el.textContent = current.toLocaleString() + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
       }
+    }
 
-      // Demo state
-      const demoState = {
-        uploadedFiles: { pos: null, alle: null, aspire: null },
-        processingResults: null,
-        isProcessing: false,
-        useSampleData: false,
-        currentStep: 'upload'
+    requestAnimationFrame(update);
+  }
+
+  // Display results in an enhanced table
+  function displayResults(results) {
+    showSection('resultsSection');
+
+    const subtitle = $('resultsSubtitle');
+    if (subtitle) {
+      subtitle.innerHTML = `
+        Processed ${results.total} transactions in ${results.processingTime}s<br>
+        <span style="color: var(--accent-green); font-weight: 600;">Achieved ${results.accuracy}% accuracy</span>
+      `;
+    }
+
+    animateCounter('totalTransactions', results.total);
+    animateCounter('exactMatches', results.exact);
+    animateCounter('fuzzyMatches', results.fuzzy);
+    animateCounter('accuracy', results.accuracy, '%');
+
+    const tbody = $('resultsTableBody');
+    if (tbody && results.matches) {
+      tbody.innerHTML = results.matches.map(match => `
+        <tr>
+          <td style="font-weight: 500;">${match.name}</td>
+          <td>${match.service}</td>
+          <td>${match.date}</td>
+          <td style="text-align: right; font-weight: 500;">$${match.amount.toFixed(2)}</td>
+          <td>
+            <span class="badge-match badge-${match.type}">
+              ${match.type.charAt(0).toUpperCase() + match.type.slice(1)}
+            </span>
+          </td>
+          <td>
+            <span class="badge-match ${match.confidence >= 90 ? 'badge-exact' : (match.confidence >= 70 ? 'badge-fuzzy' : '')}">
+              ${match.confidence}%
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    notify('Reconciliation completed successfully!');
+  }
+
+  // Simulate advanced reconciliation process with progress updates
+  async function startReconciliation() {
+    if (state.processing) {
+      notify('Already processing...', 'error');
+      return;
+    }
+
+    const files = state.files;
+    if (!files.pos || !files.alle || !files.aspire) {
+      notify('Please select all three files first', 'error');
+      return;
+    }
+
+    state.processing = true;
+    showSection('processingSection');
+    state.currentStage = 1;
+    updateProgressBar(20);
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    state.currentStage = 2;
+    updateProgressBar(50);
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    state.currentStage = 3;
+    updateProgressBar(80);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    state.currentStage = 4;
+    updateProgressBar(100);
+
+    try {
+      const total = 10;
+      const exact = 7;
+      const fuzzy = 2;
+      const accuracy = Math.round(((exact + fuzzy) / total) * 100);
+
+      const results = {
+        total,
+        exact,
+        fuzzy,
+        accuracy,
+        processingTime: 4.5,
+        matches: [
+          { name: "Sarah Johnson", service: "Botox Cosmetic", date: "2024-03-15", amount: 450.00, type: "exact", confidence: 98 },
+          { name: "Michael Chen", service: "Juvederm Ultra", date: "2024-03-15", amount: 650.00, type: "exact", confidence: 99 },
+          { name: "Jennifer Smith", service: "Dysport", date: "2024-03-16", amount: 380.00, type: "fuzzy", confidence: 87 },
+          { name: "Robert Davis", service: "Restylane Lyft", date: "2024-03-16", amount: 700.00, type: "exact", confidence: 96 },
+          { name: "Lisa Anderson", service: "Botox Cosmetic", date: "2024-03-17", amount: 525.00, type: "exact", confidence: 97 },
+          { name: "David Williams", service: "CoolSculpting Elite", date: "2024-03-17", amount: 1200.00, type: "fuzzy", confidence: 82 },
+          { name: "Emma Thompson", service: "Juvéderm Voluma XC", date: "2024-03-18", amount: 800.00, type: "exact", confidence: 95 }
+        ]
       };
+      state.results = results;
+      displayResults(results);
 
-      // Sample data
-      const sampleDataContent = {
-        pos: `name,service,amount,date,location_id,staff_member
-"Sarah Johnson","Botox Cosmetic",450.00,"2024-03-15","LOC001","Dr. Smith"
-"Michael Chen","Juvederm Ultra",650.00,"2024-03-15","LOC001","Dr. Johnson"
-"Jennifer Smith","Dysport",380.00,"2024-03-16","LOC002","Dr. Smith"`,
-        alle: `customer_name,product,points_redeemed,redemption_date,member_id,clinic_code
-"Sarah M Johnson","Botox Cosmetic",90,"2024-03-15","ALL001","CLI001"
-"Michael C Chen","Juvederm Ultra",130,"2024-03-15","ALL002","CLI001"`,
-        aspire: `member_name,treatment,reward_amount,transaction_date,account_id,provider_code
-"Robert J Davis","Restylane Lyft",140.00,"2024-03-16","ASP001","PRV001"`
-      };
+    } catch (error) {
+      console.error('Processing error:', error);
+      notify('Processing failed. Please try again.', 'error');
+      showSection('uploadSection');
+    } finally {
+      state.processing = false;
+    }
+  }
 
-      // Notification system
-      function showNotification(message, type = 'success') {
-        const container = safeGetElement('notificationContainer', false) || createNotificationContainer();
-        
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        
-        container.appendChild(notification);
-        
-        setTimeout(() => notification.classList.add('show'), 100);
-        
-        setTimeout(() => {
-          notification.classList.remove('show');
-          setTimeout(() => {
-            if (notification.parentNode) {
-              notification.parentNode.removeChild(notification);
-            }
-          }, 300);
-        }, 3000);
-      }
+  // Export results to CSV with more detailed content
+  function exportResults() {
+    if (!state.results) {
+      notify('No results to export', 'error');
+      return;
+    }
 
-      function createNotificationContainer() {
-        const container = document.createElement('div');
-        container.id = 'notificationContainer';
-        container.className = 'notification-container';
-        document.body.appendChild(container);
-        return container;
-      }
+    const csvRows = [
+      ['MedSpaSync Pro Reconciliation Report'],
+      [`Generated: ${new Date().toISOString()}`],
+      [`Total Transactions: ${state.results.total}`],
+      [`Accuracy: ${state.results.accuracy}%`],
+      [''],
+      ['Customer Name', 'Service', 'Date', 'Amount', 'Match Type', 'Confidence']
+    ];
 
-      // Update file selection display
-      function updateFileSelectionDisplay(fileType, fileName, isSelected, fileSize) {
-        const statusDisplay = safeGetElement(`${fileType}StatusDisplay`, false);
-        const uploadArea = safeGetElement(`${fileType}UploadArea`, false);
-        
-        if (statusDisplay && uploadArea) {
-          if (isSelected && fileName) {
-            const sizeText = fileSize ? ` (${(fileSize / 1024).toFixed(1)} KB)` : '';
-            statusDisplay.textContent = `✓ ${fileName}${sizeText}`;
-            statusDisplay.style.color = 'var(--accent-green)';
-            uploadArea.classList.add('file-selected');
-          } else {
-            statusDisplay.textContent = 'Click to select CSV/TXT file';
-            statusDisplay.style.color = '';
-            uploadArea.classList.remove('file-selected');
-          }
-        }
-      }
+    state.results.matches.forEach(match => {
+      csvRows.push([match.name, match.service, match.date, match.amount.toFixed(2), match.type, `${match.confidence}%`]);
+    });
 
-      // Update reconciliation button state
-      function updateReconciliationButtonState() {
-        const button = safeGetElement('startReconciliationBtn', false);
-        if (!button) return;
+    const csvContent = csvRows.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'medspasync_reconciliation_report.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    notify('Report exported to CSV!');
+  }
 
-        const filesSelected = Object.values(demoState.uploadedFiles).filter(file => file !== null);
-        const allFilesSelected = filesSelected.length === 3;
+  ready(() => {
+    console.log('Demo is ready!');
+    window.MedSpaSyncDemo = true;
 
-        if (allFilesSelected) {
-          button.disabled = false;
-          button.textContent = '🚀 Begin AI Reconciliation Process';
-        } else {
-          button.disabled = true;
-          const remaining = 3 - filesSelected.length;
-          button.textContent = `Select ${remaining} more file${remaining !== 1 ? 's' : ''} to continue`;
-        }
-      }
+    const posUpload = $('posFileInput');
+    const alleUpload = $('alleFileInput');
+    const aspireUpload = $('aspireFileInput');
+    const loadPosSample = $('loadPosSampleBtn');
+    const loadAlleSample = $('loadAlleSampleBtn');
+    const loadAspireSample = $('loadAspireSampleBtn');
+    const startBtn = $('startReconciliationBtn');
+    const exportBtn = $('exportReportBtn');
+    const posArea = $('posUploadArea');
+    const alleArea = $('alleUploadArea');
+    const aspireArea = $('aspireUploadArea');
 
-      // Load sample data
-      function loadSampleDataForType(fileType) {
-        if (!sampleDataContent[fileType]) {
-          console.error(`No sample data for type: ${fileType}`);
-          return;
-        }
+    if (posUpload) posUpload.addEventListener('change', (e) => handleFile('pos', e.target.files[0]));
+    if (alleUpload) alleUpload.addEventListener('change', (e) => handleFile('alle', e.target.files[0]));
+    if (aspireUpload) aspireUpload.addEventListener('change', (e) => handleFile('aspire', e.target.files[0]));
+    if (loadPosSample) loadPosSample.addEventListener('click', () => loadSample('pos'));
+    if (loadAlleSample) loadAlleSample.addEventListener('click', () => loadSample('alle'));
+    if (loadAspireSample) loadAspireSample.addEventListener('click', () => loadSample('aspire'));
+    if (startBtn) startBtn.addEventListener('click', startReconciliation);
+    if (exportBtn) exportBtn.addEventListener('click', exportResults);
 
-        const mockFile = {
-          name: `sample_${fileType}_data.csv`,
-          size: sampleDataContent[fileType].length,
-          type: 'text/csv',
-          content: sampleDataContent[fileType]
-        };
-
-        demoState.uploadedFiles[fileType] = mockFile;
-        demoState.useSampleData = true;
-        
-        updateFileSelectionDisplay(fileType, mockFile.name, true, mockFile.size);
-        updateReconciliationButtonState();
-        
-        showNotification(`Sample ${fileType.toUpperCase()} data loaded successfully`);
-      }
-
-      // Handle file upload
-      function handleFileUploadSelection(fileType, selectedFile) {
-        if (!selectedFile) return;
-
-        demoState.uploadedFiles[fileType] = selectedFile;
-        updateFileSelectionDisplay(fileType, selectedFile.name, true, selectedFile.size);
-        updateReconciliationButtonState();
-        
-        showNotification(`${fileType.toUpperCase()} file uploaded successfully`);
-      }
-
-      // Show section
-      function showSection(activeSection) {
-        const sections = ['uploadSection', 'processingSection', 'reconciliationResultsSection'];
-        
-        sections.forEach(sectionId => {
-          const element = safeGetElement(sectionId, false);
-          if (element) {
-            if (sectionId === activeSection) {
-              element.classList.remove('hidden');
-            } else {
-              element.classList.add('hidden');
-            }
-          }
-        });
-      }
-
-      // Update step indicator
-      function updateStepIndicator(currentStep) {
-        const steps = {
-          upload: 'stepIndicator1',
-          processing: 'stepIndicator2',
-          results: 'stepIndicator3'
-        };
-
-        Object.entries(steps).forEach(([step, elementId]) => {
-          const element = safeGetElement(elementId, false);
-          if (element) {
-            element.classList.remove('active', 'completed');
-            
-            if (step === currentStep) {
-              element.classList.add('active');
-            } else if (Object.keys(steps).indexOf(step) < Object.keys(steps).indexOf(currentStep)) {
-              element.classList.add('completed');
-            }
-          }
-        });
-      }
-
-      // Update progress bar
-      function updateProgressBar(percentage, message) {
-        const progressBar = safeGetElement('reconciliationProgressBar', false);
-        const statusText = safeGetElement('progressStatusText', false);
-        
-        if (progressBar) {
-          progressBar.style.width = percentage + '%';
-        }
-        
-        if (statusText) {
-          statusText.textContent = message;
-        }
-      }
-
-      // Add processing log entry
-      function addProcessingLogEntry(message, type = 'processing') {
-        const container = safeGetElement('processingLogContainer', false);
-        if (!container) return;
-
-        const timestamp = new Date().toLocaleTimeString();
-        const logEntry = document.createElement('div');
-        logEntry.className = `log-entry ${type}`;
-        logEntry.textContent = `[${timestamp}] ${message}`;
-        
-        container.appendChild(logEntry);
-        container.scrollTop = container.scrollHeight;
-      }
-
-      // Start reconciliation process
-      async function startReconciliationProcess() {
-        if (demoState.isProcessing) {
-          showNotification('Reconciliation already in progress', 'error');
-          return;
-        }
-
-        const selectedFiles = demoState.uploadedFiles;
-        if (!selectedFiles.pos || !selectedFiles.alle || !selectedFiles.aspire) {
-          showNotification('Please select all three files before starting', 'error');
-          return;
-        }
-
-        demoState.isProcessing = true;
-        demoState.currentStep = 'processing';
-        
-        updateStepIndicator('processing');
-        showSection('processingSection');
-        
-        const logContainer = safeGetElement('processingLogContainer', false);
-        if (logContainer) {
-          logContainer.innerHTML = '';
-        }
-
-        try {
-          // Processing stages
-          const stages = [
-            { message: 'Initializing AI reconciliation engine...', progress: 10, duration: 500 },
-            { message: 'Parsing transaction data...', progress: 30, duration: 800 },
-            { message: 'Running AI matching algorithms...', progress: 60, duration: 1200 },
-            { message: 'Calculating confidence scores...', progress: 85, duration: 600 },
-            { message: 'Generating results...', progress: 100, duration: 400 }
-          ];
-
-          for (const stage of stages) {
-            updateProgressBar(stage.progress, stage.message);
-            addProcessingLogEntry(stage.message, 'processing');
-            await new Promise(resolve => setTimeout(resolve, stage.duration));
-          }
-
-          // Generate mock results
-          const results = {
-            totalTransactions: 8,
-            exactMatches: 5,
-            fuzzyMatches: 2,
-            accuracy: 87,
-            processingTimeMs: 3200,
-            matches: [
-              {
-                name: "Sarah Johnson",
-                service: "Botox Cosmetic", 
-                date: "2024-03-15",
-                amount: 450.00,
-                confidence: 98,
-                matchType: "exact"
-              },
-              {
-                name: "Michael Chen",
-                service: "Juvederm Ultra",
-                date: "2024-03-15", 
-                amount: 650.00,
-                confidence: 99,
-                matchType: "exact"
-              }
-            ]
-          };
-
-          demoState.processingResults = results;
-          await displayResults(results);
-
-        } catch (error) {
-          console.error('Processing error:', error);
-          addProcessingLogEntry(`❌ Processing failed: ${error.message}`, 'error');
-          showNotification('Processing failed', 'error');
-        } finally {
-          demoState.isProcessing = false;
-        }
-      }
-
-      // Display results
-      async function displayResults(results) {
-        demoState.currentStep = 'results';
-        updateStepIndicator('results');
-        showSection('reconciliationResultsSection');
-
-        const processingTime = (results.processingTimeMs / 1000).toFixed(1);
-        const subtitle = safeGetElement('resultsSubtitleText', false);
-        if (subtitle) {
-          subtitle.innerHTML = `
-            Processed ${results.totalTransactions} transactions in ${processingTime} seconds<br>
-            <span style="color: var(--accent-green); font-weight: 600;">Achieved ${results.accuracy}% accuracy</span>
-          `;
-        }
-
-        // Animate counters
-        const animations = [
-          { id: 'totalTransactionsCount', value: results.totalTransactions, delay: 200 },
-          { id: 'exactMatchesCount', value: results.exactMatches, delay: 400 },
-          { id: 'fuzzyMatchesCount', value: results.fuzzyMatches, delay: 600 },
-          { id: 'overallMatchAccuracy', value: results.accuracy, delay: 800, suffix: '%' }
-        ];
-
-        animations.forEach(({ id, value, delay, suffix = '' }) => {
-          setTimeout(() => {
-            animateCounter(id, value, suffix);
-          }, delay);
-        });
-
-        // Display results table
-        setTimeout(() => {
-          displayResultsTable(results.matches);
-          showNotification('Reconciliation completed successfully!');
-        }, 1500);
-      }
-
-      // Animate counter
-      function animateCounter(elementId, targetValue, suffix = '') {
-        const element = safeGetElement(elementId, false);
-        if (!element) return;
-
-        const duration = 1000;
-        const startTime = performance.now();
-        
-        function updateCounter() {
-          const elapsed = performance.now() - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const currentValue = Math.floor(targetValue * progress);
-          
-          element.textContent = currentValue.toLocaleString() + suffix;
-          
-          if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-          }
-        }
-        
-        requestAnimationFrame(updateCounter);
-      }
-
-      // Display results table
-      function displayResultsTable(matches) {
-        const container = safeGetElement('reconciliationResultsDisplay', false);
-        if (!container || !matches.length) return;
-
-        const tableHTML = `
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
-            <thead style="background: linear-gradient(to right, var(--neutral-50), var(--neutral-100));">
-              <tr>
-                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Customer</th>
-                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Service</th>
-                <th style="padding: 1rem; text-align: left; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Date</th>
-                <th style="padding: 1rem; text-align: right; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Amount</th>
-                <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Type</th>
-                <th style="padding: 1rem; text-align: center; font-weight: 600; border-bottom: 2px solid var(--neutral-200);">Confidence</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${matches.map(match => `
-                <tr style="border-bottom: 1px solid var(--neutral-200);">
-                  <td style="padding: 1rem; font-weight: 500;">${match.name}</td>
-                  <td style="padding: 1rem;">${match.service}</td>
-                  <td style="padding: 1rem;">${match.date}</td>
-                  <td style="padding: 1rem; text-align: right; font-weight: 500;">${match.amount.toFixed(2)}</td>
-                  <td style="padding: 1rem; text-align: center;">
-                    <span style="padding: 4px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${match.matchType === 'exact' ? '#dcfce7' : '#fef3c7'}; color: ${match.matchType === 'exact' ? '#166534' : '#92400e'};">
-                      ${match.matchType.charAt(0).toUpperCase() + match.matchType.slice(1)}
-                    </span>
-                  </td>
-                  <td style="padding: 1rem; text-align: center;">
-                    <span style="padding: 4px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: ${match.confidence >= 95 ? '#dcfce7' : '#fef3c7'}; color: ${match.confidence >= 95 ? '#166534' : '#92400e'};">
-                      ${match.confidence}%
-                    </span>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-
-        container.innerHTML = tableHTML;
-      }
-
-      // Export results
-      function exportResults() {
-        if (!demoState.processingResults) {
-          showNotification('No results to export', 'error');
-          return;
-        }
-
-        showNotification('Export functionality would generate CSV report');
-      }
-
-      // Preview results  
-      function previewResults() {
-        if (!demoState.processingResults) {
-          showNotification('No results to preview', 'error');
-          return;
-        }
-
-        showNotification('Preview functionality would show detailed report');
-      }
-
-      // Setup event listeners
-      function setupEventListeners() {
-        console.log('🎯 Setting up event listeners...');
-
-        // Start reconciliation button
-        const startBtn = safeGetElement('startReconciliationBtn', false);
-        if (startBtn) {
-          startBtn.addEventListener('click', startReconciliationProcess);
-          console.log('✅ Start button listener attached');
-        }
-
-        // File inputs
-        ['pos', 'alle', 'aspire'].forEach(type => {
-          const fileInput = safeGetElement(`${type}FileInput`, false);
-          if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-              handleFileUploadSelection(type, e.target.files[0]);
-            });
-          }
-
-          // Upload areas
-          const uploadArea = safeGetElement(`${type}UploadArea`, false);
-          if (uploadArea) {
-            uploadArea.addEventListener('click', () => {
-              if (fileInput && !uploadArea.classList.contains('disabled')) {
-                fileInput.click();
-              }
-            });
-          }
-
-          // Sample data buttons
-          const sampleBtn = safeGetElement(`load${type.charAt(0).toUpperCase() + type.slice(1)}SampleBtn`, false);
-          if (sampleBtn) {
-            sampleBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              loadSampleDataForType(type);
-            });
-          }
-        });
-
-        // Export and preview buttons
-        const exportBtn = safeGetElement('exportCsvReportBtn', false);
-        if (exportBtn) {
-          exportBtn.addEventListener('click', exportResults);
-        }
-
-        const previewBtn = safeGetElement('previewReportBtn', false);
-        if (previewBtn) {
-          previewBtn.addEventListener('click', previewResults);
-        }
-
-        console.log('🎯 Event listeners setup complete');
-      }
-
-      // Initialize demo
-      function initializeDemo() {
-        console.log('🏥 Initializing MedSpaSync Pro Demo...');
-
-        try {
-          // Debug: Log all elements with IDs
-          const elementsWithIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
-          console.log('📋 Available elements:', elementsWithIds);
-
-          // Set initial state
-          updateStepIndicator('upload');
-          showSection('uploadSection');
-          updateReconciliationButtonState();
-
-          // Setup event listeners
-          setupEventListeners();
-
-          console.log('✅ Demo initialization complete');
-          showNotification('Demo loaded successfully!');
-
-        } catch (error) {
-          console.error('❌ Demo initialization failed:', error);
-          showNotification('Demo failed to load', 'error');
-        }
-      }
-
-      // Global error handler
-      window.addEventListener('error', (event) => {
-        console.error('🚨 Global error:', event.error);
-        showNotification('An error occurred', 'error');
+    // Enhanced drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      posArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        if (eventName === 'dragover') posArea.classList.add('dragover');
+        if (eventName === 'dragleave' || eventName === 'drop') posArea.classList.remove('dragover');
       });
+      alleArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        if (eventName === 'dragover') alleArea.classList.add('dragover');
+        if (eventName === 'dragleave' || eventName === 'drop') alleArea.classList.remove('dragover');
+      });
+      aspireArea?.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        if (eventName === 'dragover') aspireArea.classList.add('dragover');
+        if (eventName === 'dragleave' || eventName === 'drop') aspireArea.classList.remove('dragover');
+      });
+    });
 
-      // Initialize when DOM is ready
-      onDOMReady(initializeDemo);
+    if (posArea) posArea.addEventListener('drop', (e) => handleFile('pos', e.dataTransfer.files[0]));
+    if (alleArea) alleArea.addEventListener('drop', (e) => handleFile('alle', e.dataTransfer.files[0]));
+    if (aspireArea) aspireArea.addEventListener('drop', (e) => handleFile('aspire', e.dataTransfer.files[0]));
 
-      // Export debug utilities
-      window.MedSpaSyncDebug = {
-        state: demoState,
-        reinitialize: initializeDemo,
-        showSection,
-        updateStepIndicator
-      };
-
-      console.log('🔧 Debug tools available at window.MedSpaSyncDebug');
-
-    })();
-  </script>
-</body>
-</html>
+    updateButton();
+  });
+})();

@@ -8,8 +8,39 @@ require('dotenv').config(); // Load .env variables
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
+// Security middleware with updated CSP
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'",  // ✅ Allow inline scripts (fixes CSP error)
+        "https://unpkg.com",
+        "https://cdnjs.cloudflare.com"
+      ],
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'"   // ✅ Allow inline styles
+      ],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https:",
+        "https://status.medspasyncpro.com"  // For status badge
+      ],
+      connectSrc: [
+        "'self'",
+        "https://api.medspasyncpro.com"
+      ],
+      fontSrc: ["'self'", "https:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+}));
+
 app.use(cors({
   origin: ['http://localhost:3000', 'https://demo.medspasyncpro.com'],
   credentials: false
@@ -50,4 +81,8 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🌐 Demo available at: http://localhost:${PORT}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔧 CSP configured for development with inline scripts allowed');
+  }
 });

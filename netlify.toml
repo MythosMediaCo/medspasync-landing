@@ -1,12 +1,90 @@
+[build.environment]
+  NODE_VERSION = "18"
+  VITE_API_BASE = "https://api.medspasyncpro.com"
+  VITE_STRIPE_PORTAL_URL = "https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00"
+
 [build]
-  publish = "public"
-  command = "npm run build:css"
+  command = "npm run build"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[dev]
-  command = "npm run start"
-  targetPort = 5000
+# Main headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "interest-cohort=()"
+    
+    # Updated CSP - No Google Fonts, self-hosted only
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline';
+      font-src 'self';
+      img-src 'self' data: https://status.medspasyncpro.com;
+      connect-src 'self' https://api.medspasyncpro.com https://status.medspasyncpro.com https://billing.stripe.com;
+      object-src 'none';
+      base-uri 'self';
+      frame-ancestors 'none';
+      upgrade-insecure-requests;
+    """
+    
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Font files - long-term caching
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+
+# Static assets - long-term caching
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS and JS files - long-term caching
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Demo page specific headers
+[[headers]]
+  for = "/demo"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# API proxy headers (if needed)
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+# Stripe webhook endpoint
+[[redirects]]
+  from = "/api/webhooks/stripe"
+  to = "https://api.medspasyncpro.com/webhooks/stripe"
+  status = 200
+  force = true
+
+# Demo API endpoint
+[[redirects]]
+  from = "/api/demo/*"
+  to = "https://api.medspasyncpro.com/demo/:splat"
+  status = 200
+  force = true

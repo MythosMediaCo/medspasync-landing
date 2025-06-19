@@ -559,10 +559,12 @@
         }
       }
       
-      // Enhanced subscription flow
-      else if (id === 'subscribeBtn') {
+      // Enhanced subscription flow for Stripe Checkout
+      else if (target.closest('.subscribe-btn')) {
         e.preventDefault();
-        this.handleSubscription(target);
+        const btn = target.closest('.subscribe-btn');
+        const plan = btn.dataset.plan || demoState.selectedPlan;
+        this.handleSubscription(plan, btn);
       }
       
       // Navigation
@@ -672,22 +674,43 @@
       }, 1000);
     },
 
-    handleSubscription(button) {
-      utils.showToast('Redirecting to subscription...', 'info');
-      
+    async handleSubscription(plan, button) {
+      utils.showToast('Redirecting to checkout...', 'info');
+
       perf.rafUpdate(() => {
-        button.textContent = 'Redirecting...';
-        button.disabled = true;
+        if (button) {
+          button.textContent = 'Redirecting...';
+          button.disabled = true;
+        }
       });
-      
-      analytics.track('subscription_initiated', { 
-        selected_plan: demoState.selectedPlan,
+
+      analytics.track('subscription_initiated', {
+        selected_plan: plan,
         user_email: demoState.userEmail
       });
-      
-      setTimeout(() => {
-        window.location.href = CONFIG.SUBSCRIPTION_URL;
-      }, 1500);
+
+      try {
+        const response = await fetch('/api/checkout/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan })
+        });
+        const session = await response.json();
+        if (session.url) {
+          window.location.href = session.url;
+        } else {
+          throw new Error('Invalid session URL');
+        }
+      } catch (err) {
+        console.error('Checkout error:', err);
+        utils.showToast('Unable to start checkout.', 'error');
+        if (button) {
+          perf.rafUpdate(() => {
+            button.textContent = 'Subscribe Now';
+            button.disabled = false;
+          });
+        }
+      }
     }
   };
 

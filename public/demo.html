@@ -57,25 +57,27 @@
     </section>
 
     <section id="pricingSection" class="grid md:grid-cols-2 gap-6 mb-12">
-      <div id="corePlan" class="p-6 bg-white rounded-xl shadow border border-blue-500 hover:border-blue-500 cursor-pointer">
+  <div id="corePlan" class="p-6 bg-white rounded-xl shadow border border-blue-500 hover:border-blue-500 cursor-pointer">
         <div class="flex justify-between items-center mb-2">
           <h3 class="text-lg font-semibold">Core Reconciliation</h3>
           <input type="radio" id="coreRadio" name="plan" value="core" checked aria-describedby="corePlanDescription" class="sr-only">
         </div>
         <label for="coreRadio" class="block text-2xl font-bold text-blue-600 mb-1">$299/month</label>
         <p class="text-sm text-gray-600">Ideal for small to medium spas</p>
-        <p id="corePlanDescription" class="text-sm text-gray-500 hidden">Core plan includes essential reconciliation features.</p>
-      </div>
+        <p id="corePlanDescription" class="text-sm text-gray-500 hidden">Core plan includes essential reconciliation features.</p>
+        <button data-plan="core" class="subscribe-btn mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
+      </div>
 
-      <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer opacity-60">
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="text-lg font-semibold">Professional Suite <span class="ml-2 px-2 py-1 rounded-full bg-gradient-to-r from-pink-400 to-red-500 text-white text-xs font-bold">Coming Soon</span></h3>
-          <input type="radio" id="proRadio" name="plan" value="professional" disabled aria-describedby="proPlanDescription" class="sr-only">
-        </div>
+  <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-semibold">Professional Suite</h3>
+          <input type="radio" id="proRadio" name="plan" value="professional" aria-describedby="proPlanDescription" class="sr-only">
+        </div>
         <label for="proRadio" class="block text-2xl font-bold text-purple-600 mb-1">$499/month</label>
         <p class="text-sm text-gray-600">Advanced tools for scaling medspas</p>
-        <p id="proPlanDescription" class="text-sm text-gray-500 hidden">Professional Suite with advanced features coming soon.</p>
-      </div>
+        <p id="proPlanDescription" class="text-sm text-gray-500 hidden">Professional Suite with advanced features coming soon.</p>
+        <button data-plan="professional" class="subscribe-btn mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
+      </div>
     </section>
 
     <div class="text-center">

@@ -4,30 +4,24 @@ const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require('dotenv').config(); // Load .env variables
+require('dotenv').config();
 
 const app = express();
 
-// Security middleware with updated CSP
+// Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'", 
-        "'unsafe-inline'",  // ✅ Allow inline scripts (fixes CSP error)
+        "'unsafe-inline'",
         "https://unpkg.com",
         "https://cdnjs.cloudflare.com"
       ],
       styleSrc: [
         "'self'", 
-        "'unsafe-inline'"   // ✅ Allow inline styles
-      ],
-      imgSrc: [
-        "'self'", 
-        "data:", 
-        "https:",
-        "https://status.medspasyncpro.com"  // For status badge
+        "'unsafe-inline'"
       ],
       connectSrc: [
         "'self'",
@@ -42,47 +36,65 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://demo.medspasyncpro.com'],
+  origin: ['http://localhost:3000', 'http://localhost:5000', 'https://demo.medspasyncpro.com'],
   credentials: false
 }));
 
-// Stripe requires raw body for webhook validation — mount BEFORE express.json()
-app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
+// Health check endpoint (before other middleware)
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    uptime: process.uptime(),
+    port: process.env.PORT || 5000,
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
+// Special handling for Stripe webhooks - raw body parser ONLY for webhook POST
+app.use('/api/webhook', (req, res, next) => {
+  if (req.method === 'POST' && req.path === '/') {
+    // Only use raw body for actual Stripe webhooks
+    bodyParser.raw({ type: 'application/json' })(req, res, next);
+  } else {
+    // Use JSON parser for other webhook endpoints
+    express.json()(req, res, next);
+  }
+});
 
 // Normal JSON parser for everything else
 app.use(express.json({ limit: '2mb' }));
 
-// Serve static demo frontend with demo.html as default
+// Serve static demo frontend
 app.use(express.static(path.join(__dirname, '../public'), { index: 'demo.html' }));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/medspasync')
-  .then(() => {
-    console.log('✅ Connected to MongoDB');
-  })
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-  });
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // API routes
-app.use('/api', require('./routes/demo'));
-app.use('/api', require('./routes/training'));
-app.use('/api/checkout', require('./routes/checkout'));
-app.use('/api/webhook', require('./routes/webhook'));
-app.use('/api', require('./routes/reconciliation'));
+try {
+  app.use('/api', require('./routes/demo'));
+  app.use('/api', require('./routes/training'));
+  app.use('/api/checkout', require('./routes/checkout'));
+  app.use('/api/webhook', require('./routes/webhook'));
+  app.use('/api', require('./routes/reconciliation'));
+} catch (error) {
+  console.error('Error loading routes:', error.message);
+}
 
-// Catch unhandled errors
+// Error handler
 app.use((err, req, res, next) => {
-  console.error('🔥 Unhandled error:', err);
-  res.status(500).json({ error: 'Unexpected server error' });
+  console.error('🔥 Error:', err);
+  res.status(500).json({ error: 'Server error' });
 });
 
-// Launch server
-const PORT = process.env.PORT || 3000;
+// Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`�� Health check: http://localhost:${PORT}/health`);
   console.log(`🌐 Demo available at: http://localhost:${PORT}`);
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔧 CSP configured for development with inline scripts allowed');
-  }
 });

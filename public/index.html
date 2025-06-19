@@ -183,6 +183,10 @@
       background-color: #f3f4f6;
       color: #059669;
     }
+
+    body {
+      line-height: 1.75;
+    }
     
     /* Responsive improvements */
     @media (max-width: 640px) {
@@ -276,7 +280,7 @@
       
       <div class="animate-fade-in-up stagger-4">
         <button id="heroCtaBtn" 
-                class="bg-primary-600 hover:bg-primary-700 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg" 
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg" 
                 aria-describedby="hero-cta-description">
           🚀 Start Revenue Recovery Demo
         </button>
@@ -336,22 +340,22 @@
       
       <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         <!-- Core Plan -->
-        <div id="corePlan" 
-             class="plan-card selected p-8 bg-white rounded-2xl shadow-lg border-2 border-blue-500 cursor-pointer relative" 
+        <div id="corePlan"
+             class="plan-card selected p-8 bg-white rounded-2xl shadow-lg border-2 border-emerald-500 cursor-pointer relative"
              tabindex="0"
              role="button"
              aria-pressed="true"
              aria-describedby="corePlanDescription">
           
           <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-            <span class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold">
+            <span class="bg-emerald-600 text-white px-4 py-1 rounded-full text-sm font-bold">
               MOST POPULAR
             </span>
           </div>
           
           <div class="text-center mb-6">
             <h4 class="text-xl font-bold text-gray-900 mb-2">Core Reconciliation</h4>
-            <div class="text-4xl font-extrabold text-blue-600 mb-2">$299<span class="text-lg text-gray-500">/month</span></div>
+            <div class="text-4xl font-extrabold text-emerald-600 mb-2">$299<span class="text-lg text-gray-500">/month</span></div>
             <p class="text-gray-600">Perfect for small to medium spas</p>
           </div>
           
@@ -388,7 +392,7 @@
             </li>
           </ul>
           
-          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors duration-200">
+          <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors duration-200">
             Try Demo First
           </button>
           
@@ -467,12 +471,12 @@
         
         <div class="space-y-4">
           <button id="demoCtaBtn" 
-                  class="bg-primary-600 hover:bg-primary-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg mr-4">
+                  class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg mr-4">
             🚀 Try Demo First
           </button>
           
           <button id="subscribeBtn" 
-                  class="bg-white hover:bg-gray-50 text-primary-600 border-2 border-primary-600 font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover">
+                  class="bg-white hover:bg-gray-50 text-emerald-600 border-2 border-emerald-600 font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover">
             Subscribe Now – $299/month
           </button>
         </div>
@@ -510,7 +514,7 @@
             <input id="leadEmail" 
                    type="email" 
                    required 
-                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-primary-500 transition-colors duration-200 text-gray-900" 
+                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors duration-200 text-gray-900" 
                    placeholder="you@yourmedspa.com"
                    autocomplete="email"
                    aria-describedby="email-help email-error" />
@@ -524,13 +528,13 @@
             </label>
             <input id="leadName" 
                    type="text" 
-                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-primary-500 transition-colors duration-200 text-gray-900" 
+                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors duration-200 text-gray-900" 
                    placeholder="Your name"
                    autocomplete="name" />
           </div>
           
           <button type="submit" 
-                  class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-4 rounded-lg shadow-lg transition-all duration-300 btn-hover font-bold text-lg">
+                  class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-lg shadow-lg transition-all duration-300 btn-hover font-bold text-lg">
             <span id="leadSubmitText">🚀 Start Live Demo</span>
             <span id="leadLoading" class="spinner ml-2 hidden" aria-hidden="true"></span>
           </button>
@@ -546,7 +550,7 @@
         
         <!-- Back to options -->
         <div class="text-center mt-6 pt-6 border-t border-gray-200">
-          <button id="backToOptionsBtn" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+          <button id="backToOptionsBtn" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
             ← Back to options
           </button>
         </div>
@@ -574,28 +578,28 @@
         <div>
           <h4 class="font-semibold text-gray-900 mb-4">Product</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="#features" class="hover:text-primary-600 transition-colors">Features</a></li>
-            <li><a href="#pricing" class="hover:text-primary-600 transition-colors">Pricing</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Integrations</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Security</a></li>
+            <li><a href="#features" class="hover:text-emerald-600 transition-colors">Features</a></li>
+            <li><a href="#pricing" class="hover:text-emerald-600 transition-colors">Pricing</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Integrations</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Security</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-semibold text-gray-900 mb-4">Resources</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Help Center</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">API Docs</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Case Studies</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Help Center</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">API Docs</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Case Studies</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Blog</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-semibold text-gray-900 mb-4">Legal</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="privacy.html" class="hover:text-primary-600 transition-colors">Privacy Policy</a></li>
-            <li><a href="terms.html" class="hover:text-primary-600 transition-colors">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Contact</a></li>
-            <li><a href="#" class="hover:text-primary-600 transition-colors">Support</a></li>
+            <li><a href="privacy.html" class="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-emerald-600 transition-colors">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Contact</a></li>
+            <li><a href="#" class="hover:text-emerald-600 transition-colors">Support</a></li>
           </ul>
         </div>
       </div>
@@ -850,7 +854,7 @@
 
             if (corePlan && proPlan) {
               // Remove selection from both
-              corePlan.classList.remove('selected', 'border-blue-500');
+              corePlan.classList.remove('selected', 'border-emerald-500');
               corePlan.classList.add('border-gray-200');
               corePlan.setAttribute('aria-pressed', 'false');
               
@@ -860,7 +864,7 @@
 
               // Add selection to chosen plan
               if (planType === 'core') {
-                corePlan.classList.add('selected', 'border-blue-500');
+                corePlan.classList.add('selected', 'border-emerald-500');
                 corePlan.classList.remove('border-gray-200');
                 corePlan.setAttribute('aria-pressed', 'true');
               } else if (planType === 'professional') {

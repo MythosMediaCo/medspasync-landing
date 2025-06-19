@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
   <meta name="theme-color" content="#059669">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.medspasyncpro.com">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com">
   <title>MedSpaSync Pro Demo 2.0</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,113 +19,125 @@
     body { line-height: 1.75; font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-  <noscript>
-    <div class="bg-red-100 text-red-800 p-4 text-center">
-      JavaScript is required to run this demo. Please enable it in your browser.
-    </div>
-  </noscript>
+<body class="bg-gray-50 text-gray-900">
+  <noscript>
+    <div class="bg-red-100 text-red-800 p-4 text-center">
+      JavaScript is required to run this demo. Please enable it in your browser.
+    </div>
+  </noscript>
+
+  <a href="#main" class="skip-link focus:top-0">Skip to main content</a>
+
+  <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg p-4 toast" role="status" aria-live="polite"></div>
 
   <nav class="bg-white shadow sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
           </svg>
         </div>
-        <span class="font-semibold text-gray-900">MedSpaSync Pro</span>
-      </a>
+        <h1 class="text-xl font-bold">MedSpaSync Pro</h1>
+      </div>
+      <span class="text-sm font-semibold text-green-600 hidden md:block">✨ Production Demo</span>
+      <img src="https://status.medspasyncpro.com/badge?theme=light" alt="status" class="h-5 ml-4" />
     </div>
   </nav>
 
-  <main class="max-w-5xl mx-auto py-10 px-4">
-    <section id="heroSection" class="text-center mb-10">
-      <h2 class="text-3xl font-bold mb-3">Live Revenue Recovery Demo</h2>
-      <p class="text-lg text-gray-600 mb-3">Instantly detect unmatched rewards from POS, Alle, and Aspire data.</p>
-      <div class="inline-block px-4 py-2 rounded-full text-white bg-gradient-to-r from-yellow-400 to-yellow-500 font-semibold animate-pulse">
-        💰 See lost revenue in real time
-      </div>
+  <main class="max-w-5xl mx-auto py-10 px-4" id="main">
+    <section id="heroSection" class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-3">Live Revenue Recovery Demo</h2>
+      <p class="text-lg text-gray-600 mb-3">Instantly detect unmatched rewards from POS, Alle, and Aspire data.</p>
+      <div class="inline-block px-4 py-2 rounded-full text-white bg-gradient-to-r from-yellow-400 to-yellow-500 font-semibold animate-pulse">
+        💰 See lost revenue in real time
+      </div>
       <div class="mt-4">
-        <a href="#leadCapture" class="btn bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-lg" aria-describedby="hero-cta-description">
-          🚀 Start Revenue Recovery Demo
-        </a>
-        <div id="hero-cta-description" class="sr-only">
-          Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
-        </div>
-    </div>
-    </section>
+        <a href="#leadCapture" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg" aria-describedby="hero-cta-description">
+          🚀 Start Revenue Recovery Demo
+        </a>
+        <div id="hero-cta-description" class="sr-only">
+          Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
+        </div>
+      </div>
+    </section>
 
-    <section id="pricingSection" class="grid md:grid-cols-2 gap-6 mb-12">
-  <div id="corePlan" class="p-6 bg-white rounded-xl shadow border border-blue-500 hover:border-blue-500 cursor-pointer">
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="text-lg font-semibold">Core Reconciliation</h3>
-          <input type="radio" id="coreRadio" name="plan" value="core" checked aria-describedby="corePlanDescription" class="sr-only">
-        </div>
-        <label for="coreRadio" class="block text-2xl font-bold text-blue-600 mb-1">$299/month</label>
-        <p class="text-sm text-gray-600">Ideal for small to medium spas</p>
+    <section id="pricingSection" class="grid md:grid-cols-2 gap-6 mb-12">
+      <div id="corePlan" class="p-6 bg-white rounded-xl shadow border border-blue-500 hover:border-blue-500 cursor-pointer">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-semibold">Core Reconciliation</h3>
+          <input type="radio" id="coreRadio" name="plan" value="core" checked aria-describedby="corePlanDescription" class="sr-only">
+        </div>
+        <label for="coreRadio" class="block text-2xl font-bold text-blue-600 mb-1">$299/month</label>
+        <p class="text-sm text-gray-600">Ideal for small to medium spas</p>
         <p id="corePlanDescription" class="text-sm text-gray-500 hidden">Core plan includes essential reconciliation features.</p>
         <button data-plan="core" class="subscribe-btn mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
       </div>
 
-  <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer">
+      <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer">
         <div class="flex justify-between items-center mb-2">
           <h3 class="text-lg font-semibold">Professional Suite</h3>
           <input type="radio" id="proRadio" name="plan" value="professional" aria-describedby="proPlanDescription" class="sr-only">
         </div>
-        <label for="proRadio" class="block text-2xl font-bold text-purple-600 mb-1">$499/month</label>
-        <p class="text-sm text-gray-600">Advanced tools for scaling medspas</p>
+        <label for="proRadio" class="block text-2xl font-bold text-purple-600 mb-1">$499/month</label>
+        <p class="text-sm text-gray-600">Advanced tools for scaling medspas</p>
         <p id="proPlanDescription" class="text-sm text-gray-500 hidden">Professional Suite with advanced features coming soon.</p>
         <button data-plan="professional" class="subscribe-btn mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
       </div>
-    </section>
+    </section>
 
     <div class="text-center">
-      <a href="#leadCapture" id="subscribeBtn" class="btn bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 rounded-lg">
-        Subscribe Now – $299/month
-      </a>
-      <p class="text-sm text-gray-500 mt-2">30-day money-back guarantee • Cancel anytime</p>
-    </div>
+      <a href="#leadCapture" id="subscribeBtn" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg">
+        Subscribe Now – $299/month
+      </a>
+      <p class="text-sm text-gray-500 mt-2">30-day money-back guarantee • Cancel anytime</p>
+    </div>
 
-    <section id="leadCapture" class="max-w-md mx-auto mt-16">
-      <form id="leadForm" class="bg-white p-4 rounded-lg shadow space-y-4">
-        <div>
+    <section id="leadCapture" class="max-w-md mx-auto mt-16">
+      <form id="leadForm" class="bg-white p-4 rounded-lg shadow">
+        <div class="mb-3">
           <label for="leadEmail" class="block text-sm font-medium mb-1">Work Email</label>
-          <input id="leadEmail" type="email" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500" />
+          <input id="leadEmail" type="email" required class="w-full border rounded px-2 py-1" />
+          <div id="leadEmail-error" class="text-xs text-red-600 mt-1 hidden" role="alert"></div>
         </div>
-        <div>
+        <div class="mb-3">
           <label for="leadName" class="block text-sm font-medium mb-1">Name <span class="text-gray-400">(optional)</span></label>
-          <input id="leadName" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500" />
+          <input id="leadName" type="text" class="w-full border rounded px-2 py-1" />
         </div>
-        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow w-full">Start Demo</button>
-        <p id="leadNotice" class="text-sm mt-2 text-center text-red-600"></p>
-      </form>
-    </section>
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow w-full">Start Demo</button>
+        <p id="leadNotice" class="text-sm mt-2 text-center text-red-600"></p>
+      </form>
+    </section>
 
-    <div id="demoTool" class="mt-16 hidden">
-      <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded"></div>
-      <div class="mb-4">
-        <label for="posFile" class="block font-semibold mb-1">POS Data</label>
-        <input type="file" id="posFile" accept=".csv" class="mb-2">
-        <button type="button" id="loadPosSample" class="text-blue-600 underline text-sm">Load Sample</button>
-      </div>
-      <div class="mb-4">
-        <label for="rewardFile" class="block font-semibold mb-1">Rewards Data</label>
-        <input type="file" id="rewardFile" accept=".csv" class="mb-2">
-        <button type="button" id="loadAlleSample" class="text-blue-600 underline text-sm">Load Alle Sample</button>
-        <button type="button" id="loadAspireSample" class="text-blue-600 underline text-sm ml-2">Load Aspire Sample</button>
-      </div>
-      <button id="runDemoBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded">Run Reconciliation</button>
-      <p class="text-xs text-gray-500 mt-1">By running the demo you agree to our <a href="privacy.html" class="underline">Privacy Policy</a>.</p>
-      <button id="exportBtn" class="bg-gray-700 text-white px-5 py-2 rounded ml-3 hidden">Export CSV</button>
-      <div id="results" class="mt-8"></div>
-    </div>
-  </main>
+    <div id="demoTool" class="mt-16 hidden">
+      <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded"><span id="usageText"></span></div>
+      <div class="mb-4">
+        <label for="posFile" class="block font-semibold mb-1">POS Data</label>
+        <input type="file" id="posFile" accept=".csv" class="mb-2">
+        <button type="button" id="loadPosSample" class="text-blue-600 underline text-sm">Load Sample</button>
+      </div>
+      <div class="mb-4">
+        <label for="rewardFile" class="block font-semibold mb-1">Rewards Data</label>
+        <input type="file" id="rewardFile" accept=".csv" class="mb-2">
+        <button type="button" id="loadAlleSample" class="text-blue-600 underline text-sm">Load Alle Sample</button>
+        <button type="button" id="loadAspireSample" class="text-blue-600 underline text-sm ml-2">Load Aspire Sample</button>
+      </div>
+      <button id="runDemoBtn" class="bg-blue-600 text-white px-5 py-2 rounded">Run Reconciliation</button>
+      <div id="runLoader" class="ml-2 inline-block align-middle hidden">
+        <div class="spinner"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">By running the demo you agree to our <a href="privacy.html" class="underline">Privacy Policy</a>.</p>
+      <button id="exportBtn" class="bg-gray-700 text-white px-5 py-2 rounded ml-3 hidden">Export CSV</button>
+      <div id="results" class="mt-8"></div>
+    </div>
+  </main>
 
-  <footer class="text-center text-sm text-gray-400 py-6 border-t">
-    &copy; 2025 MedSpaSync Pro. All rights reserved.
-  </footer>
+  <footer class="text-center text-sm text-gray-400 py-6 border-t">
+    &copy; 2025 MedSpaSync Pro. All rights reserved.
+  </footer>
 
-  <script defer src="demo.js"></script>
+  <div id="sr-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <script defer src="demo.js"></script>
 </body>
 </html>

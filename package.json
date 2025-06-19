@@ -1,73 +1,56 @@
 {
-  "name": "medspasync-pro",
-  "version": "2.1.0",
-  "description": "AI-powered reconciliation platform for medical spas",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "lint": "eslint src --ext .js,.jsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint src --ext .js,.jsx --fix",
-    "start": "node server/index.js",
-    "build:css": "tailwindcss -i ./src/index.css -o ./public/tailwind.css --watch",
-    "deploy": "npm run build && netlify deploy --prod"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "csv-parser": "^3.0.0",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "express-validator": "^7.2.1",
-    "helmet": "^7.1.0",
-    "multer": "^1.4.5-lts.1",
-    "papaparse": "^5.4.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.1",
-    "stripe": "^14.21.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.2.0",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.16",
-    "eslint": "^8.55.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.0",
-    "vite": "^5.0.8",
-    "vitest": "^1.2.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/medspasync/medspasync-pro.git"
-  },
+  "name": "medspasync-landing",
+  "version": "1.0.0",
+  "description": "MedSpaSync Pro landing page and demo system with full-stack functionality.",
+  "main": "server/index.js",
   "keywords": [
-    "medical-spa",
+    "medspa",
     "reconciliation",
-    "ai",
-    "healthcare",
+    "alle rewards",
+    "aspire rewards",
+    "pos system",
+    "revenue recovery",
+    "full-stack",
+    "express",
+    "mongodb",
     "stripe",
-    "billing",
-    "pos-integration"
+    "tailwind",
+    "react",
+    "demo"
   ],
   "author": "MedSpaSync Pro Team",
   "license": "MIT",
-  "homepage": "https://medspasyncpro.com",
-  "bugs": {
-    "url": "https://github.com/medspasync/medspasync-pro/issues"
-  }
+  "scripts": {
+    "start": "NODE_ENV=production node server/index.js",
+    "dev": "NODE_ENV=development nodemon server/index.js",
+    "build:css": "tailwindcss -i public/input.css -o public/tailwind.css --minify",
+    "watch:css": "tailwindcss -i public/input.css -o public/tailwind.css --watch"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "express-validator": "^7.1.0",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.4.4",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.13",
+    "stripe": "^15.11.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^7.0.3",
+    "nodemon": "^3.1.3",
+    "postcss": "^8.4.38",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^4.1.10"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

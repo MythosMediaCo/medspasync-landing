@@ -5,19 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="MedSpaSync Pro reconciliation demo for medical spas">
   <meta name="theme-color" content="#059669">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com">
+  
+  <!-- Updated CSP - No Google Fonts -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://status.medspasyncpro.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+  
   <title>MedSpaSync Pro Demo 2.0</title>
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="tailwind.css">
+  
+  <!-- Self-hosted Inter fonts -->
+  <style>
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      src: url('/fonts/inter-v19-latin-regular.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      src: url('/fonts/inter-v19-latin-500.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      src: url('/fonts/inter-v19-latin-600.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      src: url('/fonts/inter-v19-latin-700.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 800;
+      src: url('/fonts/inter-v19-latin-800.woff2') format('woff2');
+    }
+    
+    body { 
+      line-height: 1.75; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    }
+    
+    /* CSP-compliant utility classes */
+    .hidden-element { display: none !important; }
+    .visible-element { display: block; }
+    .spinner-medium {
+      width: 24px; height: 24px; border: 3px solid #e5e7eb;
+      border-top-color: #059669; border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Subscription CTA styles */
+    .subscription-cta {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+    }
+    
+    .subscription-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.4);
+    }
+  </style>
+  
   <script defer src="preview.js"></script>
   <script defer src="usageMeter.js"></script>
   <script defer src="demo.js"></script>
-  <style>
-    body { line-height: 1.75; font-family: 'Inter', sans-serif; }
-  </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
   <noscript>
@@ -40,8 +106,18 @@
         </div>
         <h1 class="text-xl font-bold">MedSpaSync Pro</h1>
       </div>
-      <span class="text-sm font-semibold text-green-600 hidden md:block">✨ Production Demo</span>
-      <img src="https://status.medspasyncpro.com/badge?theme=light" alt="status" class="h-5 ml-4" />
+      
+      <!-- Subscription CTA in Header -->
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-gray-600 hidden sm:block">Seen enough?</span>
+        <button 
+          id="headerSubscribeBtn"
+          onclick="handleSubscribeClick('header')"
+          class="subscription-cta text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+        >
+          Subscribe Now
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -71,7 +147,13 @@
         <label for="coreRadio" class="block text-2xl font-bold text-blue-600 mb-1">$299/month</label>
         <p class="text-sm text-gray-600">Ideal for small to medium spas</p>
         <p id="corePlanDescription" class="text-sm text-gray-500 hidden">Core plan includes essential reconciliation features.</p>
-        <button data-plan="core" class="subscribe-btn mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
+        <button 
+          data-plan="core" 
+          onclick="handleSubscribeClick('core-plan')"
+          class="subscribe-btn mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded"
+        >
+          Subscribe Now
+        </button>
       </div>
 
       <div id="proPlan" class="p-6 bg-white rounded-xl shadow border hover:border-purple-500 cursor-pointer">
@@ -82,16 +164,15 @@
         <label for="proRadio" class="block text-2xl font-bold text-purple-600 mb-1">$499/month</label>
         <p class="text-sm text-gray-600">Advanced tools for scaling medspas</p>
         <p id="proPlanDescription" class="text-sm text-gray-500 hidden">Professional Suite with advanced features coming soon.</p>
-        <button data-plan="professional" class="subscribe-btn mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded">Subscribe Now</button>
+        <button 
+          data-plan="professional" 
+          onclick="handleSubscribeClick('pro-plan')"
+          class="subscribe-btn mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded"
+        >
+          Subscribe Now
+        </button>
       </div>
     </section>
-
-    <div class="text-center">
-      <a href="#leadCapture" id="subscribeBtn" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg">
-        Subscribe Now – $299/month
-      </a>
-      <p class="text-sm text-gray-500 mt-2">30-day money-back guarantee • Cancel anytime</p>
-    </div>
 
     <section id="leadCapture" class="max-w-md mx-auto mt-16">
       <form id="leadForm" class="bg-white p-4 rounded-lg shadow">
@@ -124,12 +205,48 @@
       </div>
       <button id="runDemoBtn" class="bg-blue-600 text-white px-5 py-2 rounded">Run Reconciliation</button>
       <div id="runLoader" class="ml-2 inline-block align-middle hidden">
-        <div class="spinner"></div>
+        <div class="spinner-medium"></div>
       </div>
       <p class="text-xs text-gray-500 mt-1">By running the demo you agree to our <a href="privacy.html" class="underline">Privacy Policy</a>.</p>
       <button id="exportBtn" class="bg-gray-700 text-white px-5 py-2 rounded ml-3 hidden">Export CSV</button>
       <div id="results" class="mt-8"></div>
     </div>
+
+    <!-- Subscription CTA Section -->
+    <section id="subscriptionCTA" class="mt-16 hidden">
+      <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-8">
+        <div class="text-center">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">
+            Ready to Start Saving Time?
+          </h3>
+          <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+            You've seen how MedSpaSync Pro can recover your lost revenue. 
+            Start your subscription today and eliminate manual reconciliation forever.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-green-600">$299</div>
+              <div class="text-sm text-gray-500">per month</div>
+              <div class="text-xs text-gray-400">Core Reconciliation</div>
+            </div>
+            
+            <button
+              onclick="handleSubscribeClick('main-cta')"
+              class="subscription-cta text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300"
+            >
+              🚀 Subscribe Now
+            </button>
+          </div>
+          
+          <div class="text-sm text-gray-500 space-y-1">
+            <p>✅ 30-day money-back guarantee</p>
+            <p>✅ HIPAA-compliant processing</p>
+            <p>✅ Cancel anytime</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="text-center text-sm text-gray-400 py-6 border-t">
@@ -137,6 +254,90 @@
   </footer>
 
   <div id="sr-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Subscription Modal -->
+  <div id="subscriptionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+      <h3 class="text-xl font-bold mb-4">Ready to Save Hours Every Day?</h3>
+      <p class="text-gray-600 mb-6">
+        You've seen the power of MedSpaSync Pro. Start your subscription and 
+        eliminate manual reconciliation forever.
+      </p>
+      <div class="flex space-x-3">
+        <button 
+          id="modalSubscribeBtn"
+          onclick="confirmSubscription()"
+          class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors"
+        >
+          Subscribe Now
+        </button>
+        <button 
+          onclick="closeSubscriptionModal()"
+          class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition-colors"
+        >
+          Maybe Later
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Stripe Customer Portal Integration
+    const STRIPE_PORTAL_URL = 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00';
+    
+    // Analytics tracking
+    function trackSubscriptionClick(source) {
+      if (typeof analytics !== 'undefined') {
+        analytics.track('subscription_clicked', {
+          source: source,
+          timestamp: new Date().toISOString(),
+          demo_completed: !!document.getElementById('results').innerHTML
+        });
+      }
+      console.log('Subscription click tracked:', source);
+    }
+    
+    // Handle subscription clicks
+    function handleSubscribeClick(source) {
+      trackSubscriptionClick(source);
+      window.open(STRIPE_PORTAL_URL, '_blank');
+    }
+    
+    // Show subscription modal after demo
+    function showSubscriptionModal() {
+      if (!localStorage.getItem('subscription_prompt_shown')) {
+        const modal = document.getElementById('subscriptionModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        localStorage.setItem('subscription_prompt_shown', 'true');
+      }
+    }
+    
+    // Close subscription modal
+    function closeSubscriptionModal() {
+      const modal = document.getElementById('subscriptionModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    
+    // Confirm subscription from modal
+    function confirmSubscription() {
+      trackSubscriptionClick('modal');
+      window.open(STRIPE_PORTAL_URL, '_blank');
+      closeSubscriptionModal();
+    }
+    
+    // Show CTA section after demo completion
+    function showSubscriptionCTA() {
+      const ctaSection = document.getElementById('subscriptionCTA');
+      ctaSection.classList.remove('hidden');
+      
+      // Smooth scroll to CTA
+      setTimeout(() => {
+        ctaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
+  </script>
 
   <script defer src="demo.js"></script>
 </body>

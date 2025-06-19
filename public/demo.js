@@ -1,34 +1,108 @@
-// demo.js - Demo 2.0 with Stripe Customer Portal Integration
-// Handles lead capture, file uploads, reconciliation processing, and subscription flow
+/**
+ * MedSpaSync Pro Demo System v2.1
+ * Enhanced with all improvements from assessment
+ * - Progressive UI enhancements
+ * - Industry benchmarking
+ * - Visual progress indicators
+ * - Mobile optimizations
+ * - Performance improvements
+ */
 
-console.log('🏥 MedSpaSync Pro - Demo System v2.1 (Production Ready)');
+console.log('🚀 MedSpaSync Pro Demo System v2.1 Loading...');
 
 // Configuration
 const CONFIG = {
-  STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00',
-  API_BASE_URL: '/api',
   MAX_DAILY_DEMOS: 5,
-  DEMO_TIMEOUT: 30000,
-  SUBSCRIPTION_DELAY: 5000 // Show subscription prompt after 5 seconds
+  MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+  SUPPORTED_TYPES: ['.csv', '.txt'],
+  PROCESSING_DELAY: {
+    MIN: 600,
+    MAX: 1000
+  },
+  STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00', // Updated Stripe URL to a test URL
+  API_ENDPOINTS: {
+    demo: '/api/demo',
+    subscription: '/api/subscription',
+    analytics: '/api/analytics' // Added analytics endpoint
+  },
+  ANALYTICS: {
+    enabled: true,
+    debug: false
+  }
 };
 
-// Demo state management
+// Global state
 const demoState = {
+  userEmail: null,
+  userName: null,
   uploadedFiles: {},
   processing: false,
-  results: null,
-  currentPlan: 'core',
-  userEmail: null,
   demoCompleted: false,
-  subscriptionPromptShown: false
+  results: null,
+  currentStep: 'upload', // 'upload', 'processing', 'results'
+  usageCount: 0,
+  sessionId: null
+};
+
+// Initialize session
+demoState.sessionId = 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+// Analytics system
+const analytics = {
+  track(event, properties = {}) {
+    if (!CONFIG.ANALYTICS.enabled) return;
+
+    const eventData = {
+      event,
+      properties: {
+        ...properties,
+        session_id: demoState.sessionId,
+        timestamp: new Date().toISOString(),
+        user_agent: navigator.userAgent,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight
+        }
+      }
+    };
+
+    if (CONFIG.ANALYTICS.debug) {
+      console.log(`📊 Analytics Event:`, eventData);
+    }
+
+    // In production, send to your analytics service
+    try {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', event, properties);
+      }
+
+      // Custom analytics endpoint
+      if (CONFIG.API_ENDPOINTS.analytics) {
+        fetch(CONFIG.API_ENDPOINTS.analytics, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData)
+        }).catch(err => console.warn('Analytics error:', err));
+      }
+    } catch (error) {
+      console.warn('Analytics tracking error:', error);
+    }
+  }
 };
 
 // Utility functions
 const utils = {
+  // Safe element getter with error handling
   $(id) {
-    return document.getElementById(id);
+    try {
+      return document.getElementById(id);
+    } catch (error) {
+      console.warn(`Element not found: ${id}`);
+      return null;
+    }
   },
 
+  // Enhanced toast notifications with better UX
   showToast(message, type = 'info', duration = 4000) {
     const toast = this.$('toast');
     if (!toast) {
@@ -36,120 +110,793 @@ const utils = {
       return;
     }
 
-    const typeStyles = {
-      success: 'border-green-200 bg-green-50 text-green-800',
-      error: 'border-red-200 bg-red-50 text-red-800',
-      warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
-      info: 'border-blue-200 bg-blue-50 text-blue-800'
+    // Enhanced styling for different types
+    const styles = {
+      success: {
+        bg: 'bg-green-50 border-green-200',
+        text: 'text-green-800',
+        icon: '✅'
+      },
+      error: {
+        bg: 'bg-red-50 border-red-200',
+        text: 'text-red-800',
+        icon: '❌'
+      },
+      warning: {
+        bg: 'bg-yellow-50 border-yellow-200',
+        text: 'text-yellow-800',
+        icon: '⚠️'
+      },
+      info: {
+        bg: 'bg-blue-50 border-blue-200',
+        text: 'text-blue-800',
+        icon: 'ℹ️'
+      }
     };
 
-    toast.className = `fixed bottom-4 right-4 z-50 max-w-sm border rounded-lg shadow-lg p-4 toast ${typeStyles[type] || typeStyles.info}`;
-    toast.textContent = message;
-    
-    // Show toast
-    toast.style.transform = 'translateX(0)';
-    toast.style.opacity = '1';
-    
-    setTimeout(() => {
-      toast.style.transform = 'translateX(100%)';
-      toast.style.opacity = '0';
-    }, duration);
+    const style = styles[type] || styles.info;
 
-    console.log(`${type.toUpperCase()}: ${message}`);
+    toast.className = `fixed bottom-4 right-4 z-50 max-w-sm border rounded-lg shadow-lg p-4 toast ${style.bg}`;
+    toast.innerHTML = `
+      <div class="flex items-start gap-3">
+        <div class="text-lg flex-shrink-0">
+          ${style.icon}
+        </div>
+        <div class="flex-1">
+          <p class="text-sm font-medium ${style.text}">${message}</p>
+        </div>
+        <button onclick="this.parentElement.parentElement.parentElement.classList.remove('show')"
+                 class="text-gray-400 hover:text-gray-600 ml-2">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    `;
+
+    toast.classList.add('show');
+
+    if (duration > 0) {
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
   },
 
+  // Format file size for display
   formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB'];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   },
 
-  validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  },
-
-  // CSP-compliant element manipulation
-  show(element, displayType = 'block') {
-    if (!element) return;
-    element.classList.remove('hidden-element');
-    element.classList.add('visible-element');
-    element.style.display = displayType;
+  // Enhanced show/hide with animation support
+  show(element, display = 'block') {
+    if (element) {
+      element.style.display = display;
+      element.classList.remove('hidden');
+      // Trigger reflow for animations
+      element.offsetHeight;
+      element.classList.add('animate-in');
+    }
   },
 
   hide(element) {
-    if (!element) return;
-    element.classList.add('hidden-element');
-    element.classList.remove('visible-element');
+    if (element) {
+      element.classList.add('hidden');
+      element.classList.remove('animate-in');
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 150);
+    }
+  },
+
+  // Progress bar management
+  updateProgress(percentage, message = '') {
+    const progressBar = this.$('progressBar');
+    const progressPercent = this.$('progressPercent');
+    const processingMessage = this.$('processingMessage');
+
+    if (progressBar) {
+      progressBar.style.width = `${percentage}%`;
+    }
+
+    if (progressPercent) {
+      progressPercent.textContent = `${Math.round(percentage)}%`;
+    }
+
+    if (processingMessage && message) {
+      processingMessage.textContent = message;
+    }
+  },
+
+  // Debounce function for performance
+  debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  },
+
+  // Mobile detection
+  isMobile() {
+    return window.innerWidth <= 768;
+  },
+
+  // Smooth scroll to element
+  scrollToElement(elementId) {
+    const element = this.$(elementId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
   }
 };
 
-// Analytics tracking
-const analytics = {
-  track(event, properties = {}) {
-    const data = {
-      event,
-      properties: {
-        ...properties,
-        timestamp: new Date().toISOString(),
-        user_agent: navigator.userAgent,
-        demo_session_id: this.getSessionId()
+// Enhanced file handling system
+const fileHandler = {
+  validateFile(file) {
+    const validTypes = CONFIG.SUPPORTED_TYPES;
+    const maxSize = CONFIG.MAX_FILE_SIZE;
+    const fileExt = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+
+    if (!validTypes.includes(fileExt)) {
+      return {
+        valid: false,
+        error: `Invalid file type. Please upload ${validTypes.join(' or ')} files only.`
+      };
+    }
+
+    if (file.size > maxSize) {
+      return {
+        valid: false,
+        error: `File too large. Maximum size is ${utils.formatFileSize(maxSize)}.`
+      };
+    }
+
+    if (file.size === 0) {
+      return {
+        valid: false,
+        error: 'File appears to be empty. Please select a valid CSV file.'
+      };
+    }
+
+    return { valid: true };
+  },
+
+  handleFileSelect(input, fileType) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const validation = this.validateFile(file);
+    if (!validation.valid) {
+      utils.showToast(validation.error, 'error');
+      input.value = '';
+      return;
+    }
+
+    // Store file with metadata
+    demoState.uploadedFiles[fileType] = {
+      file: file,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      uploadedAt: new Date().toISOString(),
+      fileType: fileType
+    };
+
+    utils.showToast(`${file.name} (${utils.formatFileSize(file.size)}) uploaded successfully`, 'success', 3000);
+
+    analytics.track('file_uploaded', {
+      file_type: fileType,
+      file_size: file.size,
+      file_name: file.name.replace(/[^a-zA-Z0-9.-]/g, '_') // Sanitize for analytics
+    });
+
+    this.updateUI();
+    this.updateFileStatus(fileType, file);
+  },
+
+  updateFileStatus(fileType, file) {
+    const statusElement = utils.$(`${fileType}FileStatus`);
+    if (statusElement) {
+      statusElement.innerHTML = `
+        <div class="flex items-center justify-between p-2 bg-green-50 rounded border border-green-200">
+          <div class="flex items-center">
+            <svg class="h-4 w-4 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm text-green-800 font-medium">${file.name}</span>
+          </div>
+          <span class="text-xs text-green-600">${utils.formatFileSize(file.size)}</span>
+        </div>
+      `;
+    }
+  },
+
+  loadSampleData(type) {
+    const sampleFiles = {
+      pos: {
+        name: 'sample_pos_data.csv',
+        size: 2048,
+        type: 'text/csv',
+        description: 'Sample POS transaction data'
+      },
+      alle: {
+        name: 'sample_alle_rewards.csv',
+        size: 1536,
+        type: 'text/csv',
+        description: 'Sample Alle rewards data'
+      },
+      aspire: {
+        name: 'sample_aspire_rewards.csv',
+        size: 1792,
+        type: 'text/csv',
+        description: 'Sample Aspire rewards data'
       }
     };
-    
-    console.log('Analytics Event:', data);
-    
-    // Store for potential later sending
-    const events = JSON.parse(localStorage.getItem('demo_events') || '[]');
-    events.push(data);
-    localStorage.setItem('demo_events', JSON.stringify(events.slice(-50))); // Keep last 50 events
+
+    const sampleFile = sampleFiles[type];
+    if (!sampleFile) return;
+
+    // Create mock file object
+    demoState.uploadedFiles[type === 'alle' || type === 'aspire' ? 'loyalty' : type] = {
+      file: null,
+      name: sampleFile.name,
+      size: sampleFile.size,
+      type: sampleFile.type,
+      isSample: true,
+      sampleType: type,
+      uploadedAt: new Date().toISOString(),
+      fileType: type === 'alle' || type === 'aspire' ? 'loyalty' : type
+    };
+
+    utils.showToast(`${sampleFile.description} loaded successfully`, 'success', 3000);
+
+    analytics.track('sample_data_loaded', {
+      sample_type: type,
+      file_name: sampleFile.name
+    });
+
+    this.updateUI();
+    this.updateSampleStatus(type, sampleFile);
   },
 
-  getSessionId() {
-    let sessionId = sessionStorage.getItem('demo_session_id');
-    if (!sessionId) {
-      sessionId = 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-      sessionStorage.setItem('demo_session_id', sessionId);
+  updateSampleStatus(type, sampleFile) {
+    const fileTypeKey = type === 'alle' || type === 'aspire' ? 'loyalty' : type;
+    const statusElement = utils.$(`${fileTypeKey}FileStatus`);
+    if (statusElement) {
+      statusElement.innerHTML = `
+        <div class="flex items-center justify-between p-2 bg-blue-50 rounded border border-blue-200">
+          <div class="flex items-center">
+            <svg class="h-4 w-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-sm text-blue-800 font-medium">${sampleFile.name}</span>
+          </div>
+          <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">Sample</span>
+        </div>
+      `;
     }
-    return sessionId;
+  },
+
+  updateUI() {
+    const filesCount = Object.keys(demoState.uploadedFiles).length;
+    const runBtn = utils.$('runDemoBtn');
+    // usageCount updates handled by usageTracking module directly
+    // demosRemaining is part of usageTracking.updateDisplay()
+
+    // Update run button state
+    if (runBtn) {
+      const canRun = filesCount >= 2 && !demoState.processing;
+
+      runBtn.disabled = !canRun;
+
+      if (demoState.processing) {
+        runBtn.textContent = '⏳ Processing...';
+        runBtn.className = 'bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg cursor-not-allowed transition';
+      } else if (canRun) {
+        runBtn.textContent = '🚀 Run AI Reconciliation';
+        runBtn.className = 'bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-emerald-700 transition cursor-pointer';
+      } else {
+        const needed = 2 - filesCount;
+        runBtn.textContent = `📁 Select ${needed} more file${needed > 1 ? 's' : ''} to continue`;
+        runBtn.className = 'bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg cursor-not-allowed transition';
+      }
+    }
+  },
+
+  clearFiles() {
+    demoState.uploadedFiles = {};
+
+    // Clear file inputs
+    const posInput = utils.$('posFileInput');
+    const loyaltyInput = utils.$('loyaltyFileInput');
+
+    if (posInput) posInput.value = '';
+    if (loyaltyInput) loyaltyInput.value = '';
+
+    // Clear status displays
+    const posStatus = utils.$('posFileStatus');
+    const loyaltyStatus = utils.$('loyaltyFileStatus');
+
+    if (posStatus) posStatus.innerHTML = '';
+    if (loyaltyStatus) loyaltyStatus.innerHTML = '';
+
+    this.updateUI();
   }
 };
 
-// Subscription management
-const subscription = {
-  trackClick(source) {
-    analytics.track('subscription_clicked', {
-      source: source,
-      demo_completed: demoState.demoCompleted,
-      current_plan: demoState.currentPlan,
-      user_email: demoState.userEmail
+// Enhanced reconciliation engine with progress tracking
+const reconciliation = {
+  async run() {
+    if (demoState.processing) return;
+
+    const filesCount = Object.keys(demoState.uploadedFiles).length;
+    if (filesCount < 2) {
+      utils.showToast('Please select at least 2 files (POS and loyalty program data)', 'error');
+      return;
+    }
+
+    // Check daily usage limit
+    const today = new Date().toDateString();
+    const usageKey = `demo_usage_${today}`;
+    const todayUsage = parseInt(localStorage.getItem(usageKey) || '0');
+
+    if (todayUsage >= CONFIG.MAX_DAILY_DEMOS) {
+      utils.showToast('Daily demo limit reached. Please subscribe for unlimited access.', 'warning');
+      setTimeout(() => subscription.showModal(), 1500);
+      return;
+    }
+
+    // Start processing
+    demoState.processing = true;
+    demoState.currentStep = 'processing';
+
+    // Update UI to show processing state
+    this.showProcessingState();
+    fileHandler.updateUI();
+    usageTracking.incrementUsage(); // Increment usage count after initiating a run
+
+    analytics.track('reconciliation_started', {
+      files_count: filesCount,
+      user_email: demoState.userEmail,
+      files: Object.keys(demoState.uploadedFiles)
     });
+
+    try {
+      // Enhanced processing simulation with realistic progress
+      await this.simulateProcessing();
+
+      // Generate enhanced results
+      const results = this.generateResults();
+
+      // Store results
+      demoState.results = results;
+      demoState.demoCompleted = true;
+      demoState.currentStep = 'results';
+
+      // Display results
+      this.displayResults(results);
+
+      utils.showToast('Reconciliation completed successfully!', 'success');
+
+      analytics.track('reconciliation_completed', {
+        results: results,
+        processing_time: results.processingTime,
+        match_rate: results.accuracy
+      });
+
+      // Show subscription CTA after successful demo
+      setTimeout(() => {
+        subscription.showCTA();
+      }, 2000);
+
+    } catch (error) {
+      console.error('Reconciliation error:', error);
+      utils.showToast('Processing failed. Please try again or contact support.', 'error');
+
+      analytics.track('reconciliation_error', {
+        error: error.message,
+        files_count: filesCount
+      });
+    } finally {
+      demoState.processing = false;
+      fileHandler.updateUI();
+    }
   },
 
-  open(source) {
-    this.trackClick(source);
-    
-    // Open Stripe Customer Portal
-    window.open(CONFIG.STRIPE_PORTAL_URL, '_blank');
-    
-    utils.showToast('Opening secure billing portal...', 'info', 2000);
+  showProcessingState() {
+    // Hide upload step
+    const uploadStep = utils.$('uploadStep');
+    const processingStep = utils.$('processingStep');
+
+    if (uploadStep) utils.hide(uploadStep);
+    if (processingStep) utils.show(processingStep);
+
+    // Scroll to processing section
+    utils.scrollToElement('processingStep');
   },
 
+  async simulateProcessing() {
+    const progressSteps = [
+      { progress: 10, message: 'Loading POS transaction data...' },
+      { progress: 25, message: 'Processing loyalty program data...' },
+      { progress: 40, message: 'Initializing AI matching algorithm...' },
+      { progress: 55, message: 'Analyzing transaction patterns...' },
+      { progress: 70, message: 'Running fuzzy matching logic...' },
+      { progress: 85, message: 'Validating matches and confidence scores...' },
+      { progress: 95, message: 'Generating comprehensive results...' },
+      { progress: 100, message: 'Finalizing reconciliation report...' }
+    ];
+
+    for (let i = 0; i < progressSteps.length; i++) {
+      const step = progressSteps[i];
+
+      // Update progress
+      utils.updateProgress(step.progress, step.message);
+
+      // Variable delay for realism
+      const delay = CONFIG.PROCESSING_DELAY.MIN +
+        Math.random() * (CONFIG.PROCESSING_DELAY.MAX - CONFIG.PROCESSING_DELAY.MIN);
+
+      await new Promise(resolve => setTimeout(resolve, delay));
+
+      // Show intermediate toast for key steps
+      if ([25, 55, 85].includes(step.progress)) {
+        utils.showToast(step.message, 'info', 2000);
+      }
+    }
+  },
+
+  generateResults() {
+    // Generate realistic but varied results
+    const baseTotal = 15 + Math.floor(Math.random() * 15); // 15-30 transactions
+    const matchRate = 0.78 + Math.random() * 0.17; // 78-95% match rate
+    const matches = Math.floor(baseTotal * matchRate);
+    const unmatched = baseTotal - matches;
+    const accuracy = 85 + Math.floor(Math.random() * 15); // 85-100% accuracy
+
+    // Calculate potential revenue impact
+    const avgTransactionValue = 150 + Math.random() * 100; // $150-250 avg
+    const potentialRevenue = Math.floor(unmatched * avgTransactionValue);
+
+    // Industry benchmarking
+    const industryAverage = 65; // Industry average match rate
+    const performanceVsIndustry = ((accuracy - industryAverage) / industryAverage * 100).toFixed(1);
+
+    return {
+      total: baseTotal,
+      matches: matches,
+      unmatched: unmatched,
+      accuracy: accuracy,
+      matchRate: Math.round(matchRate * 100),
+      processingTime: (1.2 + Math.random() * 2.3).toFixed(1),
+      potentialRevenue: potentialRevenue,
+      confidence: Math.floor(accuracy * 0.95),
+      filesProcessed: Object.keys(demoState.uploadedFiles),
+      industryComparison: {
+        industryAverage: industryAverage,
+        yourPerformance: accuracy,
+        improvementVsIndustry: performanceVsIndustry
+      },
+      breakdown: this.generateDetailedBreakdown(matches, unmatched),
+      recommendations: this.generateRecommendations(unmatched, potentialRevenue)
+    };
+  },
+
+  generateDetailedBreakdown(matches, unmatched) {
+    return {
+      perfectMatches: Math.floor(matches * 0.8),
+      fuzzyMatches: Math.floor(matches * 0.2),
+      unmatchedReasons: {
+        timingDiscrepancies: Math.floor(unmatched * 0.4),
+        nameVariations: Math.floor(unmatched * 0.3),
+        missingData: Math.floor(unmatched * 0.2),
+        other: Math.floor(unmatched * 0.1)
+      }
+    };
+  },
+
+  generateRecommendations(unmatched, revenue) {
+    const recommendations = [];
+
+    if (unmatched > 3) {
+      recommendations.push('Contact loyalty program representatives to resolve timing discrepancies');
+    }
+
+    if (revenue > 1000) {
+      recommendations.push('Implement weekly reconciliation to minimize revenue loss');
+    }
+
+    recommendations.push('Export detailed results for accounting team review');
+
+    return recommendations;
+  },
+
+  displayResults(results) {
+    // Hide processing step
+    const processingStep = utils.$('processingStep');
+    const resultsStep = utils.$('resultsStep');
+    const exportBtn = utils.$('exportBtn'); // Get export button
+
+    if (processingStep) utils.hide(processingStep);
+    if (resultsStep) utils.show(resultsStep);
+    if (exportBtn) utils.show(exportBtn); // Show export button when results are ready
+
+    // Populate results grid
+    this.populateResultsGrid(results);
+
+    // Populate detailed results
+    this.populateDetailedResults(results);
+
+    // Update industry comparison
+    this.updateIndustryComparison(results);
+
+    // Scroll to results
+    utils.scrollToElement('resultsStep');
+  },
+
+  populateResultsGrid(results) {
+    const resultsGrid = utils.$('resultsGrid');
+    if (!resultsGrid) return;
+
+    resultsGrid.innerHTML = `
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+        <div class="text-2xl font-bold text-blue-900">${results.total}</div>
+        <div class="text-sm text-blue-700">Total Transactions</div>
+        <div class="text-xs text-blue-600 mt-1">Processed in ${results.processingTime}s</div>
+      </div>
+
+      <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+        <div class="text-2xl font-bold text-green-900">${results.matches}</div>
+        <div class="text-sm text-green-700">Successful Matches</div>
+        <div class="text-xs text-green-600 mt-1">${results.matchRate}% match rate</div>
+      </div>
+
+      <div class="bg-red-50 rounded-lg p-4 border border-red-200">
+        <div class="text-2xl font-bold text-red-900">${results.unmatched}</div>
+        <div class="text-sm text-red-700">Need Review</div>
+        <div class="text-xs text-red-600 mt-1">Potential revenue: ${results.potentialRevenue.toLocaleString()}</div>
+      </div>
+
+      <div class="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+        <div class="text-2xl font-bold text-emerald-900">${results.accuracy}%</div>
+        <div class="text-sm text-emerald-700">Accuracy Score</div>
+        <div class="text-xs text-emerald-600 mt-1">${results.confidence}% confidence</div>
+      </div>
+    `;
+  },
+
+  populateDetailedResults(results) {
+    const detailedResults = utils.$('detailedResults');
+    if (!detailedResults) return;
+
+    detailedResults.innerHTML = `
+      <div class="space-y-6">
+        <div>
+          <h5 class="text-lg font-semibold text-gray-900 mb-3">Match Analysis</h5>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 border">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Perfect Matches</span>
+                <span class="font-semibold text-green-600">${results.breakdown.perfectMatches}</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg p-4 border">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">Fuzzy Matches</span>
+                <span class="font-semibold text-blue-600">${results.breakdown.fuzzyMatches}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="text-lg font-semibold text-gray-900 mb-3">Unmatched Transaction Reasons</h5>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center p-3 bg-white rounded border">
+              <span class="text-sm text-gray-600">Timing Discrepancies</span>
+              <span class="font-semibold text-gray-900">${results.breakdown.unmatchedReasons.timingDiscrepancies}</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-white rounded border">
+              <span class="text-sm text-gray-600">Name Variations</span>
+              <span class="font-semibold text-gray-900">${results.breakdown.unmatchedReasons.nameVariations}</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-white rounded border">
+              <span class="text-sm text-gray-600">Missing Data</span>
+              <span class="font-semibold text-gray-900">${results.breakdown.unmatchedReasons.missingData}</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="text-lg font-semibold text-gray-900 mb-3">Recommended Actions</h5>
+          <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+            <ul class="space-y-2">
+              ${results.recommendations.map(rec =>
+                `<li class="flex items-start">
+                  <svg class="h-4 w-4 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="text-sm text-yellow-800">${rec}</span>
+                </li>`
+              ).join('')}
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  updateIndustryComparison(results) {
+    const industryComparison = utils.$('industryComparison');
+    const industryBenchmark = utils.$('industryBenchmark');
+
+    if (industryBenchmark) {
+      const comparison = results.industryComparison;
+      const isAbove = comparison.yourPerformance > comparison.industryAverage;
+
+      industryBenchmark.innerHTML = `
+        Industry average match rate: ${comparison.industryAverage}% |
+        Your performance: ${comparison.yourPerformance}%
+        (${isAbove ? '+' : ''}${comparison.improvementVsIndustry}% vs industry)
+      `;
+    }
+
+    if (industryComparison) {
+      const isAbove = results.accuracy > results.industryComparison.industryAverage;
+      industryComparison.className = `mt-6 p-4 rounded-lg ${
+        isAbove ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'
+      }`;
+
+      const message = isAbove ?
+        `🎉 Excellent! Your reconciliation accuracy is ${results.industryComparison.improvementVsIndustry}% above industry average.` :
+        `📈 Room for improvement. Industry leaders achieve ${results.industryComparison.industryAverage}%+ match rates.`;
+
+      industryComparison.querySelector('p').innerHTML = `
+        <strong>Industry Benchmark:</strong> ${message}
+      `;
+    }
+  },
+
+  async exportResults() {
+    if (!demoState.results) {
+      utils.showToast('No results to export. Please run a demo first.', 'warning');
+      return;
+    }
+
+    try {
+      // Generate CSV content
+      const csvContent = this.generateCSVExport(demoState.results);
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `medspasync_demo_results_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        utils.showToast('Results exported successfully!', 'success');
+
+        analytics.track('results_exported', {
+          file_format: 'csv',
+          results: demoState.results
+        });
+      } else {
+        throw new Error('File download not supported');
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      utils.showToast('Export failed. Please try again or contact support.', 'error');
+    }
+  },
+
+  generateCSVExport(results) {
+    const headers = [
+      'Metric',
+      'Value',
+      'Notes'
+    ];
+
+    const rows = [
+      ['Total Transactions', results.total, 'All processed transactions'],
+      ['Successful Matches', results.matches, 'Automatically matched transactions'],
+      ['Unmatched Transactions', results.unmatched, 'Require manual review'],
+      ['Match Rate', `${results.matchRate}%`, 'Percentage of successful matches'],
+      ['Accuracy Score', `${results.accuracy}%`, 'Algorithm confidence level'],
+      ['Processing Time', `${results.processingTime}s`, 'Time to complete reconciliation'],
+      ['Potential Revenue Impact', `${results.potentialRevenue}`, 'Estimated revenue from unmatched transactions'],
+      ['Perfect Matches', results.breakdown.perfectMatches, 'Exact transaction matches'],
+      ['Fuzzy Matches', results.breakdown.fuzzyMatches, 'Approximate matches with high confidence'],
+      ['Timing Discrepancies', results.breakdown.unmatchedReasons.timingDiscrepancies, 'Unmatched due to timing differences'],
+      ['Name Variations', results.breakdown.unmatchedReasons.nameVariations, 'Unmatched due to name/description differences'],
+      ['Missing Data', results.breakdown.unmatchedReasons.missingData, 'Unmatched due to incomplete information'],
+      ['Industry Benchmark', `${results.industryComparison.industryAverage}%`, 'Medical spa industry average match rate'],
+      ['Performance vs Industry', `${results.industryComparison.improvementVsIndustry}%`, 'Your performance compared to industry average']
+    ];
+
+    // Convert to CSV format
+    const csvRows = [headers, ...rows];
+    return csvRows.map(row =>
+      row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+  },
+
+  resetDemo() {
+    // Reset state
+    demoState.uploadedFiles = {};
+    demoState.processing = false;
+    demoState.demoCompleted = false;
+    demoState.results = null;
+    demoState.currentStep = 'upload';
+
+    // Reset UI visibility
+    const leadCaptureSection = utils.$('leadCapture');
+    const demoToolSection = utils.$('demoTool');
+    const uploadStep = utils.$('uploadStep');
+    const processingStep = utils.$('processingStep');
+    const resultsStep = utils.$('resultsStep');
+    const exportBtn = utils.$('exportBtn');
+    const ctaSection = utils.$('subscriptionCTA');
+
+    if (leadCaptureSection) utils.show(leadCaptureSection);
+    if (demoToolSection) utils.hide(demoToolSection); // Hide the whole demo tool
+    if (uploadStep) utils.show(uploadStep); // Ensure upload step is visible within demoTool once it's shown
+    if (processingStep) utils.hide(processingStep);
+    if (resultsStep) utils.hide(resultsStep);
+    if (exportBtn) utils.hide(exportBtn); // Hide export button on reset
+    if (ctaSection) utils.hide(ctaSection); // Hide subscription CTA
+
+    // Clear file handler
+    fileHandler.clearFiles();
+
+    // Reset progress
+    utils.updateProgress(0, '');
+    usageTracking.updateDisplay(); // Update usage text display after reset
+
+    // Scroll to top of main content or hero section
+    utils.scrollToElement('main');
+
+
+    utils.showToast('Demo reset. You can now upload new files.', 'info');
+
+    analytics.track('demo_reset');
+  }
+};
+
+// Enhanced subscription system
+const subscription = {
+  // Directly call this when showing the modal
   showModal() {
-    if (demoState.subscriptionPromptShown) return;
-    
     const modal = utils.$('subscriptionModal');
     if (modal) {
       modal.classList.remove('hidden');
       modal.classList.add('flex');
-      demoState.subscriptionPromptShown = true;
-      
+
       analytics.track('subscription_modal_shown', {
-        trigger: 'demo_completion',
+        trigger: 'manual',
+        demo_completed: demoState.demoCompleted,
         demo_results: demoState.results
       });
+      // Optionally store in localStorage if modal should only show once
+      localStorage.setItem('subscription_prompt_shown', 'true');
     }
   },
 
@@ -158,476 +905,334 @@ const subscription = {
     if (modal) {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
-      
+
       analytics.track('subscription_modal_closed', {
         action: 'user_dismissed'
       });
     }
   },
 
+  // This is called from reconciliation.run() after demo completion
   showCTA() {
     const ctaSection = utils.$('subscriptionCTA');
     if (ctaSection) {
-      ctaSection.classList.remove('hidden');
-      
+      utils.show(ctaSection); // Use utils.show for consistent animation
       setTimeout(() => {
-        ctaSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        utils.scrollToElement('subscriptionCTA');
       }, 500);
-      
+
       analytics.track('subscription_cta_shown', {
         trigger: 'demo_completion'
       });
+    } else {
+      // Fallback to modal if CTA section doesn't exist (less ideal, but robust)
+      this.showModal();
+    }
+  },
+
+  // Handles all clicks that lead to Stripe
+  redirectToPortal(source = 'unknown') {
+    utils.showToast('Redirecting to secure checkout...', 'info');
+
+    analytics.track('subscription_redirect', {
+      source: source,
+      demo_completed: demoState.demoCompleted
+    });
+
+    setTimeout(() => {
+      window.open(CONFIG.STRIPE_PORTAL_URL, '_blank');
+    }, 1000);
+
+    // Close modal if redirecting from it
+    this.closeModal();
+  }
+};
+
+// Enhanced lead capture system
+const leadCapture = {
+  init() {
+    // Check for email parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailParam = urlParams.get('email');
+
+    if (emailParam) {
+      demoState.userEmail = emailParam;
+      this.populateEmailField(emailParam);
+    }
+  },
+
+  populateEmailField(email) {
+    const emailInput = utils.$('leadEmail');
+    if (emailInput) {
+      emailInput.value = email;
+    }
+  },
+
+  validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  },
+
+  async submitLead(formData) {
+    // Validate email before submission
+    if (!this.validateEmail(formData.email)) {
+      utils.showToast('Please enter a valid email address.', 'error');
+      const emailError = utils.$('leadEmail-error');
+      if (emailError) {
+          emailError.textContent = 'Invalid email address.';
+          utils.show(emailError, 'block');
+      }
+      return false;
+    } else {
+        const emailError = utils.$('leadEmail-error');
+        if (emailError) utils.hide(emailError);
+    }
+
+    try {
+      // In production, this would call your lead capture API
+      console.log('Lead captured:', formData);
+
+      demoState.userEmail = formData.email;
+      demoState.userName = formData.name;
+
+      utils.showToast('Welcome! You can now access the demo.', 'success');
+
+      analytics.track('lead_captured', {
+        email: formData.email.replace(/(.{2})(.*)(@.*)/, '$1***$3'), // Anonymize for analytics
+        source: 'demo_page'
+      });
+
+      // Show the demo tool and hide the lead capture form
+      utils.hide(utils.$('leadCapture'));
+      utils.show(utils.$('demoTool'));
+      utils.scrollToElement('demoTool');
+
+
+      return true;
+    } catch (error) {
+      console.error('Lead capture error:', error);
+      utils.showToast('Failed to save your information. You can still use the demo.', 'warning');
+      return false;
     }
   }
 };
 
-// File handling
-const fileHandler = {
-  validateFile(file) {
-    const validTypes = ['.csv', '.txt'];
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    const fileExt = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
-    
-    if (!validTypes.includes(fileExt)) {
-      return 'Invalid file type. Please upload CSV files only.';
-    }
-    
-    if (file.size > maxSize) {
-      return `File too large. Maximum size is ${utils.formatFileSize(maxSize)}.`;
-    }
-    
-    return null;
+// Enhanced usage tracking
+const usageTracking = {
+  init() {
+    this.updateDisplay();
+    this.checkDailyReset();
   },
 
-  handleFileSelect(input, fileType) {
-    const file = input.files[0];
-    if (!file) return;
-    
-    const error = this.validateFile(file);
-    if (error) {
-      utils.showToast(error, 'error');
-      input.value = '';
-      return;
-    }
-    
-    demoState.uploadedFiles[fileType] = file;
-    
-    utils.showToast(`${file.name} uploaded successfully`, 'success', 2000);
-    analytics.track('file_uploaded', {
-      file_type: fileType,
-      file_size: file.size,
-      file_name: file.name
-    });
-    
-    this.updateUI();
-  },
+  updateDisplay() {
+    const demosRemainingSpan = utils.$('demosRemaining');
+    const usageTextSpan = utils.$('usageText');
+    const usageBanner = utils.$('usageBanner');
 
-  loadSampleData(type) {
-    const sampleFiles = {
-      pos: 'sample_pos_data.csv',
-      alle: 'sample_alle_data.csv',
-      aspire: 'sample_aspire_data.csv'
-    };
-    
-    demoState.uploadedFiles[type] = { 
-      name: sampleFiles[type], 
-      size: 2048, 
-      type: 'text/csv',
-      isSample: true 
-    };
-    
-    utils.showToast(`${sampleFiles[type]} loaded`, 'success', 2000);
-    analytics.track('sample_data_loaded', { sample_type: type });
-    
-    this.updateUI();
-  },
+    const remaining = this.getRemainingDemos();
 
-  updateUI() {
-    const filesCount = Object.keys(demoState.uploadedFiles).length;
-    const runBtn = utils.$('runDemoBtn');
-    
-    if (runBtn) {
-      runBtn.disabled = filesCount < 2 || demoState.processing;
-      
-      if (demoState.processing) {
-        runBtn.textContent = '⏳ Processing...';
-      } else if (filesCount >= 2) {
-        runBtn.textContent = '🚀 Run AI Reconciliation';
+    if (demosRemainingSpan) {
+      demosRemainingSpan.textContent = remaining;
+      // Update styling based on remaining demos (on the span's parent element)
+      demosRemainingSpan.parentElement.classList.remove('text-red-600', 'text-yellow-600', 'text-gray-600');
+      if (remaining <= 1) {
+        demosRemainingSpan.parentElement.classList.add('text-red-600');
+      } else if (remaining <= 2) {
+        demosRemainingSpan.parentElement.classList.add('text-yellow-600');
       } else {
-        const needed = 2 - filesCount;
-        runBtn.textContent = `📁 Select ${needed} more file${needed > 1 ? 's' : ''}`;
+        demosRemainingSpan.parentElement.classList.add('text-gray-600'); // Default color
       }
     }
-  }
-};
 
-// Demo reconciliation engine
-const reconciliation = {
-  async run() {
-    if (demoState.processing) return;
-    
-    const filesCount = Object.keys(demoState.uploadedFiles).length;
-    if (filesCount < 2) {
-      utils.showToast('Please select at least 2 files (POS and rewards data)', 'error');
-      return;
+    if (usageTextSpan && usageBanner) {
+        if (remaining <= 0) {
+            usageTextSpan.textContent = 'Daily demo limit reached. Please subscribe for unlimited access.';
+            utils.show(usageBanner);
+        } else if (remaining <= 2) {
+            usageTextSpan.textContent = `You have ${remaining} demo(s) remaining today.`;
+            utils.show(usageBanner);
+        } else {
+            utils.hide(usageBanner); // Hide if ample demos remain
+        }
     }
+  },
 
-    // Check daily usage limit
+  getRemainingDemos() {
     const today = new Date().toDateString();
     const usageKey = `demo_usage_${today}`;
     const todayUsage = parseInt(localStorage.getItem(usageKey) || '0');
-    
-    if (todayUsage >= CONFIG.MAX_DAILY_DEMOS) {
-      utils.showToast('Daily demo limit reached. Please subscribe for unlimited access.', 'warning');
-      setTimeout(() => subscription.showModal(), 1000);
-      return;
-    }
+    return Math.max(0, CONFIG.MAX_DAILY_DEMOS - todayUsage);
+  },
 
-    demoState.processing = true;
-    fileHandler.updateUI();
-    
-    const loader = utils.$('runLoader');
-    if (loader) utils.show(loader);
-    
-    utils.showToast('Analyzing transaction data...', 'info');
-    analytics.track('reconciliation_started', { 
-      files_count: filesCount,
-      user_email: demoState.userEmail
-    });
-    
-    try {
-      // Simulate realistic processing with progress updates
-      const progressMessages = [
-        'Loading POS data...',
-        'Processing rewards data...',
-        'Running AI matching algorithm...',
-        'Analyzing patterns...',
-        'Generating results...'
-      ];
-      
-      for (let i = 0; i < progressMessages.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 400));
-        if (i < progressMessages.length - 1) {
-          utils.showToast(progressMessages[i], 'info', 1500);
-        }
-      }
-      
-      // Generate realistic results
-      const baseTotal = 15 + Math.floor(Math.random() * 10);
-      const matchRate = 0.75 + Math.random() * 0.2; // 75-95% match rate
-      const matches = Math.floor(baseTotal * matchRate);
-      const accuracy = 85 + Math.floor(Math.random() * 15); // 85-100% accuracy
-      
-      const results = {
-        total: baseTotal,
-        matches: matches,
-        unmatched: baseTotal - matches,
-        accuracy: accuracy,
-        processingTime: (1.2 + Math.random() * 1.8).toFixed(1),
-        potentialRevenue: Math.floor((baseTotal - matches) * 150 + Math.random() * 1000) + 500,
-        confidence: Math.floor(accuracy * 0.95),
-        filesProcessed: Object.keys(demoState.uploadedFiles)
-      };
-      
-      demoState.results = results;
-      demoState.demoCompleted = true;
-      
-      this.displayResults(results);
-      
-      // Update usage tracking
-      localStorage.setItem(usageKey, (todayUsage + 1).toString());
-      
-      utils.showToast('Reconciliation completed successfully!', 'success');
-      analytics.track('reconciliation_completed', results);
-      
-      // Show subscription options after delay
-      setTimeout(() => {
-        subscription.showCTA();
-        setTimeout(() => subscription.showModal(), CONFIG.SUBSCRIPTION_DELAY);
-      }, 2000);
-      
-    } catch (error) {
-      console.error('Reconciliation error:', error);
-      utils.showToast('Processing failed. Please try again.', 'error');
-      analytics.track('reconciliation_error', { error: error.message });
-    } finally {
-      demoState.processing = false;
-      fileHandler.updateUI();
-      
-      const loader = utils.$('runLoader');
-      if (loader) utils.hide(loader);
+  checkDailyReset() {
+    const lastResetKey = 'demo_last_reset';
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem(lastResetKey);
+
+    if (lastReset !== today) {
+      // New day, reset usage
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayKey = `demo_usage_${yesterday.toDateString()}`;
+
+      localStorage.removeItem(yesterdayKey); // Clear yesterday's usage
+      localStorage.setItem(lastResetKey, today); // Set reset for today
+
+      this.updateDisplay(); // Update display with new daily count
     }
   },
 
-  displayResults(results) {
-    const resultsDiv = utils.$('results');
-    if (!resultsDiv) return;
-    
-    resultsDiv.innerHTML = `
-      <div class="bg-white rounded-xl shadow-lg p-8">
-        <div class="text-center mb-8">
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">Reconciliation Complete</h3>
-          <p class="text-gray-600">AI analysis finished in ${results.processingTime} seconds</p>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
-          <div class="bg-blue-50 p-6 rounded-lg text-center">
-            <div class="text-3xl font-bold text-blue-600">${results.total}</div>
-            <div class="text-sm text-gray-600">Total Transactions</div>
-          </div>
-          
-          <div class="bg-green-50 p-6 rounded-lg text-center">
-            <div class="text-3xl font-bold text-green-600">${results.matches}</div>
-            <div class="text-sm text-gray-600">Matched (${Math.round(results.matches/results.total*100)}%)</div>
-          </div>
-          
-          <div class="bg-yellow-50 p-6 rounded-lg text-center">
-            <div class="text-3xl font-bold text-yellow-600">${results.unmatched}</div>
-            <div class="text-sm text-gray-600">Need Review</div>
-          </div>
-        </div>
-        
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-          <div class="flex items-center mb-4">
-            <svg class="h-6 w-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
-            </svg>
-            <h4 class="text-lg font-semibold text-red-800">Revenue at Risk</h4>
-          </div>
-          <p class="text-red-700 text-lg">
-            <strong>${results.potentialRevenue.toLocaleString()}/month</strong> in unmatched rewards transactions
-          </p>
-          <p class="text-red-600 text-sm mt-2">
-            Manual reconciliation is missing these revenue opportunities. 
-            MedSpaSync Pro would recover this automatically.
-          </p>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h5 class="font-semibold text-gray-900 mb-2">Match Accuracy</h5>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-              <div class="bg-green-500 h-3 rounded-full" style="width: ${results.accuracy}%"></div>
-            </div>
-            <p class="text-sm text-gray-600 mt-1">${results.accuracy}% accuracy</p>
-          </div>
-          
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h5 class="font-semibold text-gray-900 mb-2">Confidence Score</h5>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-              <div class="bg-blue-500 h-3 rounded-full" style="width: ${results.confidence}%"></div>
-            </div>
-            <p class="text-sm text-gray-600 mt-1">${results.confidence}% confidence</p>
-          </div>
-        </div>
-        
-        <div class="border-t border-gray-200 pt-6">
-          <div class="text-center">
-            <h4 class="text-xl font-semibold text-gray-900 mb-4">
-              Stop Losing ${results.potentialRevenue.toLocaleString()}/Month
-            </h4>
-            <p class="text-gray-600 mb-6">
-              This demo shows real savings potential. Get the full platform to recover this revenue automatically.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onclick="subscription.open('demo-results')"
-                class="subscription-cta text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300"
-              >
-                Start Subscription - $299/month
-              </button>
-              
-              <button
-                onclick="exportResults()"
-                class="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-              >
-                Export Demo Results
-              </button>
-            </div>
-            
-            <div class="mt-4 text-sm text-gray-500 space-y-1">
-              <p>✅ 30-day money-back guarantee</p>
-              <p>✅ HIPAA-compliant processing</p>
-              <p>✅ Cancel anytime</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    utils.show(resultsDiv);
-    
-    // Smooth scroll to results
-    setTimeout(() => {
-      resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+  incrementUsage() {
+    const today = new Date().toDateString();
+    const usageKey = `demo_usage_${today}`;
+    const current = parseInt(localStorage.getItem(usageKey) || '0');
+    localStorage.setItem(usageKey, (current + 1).toString());
+
+    this.updateDisplay();
   }
 };
 
-// Lead form handling
-const leadForm = {
+// Error handling and recovery
+const errorHandler = {
   init() {
-    const form = utils.$('leadForm');
-    if (!form) return;
-    
-    form.addEventListener('submit', this.handleSubmit.bind(this));
-    
-    // Real-time email validation
-    const emailInput = utils.$('leadEmail');
-    if (emailInput) {
-      emailInput.addEventListener('blur', this.validateEmailField.bind(this));
-    }
+    // Global error handler
+    window.addEventListener('error', (event) => {
+      console.error('Global error:', event.error);
+      this.handleError(event.error, 'global');
+    });
+
+    // Unhandled promise rejection handler
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('Unhandled promise rejection:', event.reason);
+      this.handleError(event.reason, 'promise');
+    });
   },
 
-  async handleSubmit(e) {
-    e.preventDefault();
-    
-    const emailEl = utils.$('leadEmail');
-    const nameEl = utils.$('leadName');
-    
-    if (!emailEl) return;
-    
-    const email = emailEl.value.trim();
-    const name = nameEl ? nameEl.value.trim() : '';
-    
-    // Validation
-    if (!email) {
-      this.showError('leadEmail', 'Email address is required');
-      return;
-    }
-    
-    if (!utils.validateEmail(email)) {
-      this.showError('leadEmail', 'Please enter a valid email address');
-      return;
-    }
-    
-    this.clearError('leadEmail');
-    
-    // Store user info
-    demoState.userEmail = email;
-    
-    // Show demo tool
-    const demoTool = utils.$('demoTool');
-    if (demoTool) {
-      utils.show(demoTool);
-      demoTool.scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    analytics.track('lead_captured', { email, name });
-    utils.showToast('Demo unlocked! Upload your files to begin.', 'success');
+  handleError(error, context) {
+    analytics.track('error_occurred', {
+      error_message: error.message || 'Unknown error',
+      error_context: context,
+      stack_trace: error.stack ? error.stack.substring(0, 500) : 'No stack trace'
+    });
+
+    // User-friendly error messages
+    const userMessage = this.getUserFriendlyMessage(error);
+    utils.showToast(userMessage, 'error');
   },
 
-  showError(fieldId, message) {
-    const errorEl = utils.$(`${fieldId}-error`);
-    const inputEl = utils.$(fieldId);
-    
-    if (errorEl) {
-      errorEl.textContent = message;
-      errorEl.classList.remove('hidden');
+  getUserFriendlyMessage(error) {
+    if (error.message && error.message.includes('network')) {
+      return 'Network error. Please check your connection and try again.';
     }
-    
-    if (inputEl) {
-      inputEl.classList.add('border-red-500');
-      inputEl.focus();
-    }
-  },
 
-  clearError(fieldId) {
-    const errorEl = utils.$(`${fieldId}-error`);
-    const inputEl = utils.$(fieldId);
-    
-    if (errorEl) {
-      errorEl.classList.add('hidden');
+    if (error.message && error.message.includes('file')) {
+      return 'File processing error. Please ensure your CSV file is valid.';
     }
-    
-    if (inputEl) {
-      inputEl.classList.remove('border-red-500');
-    }
-  },
 
-  validateEmailField() {
-    const emailInput = utils.$('leadEmail');
-    if (!emailInput) return;
-    
-    const email = emailInput.value.trim();
-    if (email && !utils.validateEmail(email)) {
-      this.showError('leadEmail', 'Please enter a valid email address');
-    } else if (email) {
-      this.clearError('leadEmail');
-    }
+    return 'Something went wrong. Please refresh the page and try again.';
   }
 };
 
-// Export functionality
-function exportResults() {
-  if (!demoState.results) {
-    utils.showToast('No results to export', 'warning');
-    return;
+// Performance monitoring
+const performance = {
+  init() {
+    this.measurePageLoad();
+    this.monitorFileUpload();
+  },
+
+  measurePageLoad() {
+    if ('performance' in window) {
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const perfData = performance.getEntriesByType('navigation')[0];
+
+          analytics.track('page_performance', {
+            load_time: perfData.loadEventEnd - perfData.loadEventStart,
+            dom_content_loaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+            total_page_load: perfData.loadEventEnd - perfData.fetchStart
+          });
+        }, 0);
+      });
+    }
+  },
+
+  monitorFileUpload() {
+    // Track file upload performance
+    const originalHandleFileSelect = fileHandler.handleFileSelect;
+    fileHandler.handleFileSelect = function(input, fileType) {
+      const startTime = performance.now();
+
+      try {
+        const result = originalHandleFileSelect.call(this, input, fileType);
+
+        const endTime = performance.now();
+        analytics.track('file_upload_performance', {
+          file_type: fileType,
+          processing_time: endTime - startTime,
+          file_size: input.files[0]?.size || 0
+        });
+
+        return result;
+      } catch (error) {
+        const endTime = performance.now();
+        analytics.track('file_upload_error', {
+          file_type: fileType,
+          processing_time: endTime - startTime,
+          error: error.message
+        });
+        throw error;
+      }
+    };
   }
-  
-  const csvContent = [
-    ['Metric', 'Value'],
-    ['Total Transactions', demoState.results.total],
-    ['Matched Transactions', demoState.results.matches],
-    ['Unmatched Transactions', demoState.results.unmatched],
-    ['Match Rate', `${Math.round(demoState.results.matches/demoState.results.total*100)}%`],
-    ['Accuracy Score', `${demoState.results.accuracy}%`],
-    ['Confidence Score', `${demoState.results.confidence}%`],
-    ['Processing Time', `${demoState.results.processingTime} seconds`],
-    ['Potential Monthly Revenue Recovery', `${demoState.results.potentialRevenue.toLocaleString()}`],
-    ['Demo Date', new Date().toLocaleDateString()],
-    ['Demo Time', new Date().toLocaleTimeString()]
-  ].map(row => row.join(',')).join('\n');
-  
-  const blob = new Blob([csvContent], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `medspasync-demo-results-${Date.now()}.csv`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-  
-  analytics.track('demo_results_exported', demoState.results);
-  utils.showToast('Demo results exported successfully', 'success');
-}
-
-// Global functions for HTML onclick handlers
-window.handleSubscribeClick = (source) => subscription.open(source);
-window.showSubscriptionModal = () => subscription.showModal();
-window.closeSubscriptionModal = () => subscription.closeModal();
-window.confirmSubscription = () => {
-  subscription.open('modal');
-  subscription.closeModal();
 };
-window.exportResults = exportResults;
 
-// Event listeners setup
+// Event listeners and initialization
 function setupEventListeners() {
+  console.log('🔧 Setting up event listeners...');
+
+  // Hero section "Start Demo" button
+  const startDemoHeroBtn = utils.$('startDemoHeroBtn');
+  if (startDemoHeroBtn) {
+      startDemoHeroBtn.addEventListener('click', (e) => {
+          e.preventDefault(); // Prevent default anchor jump
+          utils.scrollToElement('leadCapture');
+          analytics.track('hero_start_demo_clicked');
+      });
+  }
+
+  // Lead capture form submission
+  const leadForm = utils.$('leadForm');
+  if (leadForm) {
+      leadForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = utils.$('leadEmail').value;
+          const name = utils.$('leadName').value;
+          const formData = { email, name };
+          await leadCapture.submitLead(formData);
+      });
+  }
+
   // File upload handlers
-  const posFile = utils.$('posFile');
-  const rewardFile = utils.$('rewardFile');
-  
-  if (posFile) {
-    posFile.addEventListener('change', (e) => {
+  const posFileInput = utils.$('posFileInput');
+  const loyaltyFileInput = utils.$('loyaltyFileInput');
+
+  if (posFileInput) {
+    posFileInput.addEventListener('change', (e) => {
       fileHandler.handleFileSelect(e.target, 'pos');
     });
   }
-  
-  if (rewardFile) {
-    rewardFile.addEventListener('change', (e) => {
-      fileHandler.handleFileSelect(e.target, 'rewards');
+
+  if (loyaltyFileInput) {
+    loyaltyFileInput.addEventListener('change', (e) => {
+      fileHandler.handleFileSelect(e.target, 'loyalty');
     });
   }
-  
+
   // Sample data buttons
   const loadPosSample = utils.$('loadPosSample');
   const loadAlleSample = utils.$('loadAlleSample');
   const loadAspireSample = utils.$('loadAspireSample');
-  
+
   if (loadPosSample) {
     loadPosSample.addEventListener('click', () => fileHandler.loadSampleData('pos'));
   }
@@ -637,53 +1242,186 @@ function setupEventListeners() {
   if (loadAspireSample) {
     loadAspireSample.addEventListener('click', () => fileHandler.loadSampleData('aspire'));
   }
-  
-  // Run demo button
+
+  // Main demo button
   const runDemoBtn = utils.$('runDemoBtn');
   if (runDemoBtn) {
     runDemoBtn.addEventListener('click', () => reconciliation.run());
   }
-  
-  // Plan selection
-  const corePlan = utils.$('corePlan');
-  const proPlan = utils.$('proPlan');
-  
-  if (corePlan) {
-    corePlan.addEventListener('click', () => {
-      demoState.currentPlan = 'core';
-      analytics.track('plan_selected', { plan: 'core' });
+
+  // Results action buttons
+  const exportBtn = utils.$('exportBtn'); // Changed ID from 'exportResults' to 'exportBtn'
+  const runAnotherDemoBtn = utils.$('runAnotherDemoBtn'); // New ID for "Try Another Demo" button
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => reconciliation.exportResults());
+    utils.hide(exportBtn); // Hide on load, show when results are ready
+  }
+
+  if (runAnotherDemoBtn) {
+    runAnotherDemoBtn.addEventListener('click', () => reconciliation.resetDemo());
+  }
+
+
+  // Plan selection buttons (from header and pricing sections)
+  const headerSubscribeBtn = utils.$('headerSubscribeBtn');
+  if (headerSubscribeBtn) {
+    headerSubscribeBtn.addEventListener('click', () => {
+      subscription.redirectToPortal('header-cta');
     });
   }
-  
-  if (proPlan) {
-    proPlan.addEventListener('click', () => {
-      demoState.currentPlan = 'professional';
-      analytics.track('plan_selected', { plan: 'professional' });
+
+  const corePlanSubscribeBtn = utils.$('corePlanSubscribeBtn');
+  if (corePlanSubscribeBtn) {
+    corePlanSubscribeBtn.addEventListener('click', () => {
+      subscription.redirectToPortal('core-plan-section');
     });
   }
+
+  const proPlanSubscribeBtn = utils.$('proPlanSubscribeBtn');
+  if (proPlanSubscribeBtn) {
+    proPlanSubscribeBtn.addEventListener('click', () => {
+      // Check if it's the "Coming Soon" button
+      if (proPlanSubscribeBtn.disabled) { // Assuming it's disabled if coming soon
+        utils.showToast('Professional plan coming Q3 2025!', 'info');
+        analytics.track('coming_soon_clicked', { plan: 'professional' });
+      } else {
+        subscription.redirectToPortal('pro-plan-section');
+      }
+    });
+  }
+
+  const mainCtaSubscribeBtn = utils.$('mainCtaSubscribeBtn'); // From #subscriptionCTA section
+  if (mainCtaSubscribeBtn) {
+      mainCtaSubscribeBtn.addEventListener('click', () => {
+          subscription.redirectToPortal('main-cta-section');
+      });
+  }
+
+
+  // Subscription modal handlers
+  const modalSubscribeBtn = utils.$('modalSubscribeBtn');
+  if (modalSubscribeBtn) {
+      modalSubscribeBtn.addEventListener('click', () => {
+          subscription.redirectToPortal('modal-confirm');
+      });
+  }
+
+  const closeSubscriptionModalBtn = utils.$('closeSubscriptionModalBtn');
+  if (closeSubscriptionModalBtn) {
+    closeSubscriptionModalBtn.addEventListener('click', () => subscription.closeModal());
+  }
+
+  const subscriptionModal = utils.$('subscriptionModal');
+  if (subscriptionModal) {
+    // Close modal if clicking outside the content
+    subscriptionModal.addEventListener('click', (e) => {
+      if (e.target === subscriptionModal) {
+        subscription.closeModal();
+      }
+    });
+  }
+
+  // FAQ Accordion functionality
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const targetId = button.dataset.target;
+      const answer = utils.$(targetId);
+      const icon = button.querySelector('svg');
+
+      if (answer && icon) {
+        const isHidden = answer.classList.contains('hidden');
+        // Close all other open FAQs first (optional, but good UX for accordions)
+        document.querySelectorAll('.faq-answer:not(.hidden)').forEach(openAnswer => {
+          if (openAnswer.id !== targetId) { // Don't close the one just clicked
+            utils.hide(openAnswer);
+            const associatedButton = openAnswer.previousElementSibling;
+            if (associatedButton && associatedButton.classList.contains('faq-question')) {
+                associatedButton.querySelector('svg').classList.remove('rotate-180');
+            }
+          }
+        });
+
+        if (isHidden) {
+          utils.show(answer, 'block'); // Use 'block' to override potential flex/grid
+          icon.classList.add('rotate-180');
+        } else {
+          utils.hide(answer);
+          icon.classList.remove('rotate-180');
+        }
+        analytics.track('faq_toggled', { question: button.querySelector('h3').textContent.trim(), state: isHidden ? 'open' : 'closed' });
+      }
+    });
+  });
+
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    // Escape key to close modals
+    if (e.key === 'Escape') {
+      subscription.closeModal();
+    }
+
+    // Ctrl/Cmd + Enter to run demo (if files are ready)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      const filesCount = Object.keys(demoState.uploadedFiles).length;
+      if (filesCount >= 2 && !demoState.processing) {
+        reconciliation.run();
+      }
+    }
+  });
+
+  console.log('✅ Event listeners setup complete');
 }
 
-// Main initialization
+// Main initialization function
 function init() {
   console.log('🚀 Initializing MedSpaSync Pro Demo System v2.1...');
-  
+
   try {
-    // Initialize components
-    leadForm.init();
+    // Initialize all systems
+    leadCapture.init();
+    usageTracking.init();
+    errorHandler.init();
+    performance.init();
+    mobileOptimizations.init();
+    accessibility.init();
+
+    // Setup event handlers
     setupEventListeners();
-    fileHandler.updateUI();
-    
-    // Track page view
+
+    // Initialize UI state
+    fileHandler.updateUI(); // Updates run button state etc.
+
+    // Track page load
     analytics.track('demo_page_loaded', {
       user_agent: navigator.userAgent,
-      timestamp: new Date().toISOString()
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      },
+      timestamp: new Date().toISOString(),
+      session_id: demoState.sessionId
     });
-    
+
     console.log('✅ Demo system v2.1 initialized successfully');
-    
+
+    // Show welcome message for first-time users
+    if (!localStorage.getItem('demo_welcomed')) {
+      setTimeout(() => {
+        utils.showToast('Welcome! Upload your CSV files or try our sample data to see MedSpaSync Pro in action.', 'info', 6000);
+        localStorage.setItem('demo_welcomed', 'true');
+      }, 1000);
+    }
+
   } catch (error) {
     console.error('Demo initialization error:', error);
     utils.showToast('Demo system failed to initialize. Please refresh the page.', 'error');
+
+    analytics.track('initialization_error', {
+      error: error.message,
+      stack: error.stack
+    });
   }
 }
 
@@ -693,3 +1431,18 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+// Export for external access (debugging, etc.)
+if (typeof window !== 'undefined') {
+  window.MedSpaSyncDemo = {
+    state: demoState,
+    utils: utils,
+    fileHandler: fileHandler,
+    reconciliation: reconciliation,
+    subscription: subscription,
+    analytics: analytics,
+    version: '2.1'
+  };
+}
+
+console.log('📋 MedSpaSync Pro Demo System v2.1 Loaded Successfully');

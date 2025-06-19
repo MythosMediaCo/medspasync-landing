@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MedSpaSync Pro automates reconciliation for medical spas, recovering lost revenue from loyalty programs like Alle & Aspire. Eliminate manual work and ensure accurate financial reporting.">
-    <meta name="keywords" content="medical spa, reconciliation, alle rewards, aspire rewards, pos system, revenue recovery, medspa software, financial automation">
+    <meta name="keywords" content="medical spa, reconciliation, alle rewards, aspire rewards, pos system, revenue recovery, medspa software, financial automation, automated reconciliation">
     <meta name="author" content="MedSpaSync Pro">
     <meta name="theme-color" content="#059669">
 
@@ -24,7 +24,7 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="canonical" href="https://medspasyncpro.com/">
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://status.medspasyncpro.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://billing.stripe.com https://api.stripe.com https://checkout.stripe.com https://q.stripe.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
 
     <link rel="stylesheet" href="tailwind.css">
 
@@ -70,9 +70,9 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         }
 
-        /* CSP-compliant utility classes */
-        .hidden-element { display: none !important; }
-        .visible-element { display: block; }
+        /* CSP-compliant utility classes & animations */
+        .hidden-element { display: none !important; } /* For forcing hide */
+        .visible-element { display: block; } /* For forcing show */
         .spinner-medium {
             width: 24px; height: 24px; border: 3px solid #e5e7eb;
             border-top-color: #059669; border-radius: 50%;
@@ -93,6 +93,13 @@
             transform: translateY(-2px);
             box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.4);
         }
+        /* For FAQ accordion icons */
+        .faq-question svg {
+            transition: transform 0.3s ease;
+        }
+        .faq-question svg.rotate-180 {
+            transform: rotate(180deg);
+        }
     </style>
 
     <link rel="preload" href="/fonts/inter-v19-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -100,9 +107,11 @@
     <link rel="preload" href="/fonts/inter-v19-latin-600.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-v19-latin-700.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-v19-latin-800.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/demo.js" as="script">
+    <link rel="preload" href="https://unpkg.com/react@18/umd/react.production.min.js" as="script" crossorigin>
+    <link rel="preload" href="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" as="script" crossorigin>
     <link rel="preload" href="/preview.js" as="script">
-    <link rel="preload" href="/usageMeter.js" as="script">
+    <link rel="preload" href="/demo.js" as="script">
+
 
     <script type="application/ld+json">
     {
@@ -165,8 +174,9 @@
     }
     </script>
 
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script defer src="preview.js"></script>
-    <script defer src="usageMeter.js"></script>
     <script defer src="demo.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -180,15 +190,15 @@
 
     <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg p-4 toast" role="status" aria-live="polite"></div>
 
-    <nav class="bg-white shadow sticky top-0 z-50">
+    <nav class="bg-white shadow sticky top-0 z-50" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Pro Logo">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
-                <h1 class="text-xl font-bold">MedSpaSync Pro</h1>
+                <span class="text-xl font-bold">MedSpaSync Pro</span>
             </div>
 
             <div class="flex items-center space-x-4">
@@ -204,6 +214,7 @@
     </nav>
 
     <main class="max-w-5xl mx-auto py-10 px-4" id="main">
+
         <section id="heroSection" class="text-center mb-10">
             <h2 class="text-3xl font-bold mb-3">Live Revenue Recovery Demo</h2>
             <p class="text-lg text-gray-600 mb-3">Instantly detect unmatched rewards from POS, Alle, and Aspire data.</p>
@@ -307,9 +318,9 @@
                                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">AI-Powered Matching</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">95%+ Match Rate</h3>
                         <p class="text-gray-600">
-                            Advanced algorithms handle name variations, timing differences, and partial matches automatically.
+                            Our AI algorithm accurately matches POS transactions with loyalty rewards, even with naming variations and timing differences.
                         </p>
                     </div>
 
@@ -437,7 +448,7 @@
                                         📄 Use Sample Data
                                     </button>
                                 </div>
-
+                                <div id="posPreview" class="mt-4 text-left"></div>
                                 <div id="posFileStatus" class="mt-2 text-sm text-gray-600"></div>
                             </div>
 
@@ -463,7 +474,7 @@
                                         📄 Aspire Sample
                                     </button>
                                 </div>
-
+                                <div id="rewardPreview" class="mt-4 text-left"></div>
                                 <div id="loyaltyFileStatus" class="mt-2 text-sm text-gray-600"></div>
                             </div>
                         </div>
@@ -479,7 +490,7 @@
                     </div>
 
                     <div id="processingStep" class="hidden text-center py-12">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-6"></div>
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-6" role="status" aria-label="Loading"></div>
                         <h4 class="text-lg font-semibold text-gray-900 mb-2">Processing Your Data</h4>
                         <p class="text-gray-600">
                             <span id="processingMessage">Analyzing transaction patterns...</span>
@@ -667,7 +678,7 @@
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
                                 <span class="text-emerald-600 font-semibold text-lg">SM</span>
@@ -685,7 +696,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
                                 <span class="text-emerald-600 font-semibold text-lg">DR</span>
@@ -703,7 +714,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
                                 <span class="text-emerald-600 font-semibold text-lg">MJ</span>

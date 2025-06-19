@@ -3,134 +3,366 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Stop losing revenue to unmatched rewards. MedSpaSync Pro finds missing Allé and Aspire redemptions instantly with AI-powered reconciliation.">
+  <meta name="description" content="Stop losing revenue to unmatched rewards. MedSpaSync Pro finds missing Allé and Aspire redemptions instantly with AI-powered reconciliation for medical spas.">
   <meta name="theme-color" content="#059669">
   <meta name="robots" content="index, follow">
   
-  <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
-  script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com/; 
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-  font-src 'self' https://fonts.gstatic.com; 
-  img-src 'self' data: https:; 
-  connect-src 'self' https:;
-  script-src-elem 'self' 'unsafe-inline' https://unpkg.com https://cdn.tailwindcss.com/;
-  style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  font-src-elem 'self' https://fonts.gstatic.com;
-  frame-ancestors 'none';
-  upgrade-insecure-requests;">
+  <!-- Enhanced CSP - Self-hosted fonts only -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://status.medspasyncpro.com https://billing.stripe.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
   
-  <!-- SEO and Social -->
   <title>MedSpaSync Pro - Stop Losing Revenue to Unmatched Rewards | Live Demo</title>
+  
+  <!-- Open Graph -->
   <meta property="og:title" content="MedSpaSync Pro - Stop Losing Revenue to Unmatched Rewards">
-  <meta property="og:description" content="See how AI finds missing Allé and Aspire redemptions instantly. Live demo with real reconciliation capabilities.">
+  <meta property="og:description" content="AI-powered reconciliation finds missing Allé and Aspire redemptions instantly. See real results in 30 seconds.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://medspasyncpro.com">
   <meta property="og:image" content="https://medspasyncpro.com/og-image.png">
+  
+  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MedSpaSync Pro - Stop Losing Revenue">
+  <meta name="twitter:description" content="See how much revenue you're losing to unmatched rewards. Live demo with real reconciliation.">
   
-  <!-- Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="/fonts/inter-v19-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-v19-latin-600.woff2" as="font" type="font/woff2" crossorigin>
   
-  <!-- Icons and Assets -->
   <link rel="icon" type="image/png" href="/favicon.png">
   
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
-          },
-          colors: {
-            primary: {
-              50: '#f0fdf4',
-              500: '#059669',
-              600: '#047857',
-              700: '#065f46',
-            }
-          },
-          animation: {
-            'fade-in-up': 'fadeInUp 0.6s ease-out',
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          }
-        }
-      }
-    }
-  </script>
-  
-  <!-- Custom styles -->
+  <!-- Self-hosted fonts and unified styles -->
   <style>
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* Inter Font Family - Self Hosted */
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      src: url('/fonts/inter-v19-latin-regular.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      src: url('/fonts/inter-v19-latin-500.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      src: url('/fonts/inter-v19-latin-600.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      src: url('/fonts/inter-v19-latin-700.woff2') format('woff2');
+    }
+    @font-face {
+      font-display: swap;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 800;
+      src: url('/fonts/inter-v19-latin-800.woff2') format('woff2');
     }
     
-    .animate-fade-in-up {
-      animation: fadeInUp 0.6s ease-out;
+    /* Base Styles */
+    :root {
+      --color-primary: #059669;
+      --color-primary-dark: #047857;
+      --color-secondary: #0891b2;
+      --color-accent: #8b5cf6;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-gray-50: #f9fafb;
+      --color-gray-100: #f3f4f6;
+      --color-gray-200: #e5e7eb;
+      --color-gray-600: #4b5563;
+      --color-gray-900: #111827;
     }
     
-    .stagger-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
-    .stagger-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
-    .stagger-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
-    .stagger-4 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+    * {
+      box-sizing: border-box;
+    }
     
-    /* Toast animations */
+    body {
+      margin: 0;
+      line-height: 1.75;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: var(--color-gray-50);
+      color: var(--color-gray-900);
+    }
+    
+    /* CSP-Compliant Utility Classes */
+    .hidden-element { display: none !important; }
+    .visible-element { display: block; }
+    .visible-flex { display: flex; }
+    .invisible-element { visibility: hidden; }
+    
+    /* Focus Management */
+    .focus-outline { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .keyboard-navigation .focus-outline:focus { outline: 2px solid var(--color-primary); }
+    
+    /* State Classes */
+    .error-state { border-color: var(--color-error) !important; background-color: #fef2f2; color: #dc2626; }
+    .success-state { border-color: var(--color-success) !important; background-color: #f0fdf4; color: var(--color-primary); }
+    .warning-state { border-color: var(--color-warning) !important; background-color: #fffbeb; color: #d97706; }
+    .loading-state { opacity: 0.7; pointer-events: none; cursor: wait; }
+    
+    /* Spinner Animations */
+    .spinner-small {
+      width: 16px; height: 16px; border: 2px solid var(--color-gray-200);
+      border-top-color: var(--color-primary); border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .spinner-medium {
+      width: 24px; height: 24px; border: 3px solid var(--color-gray-200);
+      border-top-color: var(--color-primary); border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: var(--color-gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+    
+    /* Toast Notifications */
     .toast {
       transition: all 0.3s ease-in-out;
       transform: translateX(100%);
       opacity: 0;
     }
-    
     .toast.show {
       transform: translateX(0);
       opacity: 1;
     }
     
-    /* Loading spinner */
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid #e5e7eb;
-      border-top-color: #059669;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    /* Subscription CTA */
+    .subscription-cta {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3);
+      transition: all 0.3s ease;
     }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Gradient text */
-    .gradient-text {
-      background: linear-gradient(135deg, #059669, #065f46);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    /* Button hover effects */
-    .btn-hover:hover:not(:disabled) {
+    .subscription-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 15px 35px -5px rgba(5, 150, 105, 0.4);
     }
     
-    /* Skip link for accessibility */
+    /* Responsive Grid */
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .md\\:flex-row { flex-direction: row; }
+      .md\\:text-left { text-align: left; }
+    }
+    
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2rem; line-height: 1.2; }
+      .subscription-cta { width: 100%; text-align: center; }
+      .results-grid { grid-template-columns: 1fr !important; }
+      .mobile-stack { flex-direction: column; }
+      .mobile-full { width: 100%; }
+    }
+    
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      .spinner-small, .spinner-medium, .subscription-cta, .progress-bar {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+    
+    @media (prefers-contrast: high) {
+      .focus-outline { outline-width: 3px; outline-color: currentColor; }
+      .error-state, .success-state { border-width: 2px; }
+    }
+    
+    /* Component Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      transform: translateY(-1px);
+    }
+    
+    .card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--color-gray-200);
+    }
+    
+    .card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .section {
+      padding: 4rem 0;
+    }
+    
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-4xl { font-size: 2.25rem; }
+    
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-8 { margin-top: 2rem; }
+    
+    .p-4 { padding: 1rem; }
+    .p-6 { padding: 1.5rem; }
+    .p-8 { padding: 2rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    
+    .rounded { border-radius: 0.25rem; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-full { border-radius: 9999px; }
+    
+    .border { border: 1px solid var(--color-gray-200); }
+    .border-2 { border: 2px solid var(--color-gray-200); }
+    
+    .bg-white { background-color: white; }
+    .bg-gray-50 { background-color: var(--color-gray-50); }
+    .bg-primary { background-color: var(--color-primary); }
+    
+    .text-gray-600 { color: var(--color-gray-600); }
+    .text-gray-900 { color: var(--color-gray-900); }
+    .text-white { color: white; }
+    .text-primary { color: var(--color-primary); }
+    
+    .shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    
+    .sticky { position: sticky; }
+    .top-0 { top: 0; }
+    .z-50 { z-index: 50; }
+    
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .space-x-4 > * + * { margin-left: 1rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    
+    .w-full { width: 100%; }
+    .max-w-md { max-width: 28rem; }
+    .max-w-lg { max-width: 32rem; }
+    .max-w-2xl { max-width: 42rem; }
+    .max-w-5xl { max-width: 64rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    
+    /* Form Styles */
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-gray-200);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--color-gray-900);
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    /* Skip Link */
     .skip-link {
       position: absolute;
       top: -40px;
       left: 6px;
-      background: #059669;
+      background: var(--color-primary);
       color: white;
       padding: 8px 16px;
       border-radius: 4px;
@@ -138,85 +370,23 @@
       z-index: 9999;
       font-weight: 600;
     }
-    
     .skip-link:focus {
       top: 6px;
     }
-    
-    /* Plan card selection states */
-    .plan-card {
-      transition: all 0.3s ease;
-    }
-    
-    .plan-card.selected {
-      transform: scale(1.02);
-      box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.2);
-    }
-    
-    .plan-card.coming-soon {
-      opacity: 0.8;
-    }
-    
-    /* Status badge */
-    .status-badge {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    
-    /* Navigation improvements */
-    .nav-item {
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    
-    .nav-item:hover {
-      background-color: #f3f4f6;
-      color: #059669;
-    }
-
-    body {
-      line-height: 1.75;
-    }
-    
-    /* Responsive improvements */
-    @media (max-width: 640px) {
-      .hero-title {
-        font-size: 2rem;
-        line-height: 1.2;
-      }
-    }
   </style>
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
-  <!-- Skip to main content -->
+<body>
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- Toast notification container -->
-  <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg p-4 toast" role="status" aria-live="polite"></div>
-
-  <!-- NoScript fallback -->
-  <noscript>
-    <div class="bg-yellow-100 text-yellow-800 p-4 text-center border-b">
-      For the best experience, please enable JavaScript in your browser.
-    </div>
-  </noscript>
+  <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm bg-white border rounded-lg shadow-lg p-4 toast" role="status" aria-live="polite"></div>
 
   <!-- Navigation -->
-  <nav class="bg-white shadow sticky top-0 z-40" role="banner">
-    <div class="max-w-7xl mx-auto px-4 py-4">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
+  <nav class="bg-white shadow sticky top-0 z-50" role="banner">
+    <div class="container">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-4">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center" aria-label="MedSpaSync Logo">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
@@ -224,385 +394,240 @@
           <h1 class="text-xl font-bold text-gray-900">MedSpaSync Pro</h1>
         </div>
         
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-1">
-          <a href="#features" class="nav-item text-gray-700">Features</a>
-          <a href="#pricing" class="nav-item text-gray-700">Pricing</a>
-          <a href="#" class="nav-item text-gray-700">Support</a>
-          <span class="status-badge ml-4">
-            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-            Live Demo
-          </span>
+        <!-- Header CTA -->
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600 hidden md:block">Ready to stop losing revenue?</span>
+          <button 
+            onclick="handleSubscribeClick('header')"
+            class="subscription-cta text-white px-4 py-2 rounded-lg font-semibold"
+          >
+            Get Notified
+          </button>
         </div>
-        
-        <!-- Mobile menu button -->
-        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100" aria-label="Toggle menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
       </div>
-      
-      <!-- Mobile Navigation -->
-      <div id="mobileMenu" class="hidden md:hidden mt-4 py-4 border-t border-gray-200">
-        <div class="flex flex-col space-y-2">
-          <a href="#features" class="nav-item text-gray-700">Features</a>
-          <a href="#pricing" class="nav-item text-gray-700">Pricing</a>
-          <a href="#" class="nav-item text-gray-700">Support</a>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demoSection" class="section">
+      <div class="max-w-lg mx-auto">
+        <div class="card">
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold mb-2">See Your Lost Revenue</h3>
+            <p class="text-gray-600">Enter your email to unlock the live demo and see exactly how much you're losing</p>
+          </div>
+          
+          <!-- Lead Capture Form -->
+          <form id="leadForm" novalidate>
+            <div class="mb-4">
+              <label for="leadEmail">Work Email Address</label>
+              <input 
+                id="leadEmail" 
+                type="email" 
+                required 
+                placeholder="you@yourmedspa.com"
+                autocomplete="email"
+                aria-describedby="email-help email-error"
+              />
+              <div id="email-help" class="text-xs text-gray-500 mt-1">We'll never share your email or send spam</div>
+              <div id="email-error" class="text-xs text-error mt-1 hidden" role="alert"></div>
+            </div>
+            
+            <div class="mb-6">
+              <label for="leadName">Name <span class="text-gray-400">(optional)</span></label>
+              <input 
+                id="leadName" 
+                type="text" 
+                placeholder="Your name"
+                autocomplete="name"
+              />
+            </div>
+            
+            <button type="submit" class="w-full btn subscription-cta text-white py-4 font-bold text-lg">
+              <span id="leadSubmitText">🚀 See My Lost Revenue</span>
+              <span id="leadLoading" class="spinner-medium ml-2 hidden" aria-hidden="true"></span>
+            </button>
+            
+            <p id="leadNotice" class="text-sm text-center mt-2 hidden" role="status"></p>
+            
+            <div class="text-center mt-4">
+              <p class="text-xs text-gray-500">
+                No credit card required • Instant access • HIPAA compliant
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Tool (Hidden Initially) -->
+    <div id="demoTool" class="section hidden-element">
+      <div class="max-w-2xl mx-auto">
+        <div class="card">
+          <h3 class="text-xl font-bold text-center mb-6">Upload Your Transaction Data</h3>
+          
+          <!-- Usage Banner -->
+          <div id="usageBanner" class="hidden-element mb-4 text-center bg-warning p-3 rounded-lg">
+            <span id="usageText" class="text-white font-medium"></span>
+          </div>
+          
+          <!-- Progress Bar -->
+          <div id="progressContainer" class="progress-container hidden-element">
+            <div id="progressBar" class="progress-bar"></div>
+            <div id="progressText" class="text-center text-sm text-gray-600 mt-2"></div>
+          </div>
+          
+          <!-- File Upload Section -->
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label for="posFile" class="block font-semibold mb-2">POS Data <span class="text-error">*</span></label>
+              <input type="file" id="posFile" accept=".csv,.txt" class="mb-2">
+              <button type="button" id="loadPosSample" class="text-primary underline text-sm hover:no-underline">
+                📁 Load Sample POS Data
+              </button>
+              <div id="posPreview" class="text-sm text-gray-500 mt-1">No file selected</div>
+            </div>
+            
+            <div>
+              <label for="rewardFile" class="block font-semibold mb-2">Rewards Data <span class="text-error">*</span></label>
+              <input type="file" id="rewardFile" accept=".csv,.txt" class="mb-2">
+              <div class="flex space-x-2">
+                <button type="button" id="loadAlleSample" class="text-primary underline text-sm hover:no-underline">
+                  📁 Allé Sample
+                </button>
+                <button type="button" id="loadAspireSample" class="text-primary underline text-sm hover:no-underline">
+                  📁 Aspire Sample
+                </button>
+              </div>
+              <div id="rewardPreview" class="text-sm text-gray-500 mt-1">No file selected</div>
+            </div>
+          </div>
+          
+          <!-- Demo Action -->
+          <div class="text-center">
+            <button id="runDemoBtn" class="btn subscription-cta text-white px-8 py-3 font-bold text-lg mb-4">
+              📁 Select 2 files to continue
+            </button>
+            <div id="runLoader" class="spinner-medium mx-auto hidden-element" aria-hidden="true"></div>
+            
+            <p class="text-xs text-gray-500">
+              By running the demo you agree to our 
+              <a href="#privacy" class="text-primary underline">Privacy Policy</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </nav>
 
-  <!-- Main Content -->
-  <main class="max-w-5xl mx-auto py-10 px-4" id="main">
-    <!-- Hero Section -->
-    <section class="text-center mb-16">
-      <div class="animate-fade-in-up stagger-1">
-        <h2 class="hero-title text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-          Stop Losing Revenue to <br>
-          <span class="gradient-text">Unmatched Rewards</span>
-        </h2>
-      </div>
-      
-      <div class="animate-fade-in-up stagger-2">
-        <p class="text-xl text-gray-600 mb-6 max-w-3xl mx-auto">
-          See how AI finds missing Allé and Aspire redemptions instantly. 
-          Most spas lose <strong>$2,000+ monthly</strong> to unmatched rewards.
+    <!-- Results Section (Hidden Initially) -->
+    <div id="results" class="section hidden-element"></div>
+
+    <!-- Subscription CTA Section (Hidden Initially) -->
+    <section id="subscriptionCTA" class="section hidden-element">
+      <div class="card bg-gradient-to-r from-green-50 to-blue-50 text-center">
+        <h3 class="text-2xl font-bold mb-4">Ready to Start Recovering Revenue?</h3>
+        <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+          You've seen how MedSpaSync Pro can recover your lost revenue. 
+          Start your subscription today and eliminate manual reconciliation forever.
         </p>
-      </div>
-      
-      <div class="animate-fade-in-up stagger-3">
-        <div class="inline-block px-6 py-3 rounded-full text-white bg-gradient-to-r from-yellow-400 to-orange-500 font-bold mb-8 animate-pulse-slow">
-          💰 See lost revenue in real time
-        </div>
-      </div>
-      
-      <div class="animate-fade-in-up stagger-4">
-        <button id="heroCtaBtn" 
-                class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg" 
-                aria-describedby="hero-cta-description">
-          🚀 Start Revenue Recovery Demo
-        </button>
-        <div id="hero-cta-description" class="sr-only">
-          Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
-        </div>
-        <p class="text-sm text-gray-500 mt-3">No credit card required • See results in 30 seconds</p>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="mb-16">
-      <div class="text-center mb-12">
-        <h3 class="text-3xl font-bold mb-4 text-gray-900">Why Medical Spas Choose MedSpaSync Pro</h3>
-        <p class="text-xl text-gray-600">Stop manual reconciliation. Start automated revenue recovery.</p>
-      </div>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="text-center">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <h4 class="text-xl font-semibold mb-2">90%+ Match Accuracy</h4>
-          <p class="text-gray-600">AI algorithms catch name variations and typos that manual processes miss</p>
-        </div>
         
-        <div class="text-center">
-          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <h4 class="text-xl font-semibold mb-2">30-Second Processing</h4>
-          <p class="text-gray-600">What takes hours manually now happens in seconds with automated reconciliation</p>
-        </div>
-        
-        <div class="text-center">
-          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <h4 class="text-xl font-semibold mb-2">HIPAA Compliant</h4>
-          <p class="text-gray-600">Enterprise-grade security with encrypted data processing and automatic deletion</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="mb-16">
-      <div class="text-center mb-12">
-        <h3 class="text-3xl font-bold mb-4 text-gray-900">Choose Your Plan</h3>
-        <p class="text-xl text-gray-600">Start recovering lost revenue today</p>
-      </div>
-      
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <!-- Core Plan -->
-        <div id="corePlan"
-             class="plan-card selected p-8 bg-white rounded-2xl shadow-lg border-2 border-emerald-500 cursor-pointer relative"
-             tabindex="0"
-             role="button"
-             aria-pressed="true"
-             aria-describedby="corePlanDescription">
-          
-          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-            <span class="bg-emerald-600 text-white px-4 py-1 rounded-full text-sm font-bold">
-              MOST POPULAR
-            </span>
-          </div>
-          
-          <div class="text-center mb-6">
-            <h4 class="text-xl font-bold text-gray-900 mb-2">Core Reconciliation</h4>
-            <div class="text-4xl font-extrabold text-emerald-600 mb-2">$299<span class="text-lg text-gray-500">/month</span></div>
-            <p class="text-gray-600">Perfect for small to medium spas</p>
-          </div>
-          
-          <ul class="space-y-3 mb-8">
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">AI-powered reconciliation</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Allé & Aspire integration</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Monthly reconciliation reports</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Email support</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">HIPAA compliant</span>
-            </li>
-          </ul>
-          
-          <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors duration-200">
-            Try Demo First
-          </button>
-          
-          <input type="radio" id="coreRadio" name="plan" value="core" checked class="sr-only">
-          <p id="corePlanDescription" class="sr-only">Core plan selected. Essential reconciliation features for small to medium medical spas at $299 per month.</p>
-        </div>
-
-        <!-- Professional Plan -->
-        <div id="proPlan" 
-             class="plan-card coming-soon p-8 bg-white rounded-2xl shadow-lg border-2 border-gray-200 cursor-pointer relative" 
-             tabindex="0"
-             role="button"
-             aria-pressed="false"
-             aria-describedby="proPlanDescription">
-          
-          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-            <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-bold">
-              COMING SOON
-            </span>
-          </div>
-          
-          <div class="text-center mb-6">
-            <h4 class="text-xl font-bold text-gray-900 mb-2">Professional Suite</h4>
-            <div class="text-4xl font-extrabold text-purple-600 mb-2">$499<span class="text-lg text-gray-500">/month</span></div>
-            <p class="text-gray-600">Advanced tools for scaling medspas</p>
-          </div>
-          
-          <ul class="space-y-3 mb-8">
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Everything in Core</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Multi-location support</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Advanced analytics dashboard</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Priority phone support</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="text-gray-700">Custom integrations</span>
-            </li>
-          </ul>
-          
-          <button class="w-full bg-gray-100 text-gray-500 py-3 rounded-lg font-semibold cursor-not-allowed" disabled>
-            Get Notified
-          </button>
-          
-          <input type="radio" id="proRadio" name="plan" value="professional" disabled class="sr-only">
-          <p id="proPlanDescription" class="sr-only">Professional Suite coming soon. Advanced features for enterprise medical spas at $499 per month.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="text-center mb-16">
-      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
-        <h3 class="text-2xl font-bold mb-4 text-gray-900">Ready to Start Recovering Revenue?</h3>
-        <p class="text-gray-600 mb-6">Join hundreds of medical spas already using MedSpaSync Pro</p>
-        
-        <div class="space-y-4">
-          <button id="demoCtaBtn" 
-                  class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover shadow-lg mr-4">
-            🚀 Try Demo First
-          </button>
-          
-          <button id="subscribeBtn" 
-                  class="bg-white hover:bg-gray-50 text-emerald-600 border-2 border-emerald-600 font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300 btn-hover">
-            Subscribe Now – $299/month
-          </button>
-        </div>
-        
-        <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-500 mt-6">
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-            30-day money-back guarantee
-          </span>
-          <span class="flex items-center gap-1">
-            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
-            HIPAA compliant
-          </span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Lead Capture Form -->
-    <section id="leadCapture" class="max-w-lg mx-auto">
-      <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-        <div class="text-center mb-6">
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">Try the Live Demo</h3>
-          <p class="text-gray-600">See exactly how much revenue you're losing in under 60 seconds</p>
-        </div>
-        
-        <form id="leadForm" class="space-y-4" novalidate>
-          <div>
-            <label for="leadEmail" class="block text-sm font-semibold mb-2 text-gray-700">
-              Work Email Address
-            </label>
-            <input id="leadEmail" 
-                   type="email" 
-                   required 
-                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors duration-200 text-gray-900" 
-                   placeholder="you@yourmedspa.com"
-                   autocomplete="email"
-                   aria-describedby="email-help email-error" />
-            <div id="email-help" class="text-xs text-gray-500 mt-1">We'll never share your email or send spam</div>
-            <div id="email-error" class="text-xs text-red-600 mt-1 hidden" role="alert"></div>
-          </div>
-          
-          <div>
-            <label for="leadName" class="block text-sm font-semibold mb-2 text-gray-700">
-              Name <span class="text-gray-400 font-normal">(optional)</span>
-            </label>
-            <input id="leadName" 
-                   type="text" 
-                   class="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors duration-200 text-gray-900" 
-                   placeholder="Your name"
-                   autocomplete="name" />
-          </div>
-          
-          <button type="submit" 
-                  class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-lg shadow-lg transition-all duration-300 btn-hover font-bold text-lg">
-            <span id="leadSubmitText">🚀 Start Live Demo</span>
-            <span id="leadLoading" class="spinner ml-2 hidden" aria-hidden="true"></span>
-          </button>
-          
-          <p id="leadNotice" class="text-sm text-center hidden" role="status"></p>
-          
+        <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-6">
           <div class="text-center">
-            <p class="text-xs text-gray-500">
-              No credit card required • Instant access • HIPAA compliant
-            </p>
+            <div class="text-3xl font-bold text-primary">$299</div>
+            <div class="text-sm text-gray-500">per month</div>
+            <div class="text-xs text-gray-400">Core Reconciliation</div>
           </div>
-        </form>
-        
-        <!-- Back to options -->
-        <div class="text-center mt-6 pt-6 border-t border-gray-200">
-          <button id="backToOptionsBtn" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
-            ← Back to options
+          
+          <button
+            onclick="handleSubscribeClick('main-cta')"
+            class="subscription-cta text-white font-bold px-8 py-4 rounded-xl text-lg"
+          >
+            🚀 Start Subscription
           </button>
+        </div>
+        
+        <div class="text-sm text-gray-500 space-y-1">
+          <p>✅ 30-day money-back guarantee</p>
+          <p>✅ HIPAA-compliant processing</p>
+          <p>✅ Cancel anytime</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Industry Comparison Section -->
+    <section class="section">
+      <div class="card text-center">
+        <h3 class="text-2xl font-bold mb-6">How You Compare to Industry Average</h3>
+        <div id="industryComparison" class="grid md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-error">65%</div>
+            <div class="text-sm text-gray-600">Industry Average Match Rate</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-warning">Manual Process</div>
+            <div class="text-sm text-gray-600">Time-Consuming & Error-Prone</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-error">$2,000+</div>
+            <div class="text-sm text-gray-600">Average Monthly Revenue Lost</div>
+          </div>
+        </div>
+        
+        <div class="mt-8 p-4 bg-primary rounded-lg text-white">
+          <p class="font-semibold">MedSpaSync Pro delivers 90%+ match rates with 96% time savings</p>
         </div>
       </div>
     </section>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-gray-200 mt-20">
-    <div class="max-w-5xl mx-auto px-4 py-8">
+  <footer class="bg-white border-t border-gray-200">
+    <div class="container py-8">
       <div class="grid md:grid-cols-4 gap-8">
         <div>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
               </svg>
             </div>
-            <span class="font-bold text-gray-900">MedSpaSync Pro</span>
+            <span class="font-bold">MedSpaSync Pro</span>
           </div>
           <p class="text-gray-600 text-sm">
             AI-powered revenue recovery for medical spas. Stop losing money to unmatched rewards.
           </p>
         </div>
+        
         <div>
-          <h4 class="font-semibold text-gray-900 mb-4">Product</h4>
+          <h4 class="font-semibold mb-4">Product</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="#features" class="hover:text-emerald-600 transition-colors">Features</a></li>
-            <li><a href="#pricing" class="hover:text-emerald-600 transition-colors">Pricing</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Integrations</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Security</a></li>
+            <li><a href="#features" class="hover:text-primary">Features</a></li>
+            <li><a href="#pricing" class="hover:text-primary">Pricing</a></li>
+            <li><a href="#" class="hover:text-primary">Security</a></li>
+            <li><a href="#" class="hover:text-primary">Integrations</a></li>
           </ul>
         </div>
+        
         <div>
-          <h4 class="font-semibold text-gray-900 mb-4">Resources</h4>
+          <h4 class="font-semibold mb-4">Support</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Help Center</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">API Docs</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Case Studies</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-primary">Help Center</a></li>
+            <li><a href="#" class="hover:text-primary">Contact Support</a></li>
+            <li><a href="#" class="hover:text-primary">Documentation</a></li>
+            <li><a href="#" class="hover:text-primary">Status Page</a></li>
           </ul>
         </div>
+        
         <div>
-          <h4 class="font-semibold text-gray-900 mb-4">Legal</h4>
+          <h4 class="font-semibold mb-4">Legal</h4>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li><a href="privacy.html" class="hover:text-emerald-600 transition-colors">Privacy Policy</a></li>
-            <li><a href="terms.html" class="hover:text-emerald-600 transition-colors">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Contact</a></li>
-            <li><a href="#" class="hover:text-emerald-600 transition-colors">Support</a></li>
+            <li><a href="#privacy" class="hover:text-primary">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-primary">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-primary">HIPAA Compliance</a></li>
+            <li><a href="#" class="hover:text-primary">Security</a></li>
           </ul>
         </div>
       </div>
+      
       <div class="border-t border-gray-200 mt-8 pt-8 text-center">
         <p class="text-sm text-gray-500">
           &copy; 2025 MedSpaSync Pro. All rights reserved. Built with ❤️ for medical spa professionals.
@@ -611,610 +636,346 @@
     </div>
   </footer>
 
+  <!-- Subscription Modal -->
+  <div id="subscriptionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden-element items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+      <h3 class="text-xl font-bold mb-4">Ready to Save Hours Every Day?</h3>
+      <p class="text-gray-600 mb-6">
+        You've seen the power of MedSpaSync Pro. Start your subscription and 
+        eliminate manual reconciliation forever.
+      </p>
+      <div class="flex space-x-3">
+        <button 
+          id="modalSubscribeBtn"
+          onclick="confirmSubscription()"
+          class="flex-1 subscription-cta text-white py-2 px-4 rounded font-semibold"
+        >
+          Subscribe Now
+        </button>
+        <button 
+          onclick="closeSubscriptionModal()"
+          class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 font-medium"
+        >
+          Maybe Later
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div id="privacyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden-element items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-8 max-w-2xl mx-4 max-h-96 overflow-y-auto">
+      <h3 class="text-xl font-bold mb-4">Privacy Policy</h3>
+      <div class="text-sm text-gray-600 space-y-4">
+        <p>This demo uploads CSV data to our servers solely for demonstration purposes and is automatically deleted after processing.</p>
+        <p>We follow HIPAA-conscious design principles:</p>
+        <ul class="list-disc pl-6 space-y-1">
+          <li>All data is encrypted in transit and at rest</li>
+          <li>Files are automatically deleted after demo completion</li>
+          <li>No personal health information is stored</li>
+          <li>We do not sell or share your information</li>
+        </ul>
+        <p>For questions about our privacy practices, contact us at privacy@medspasyncpro.com</p>
+      </div>
+      <button 
+        onclick="closePrivacyModal()"
+        class="mt-6 w-full btn bg-primary text-white py-2"
+      >
+        I Understand
+      </button>
+    </div>
+  </div>
+
+  <!-- Live region for screen readers -->
+  <div id="sr-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
   <!-- JavaScript -->
   <script>
-    /**
-     * MedSpaSync Pro Landing Page - Complete User Flow
-     * Handles navigation between demo and subscription paths
-     */
-    (function() {
-      'use strict';
-      
-      console.log('🏥 MedSpaSync Pro Landing Page - Complete Flow');
-      
-      // Configuration
-      const CONFIG = {
-        DEMO_URL: 'demo.html',
-        SUBSCRIPTION_URL: '#subscribe', // Replace with actual subscription URL
-        TOAST_DURATION: 4000,
-        PLANS: {
-          core: {
-            name: 'Core Reconciliation',
-            price: '$299/month',
-            available: true
-          },
-          professional: {
-            name: 'Professional Suite',
-            price: '$499/month',
-            available: false
-          }
-        }
-      };
+    // Configuration
+    const CONFIG = {
+      STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00',
+      API_BASE_URL: '/api',
+      MAX_DAILY_DEMOS: 5,
+      SUBSCRIPTION_DELAY: 5000
+    };
 
-      // State management
-      const state = {
-        selectedPlan: 'core',
-        userEmail: null,
-        userName: null,
-        submitting: false,
-        currentView: 'landing' // 'landing' or 'leadCapture'
-      };
-
-      // Utility functions
-      const utils = {
-        // Safe element getter
-        $(id) {
-          return document.getElementById(id);
-        },
-
-        // Show toast notification
-        showToast(message, type = 'info', duration = CONFIG.TOAST_DURATION) {
-          const toast = this.$('toast');
-          if (!toast) {
-            console.log(`${type.toUpperCase()}: ${message}`);
-            return;
-          }
-
-          const borderColors = {
-            success: 'border-green-200 bg-green-50',
-            error: 'border-red-200 bg-red-50',
-            warning: 'border-yellow-200 bg-yellow-50',
-            info: 'border-blue-200 bg-blue-50'
-          };
-
-          const iconColors = {
-            success: 'text-green-600',
-            error: 'text-red-600',
-            warning: 'text-yellow-600',
-            info: 'text-blue-600'
-          };
-
-          const icons = {
-            success: '✓',
-            error: '✗',
-            warning: '⚠',
-            info: 'ℹ'
-          };
-
-          toast.className = `fixed bottom-4 right-4 z-50 max-w-sm border rounded-lg shadow-lg p-4 toast ${borderColors[type] || borderColors.info}`;
-          toast.innerHTML = `
-            <div class="flex items-start gap-3">
-              <div class="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${iconColors[type] || iconColors.info}">
-                ${icons[type] || icons.info}
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">${message}</p>
-              </div>
-            </div>
-          `;
-          
-          toast.classList.add('show');
-          
-          setTimeout(() => {
-            toast.classList.remove('show');
-          }, duration);
-
-          console.log(`${type.toUpperCase()}: ${message}`);
-        },
-
-        // Email validation
-        validateEmail(email) {
-          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return re.test(email);
-        },
-
-        // Safe execution wrapper
-        safeExecute(fn, context = 'function') {
-          try {
-            return fn();
-          } catch (error) {
-            console.error(`Error in ${context}:`, error);
-            this.showToast('An error occurred. Please try again.', 'error');
-            return null;
-          }
-        },
-
-        // Smooth scroll to element
-        scrollToElement(elementId) {
-          const element = this.$(elementId);
-          if (element) {
-            element.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'start' 
-            });
-          }
-        },
-
-        // Show lead capture form
-        showLeadCapture() {
-          this.scrollToElement('leadCapture');
-          state.currentView = 'leadCapture';
-          analytics.track('lead_capture_shown');
-        },
-
-        // Hide lead capture and show main content
-        showMainContent() {
-          this.scrollToElement('main');
-          state.currentView = 'landing';
-        },
-
-        // Redirect to demo with email parameter
-        redirectToDemo(email) {
-          const url = new URL(CONFIG.DEMO_URL, window.location.origin);
-          if (email) {
-            url.searchParams.set('email', email);
-          }
-          window.location.href = url.toString();
-        },
-
-        // Redirect to subscription flow
-        redirectToSubscription() {
-          // In production, this would redirect to your subscription/checkout page
-          utils.showToast('Redirecting to subscription...', 'info');
-          setTimeout(() => {
-            // Replace with actual subscription URL
-            window.location.href = CONFIG.SUBSCRIPTION_URL;
-          }, 1000);
-        }
-      };
-
-      // Form handling
-      const forms = {
-        // Show field error
-        showError(fieldId, message) {
-          const errorEl = utils.$(`${fieldId}-error`);
-          const inputEl = utils.$(fieldId);
-          
-          if (errorEl) {
-            errorEl.textContent = message;
-            errorEl.classList.remove('hidden');
-          }
-          
-          if (inputEl) {
-            inputEl.setAttribute('aria-invalid', 'true');
-            inputEl.classList.add('border-red-500');
-            inputEl.focus();
-          }
-        },
-
-        // Clear field error
-        clearError(fieldId) {
-          const errorEl = utils.$(`${fieldId}-error`);
-          const inputEl = utils.$(fieldId);
-          
-          if (errorEl) {
-            errorEl.classList.add('hidden');
-          }
-          
-          if (inputEl) {
-            inputEl.setAttribute('aria-invalid', 'false');
-            inputEl.classList.remove('border-red-500');
-          }
-        },
-
-        // Submit lead form
-        async submitLead(formData) {
-          if (state.submitting) return;
-          
-          state.submitting = true;
-          
-          try {
-            // Simulate API call for lead capture
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            state.userEmail = formData.email;
-            state.userName = formData.name;
-
-            // Show success message
-            utils.showToast('Success! Redirecting to demo...', 'success');
-            
-            // Track conversion
-            analytics.track('lead_captured', {
-              email: formData.email,
-              name: formData.name,
-              selected_plan: state.selectedPlan,
-              timestamp: new Date().toISOString()
-            });
-            
-            // Redirect to demo after short delay
-            setTimeout(() => {
-              utils.redirectToDemo(formData.email);
-            }, 1000);
-            
-          } catch (error) {
-            console.error('Lead submission error:', error);
-            utils.showToast('Failed to submit. Please try again.', 'error');
-          } finally {
-            state.submitting = false;
-          }
-        }
-      };
-
-      // Plan selection
-      const plans = {
-        // Update plan selection
-        selectPlan(planType) {
-          return utils.safeExecute(() => {
-            const plan = CONFIG.PLANS[planType];
-            if (!plan) return;
-
-            // Update visual selection
-            const corePlan = utils.$('corePlan');
-            const proPlan = utils.$('proPlan');
-
-            if (corePlan && proPlan) {
-              // Remove selection from both
-              corePlan.classList.remove('selected', 'border-emerald-500');
-              corePlan.classList.add('border-gray-200');
-              corePlan.setAttribute('aria-pressed', 'false');
-              
-              proPlan.classList.remove('selected', 'border-purple-500');
-              proPlan.classList.add('border-gray-200');
-              proPlan.setAttribute('aria-pressed', 'false');
-
-              // Add selection to chosen plan
-              if (planType === 'core') {
-                corePlan.classList.add('selected', 'border-emerald-500');
-                corePlan.classList.remove('border-gray-200');
-                corePlan.setAttribute('aria-pressed', 'true');
-              } else if (planType === 'professional') {
-                proPlan.classList.add('selected', 'border-purple-500');
-                proPlan.classList.remove('border-gray-200');
-                proPlan.setAttribute('aria-pressed', 'true');
-              }
-            }
-
-            state.selectedPlan = planType;
-            
-            if (plan.available) {
-              utils.showToast(`${plan.name} selected`, 'success', 2000);
-            } else {
-              utils.showToast(`${plan.name} coming soon! We'll notify you when available.`, 'info', 3000);
-            }
-
-            // Track plan selection
-            analytics.track('plan_selected', {
-              plan_type: planType,
-              plan_name: plan.name,
-              plan_price: plan.price
-            });
-          }, 'plans.selectPlan');
-        }
-      };
-
-      // Navigation
-      const navigation = {
-        // Setup mobile menu
-        setupMobileMenu() {
-          const mobileMenuBtn = utils.$('mobileMenuBtn');
-          const mobileMenu = utils.$('mobileMenu');
-          
-          if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-              mobileMenu.classList.toggle('hidden');
-            });
-          }
-        },
-
-        // Setup smooth scrolling for anchor links
-        setupSmoothScrolling() {
-          document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-              e.preventDefault();
-              const target = document.querySelector(this.getAttribute('href'));
-              if (target) {
-                target.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start'
-                });
-              }
-            });
-          });
-        }
-      };
-
-      // Event handlers
-      const events = {
-        setup() {
-          return utils.safeExecute(() => {
-            // Navigation setup
-            navigation.setupMobileMenu();
-            navigation.setupSmoothScrolling();
-
-            // Hero CTA button - goes to lead capture
-            const heroCtaBtn = utils.$('heroCtaBtn');
-            if (heroCtaBtn) {
-              heroCtaBtn.addEventListener('click', () => {
-                utils.showLeadCapture();
-                analytics.track('hero_cta_clicked');
-              });
-            }
-
-            // Demo CTA button - goes to lead capture
-            const demoCtaBtn = utils.$('demoCtaBtn');
-            if (demoCtaBtn) {
-              demoCtaBtn.addEventListener('click', () => {
-                utils.showLeadCapture();
-                analytics.track('demo_cta_clicked');
-              });
-            }
-
-            // Subscribe button - goes to subscription flow
-            const subscribeBtn = utils.$('subscribeBtn');
-            if (subscribeBtn) {
-              subscribeBtn.addEventListener('click', () => {
-                utils.redirectToSubscription();
-                analytics.track('subscribe_cta_clicked', {
-                  selected_plan: state.selectedPlan
-                });
-              });
-            }
-
-            // Back to options button
-            const backToOptionsBtn = utils.$('backToOptionsBtn');
-            if (backToOptionsBtn) {
-              backToOptionsBtn.addEventListener('click', () => {
-                utils.showMainContent();
-                analytics.track('back_to_options_clicked');
-              });
-            }
-
-            // Plan selection
-            this.setupPlanSelection();
-
-            // Lead form
-            this.setupLeadForm();
-
-            console.log('✅ All event handlers setup complete');
-          }, 'events.setup');
-        },
-
-        setupPlanSelection() {
-          const corePlan = utils.$('corePlan');
-          const proPlan = utils.$('proPlan');
-
-          if (corePlan) {
-            corePlan.addEventListener('click', () => {
-              plans.selectPlan('core');
-            });
-            
-            corePlan.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                plans.selectPlan('core');
-              }
-            });
-          }
-
-          if (proPlan) {
-            proPlan.addEventListener('click', () => {
-              plans.selectPlan('professional');
-            });
-            
-            proPlan.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                plans.selectPlan('professional');
-              }
-            });
-          }
-        },
-
-        setupLeadForm() {
-          const leadForm = utils.$('leadForm');
-          if (!leadForm) return;
-
-          leadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (state.submitting) return;
-            
-            const emailEl = utils.$('leadEmail');
-            const nameEl = utils.$('leadName');
-            
-            if (!emailEl) return;
-            
-            const email = emailEl.value.trim();
-            const name = nameEl ? nameEl.value.trim() : '';
-            
-            // Clear previous errors
-            forms.clearError('leadEmail');
-            
-            // Validation
-            if (!email) {
-              forms.showError('leadEmail', 'Email address is required');
-              return;
-            }
-            
-            if (!utils.validateEmail(email)) {
-              forms.showError('leadEmail', 'Please enter a valid email address');
-              return;
-            }
-
-            // Show loading state
-            const submitText = utils.$('leadSubmitText');
-            const loading = utils.$('leadLoading');
-            const submitBtn = leadForm.querySelector('button[type="submit"]');
-            
-            if (submitText) submitText.textContent = 'Processing...';
-            if (loading) loading.classList.remove('hidden');
-            if (submitBtn) submitBtn.disabled = true;
-
-            try {
-              await forms.submitLead({ email, name });
-            } finally {
-              if (submitText) submitText.textContent = '🚀 Start Live Demo';
-              if (loading) loading.classList.add('hidden');
-              if (submitBtn) submitBtn.disabled = false;
-            }
-          });
-
-          // Real-time email validation
-          const emailInput = utils.$('leadEmail');
-          if (emailInput) {
-            emailInput.addEventListener('blur', () => {
-              const email = emailInput.value.trim();
-              if (email && !utils.validateEmail(email)) {
-                forms.showError('leadEmail', 'Please enter a valid email address');
-              } else if (email) {
-                forms.clearError('leadEmail');
-              }
-            });
-
-            emailInput.addEventListener('input', () => {
-              if (emailInput.hasAttribute('aria-invalid') && emailInput.getAttribute('aria-invalid') === 'true') {
-                forms.clearError('leadEmail');
-              }
-            });
-          }
-        }
-      };
-
-      // Analytics tracking
-      const analytics = {
-        track(event, properties = {}) {
-          console.log('Analytics Event:', event, properties);
-          // In production, replace with your analytics service
-          // Example: gtag('event', event, properties);
-          // Example: mixpanel.track(event, properties);
-          // Example: amplitude.track(event, properties);
-        },
-
-        trackPageView() {
-          this.track('landing_page_view', {
-            timestamp: new Date().toISOString(),
-            user_agent: navigator.userAgent,
-            referrer: document.referrer,
-            url: window.location.href
-          });
-        }
-      };
-
-      // Error handling
-      const setupErrorHandling = () => {
-        window.addEventListener('error', (event) => {
-          console.error('Global error:', event.error);
-          utils.showToast('An unexpected error occurred. Please refresh and try again.', 'error');
-          
-          analytics.track('javascript_error', {
-            error_message: event.error?.message,
-            error_stack: event.error?.stack,
-            filename: event.filename,
-            line_number: event.lineno
-          });
-        });
-
-        window.addEventListener('unhandledrejection', (event) => {
-          console.error('Unhandled promise rejection:', event.reason);
-          utils.showToast('A processing error occurred. Please try again.', 'error');
-          
-          analytics.track('unhandled_promise_rejection', {
-            reason: event.reason?.toString()
-          });
-        });
-      };
-
-      // Main initialization
-      const init = () => {
-        console.log('🚀 Initializing MedSpaSync Pro Landing Page...');
-
-        try {
-          // Setup core functionality
-          setupErrorHandling();
-          events.setup();
-          
-          // Set initial plan selection
-          plans.selectPlan('core');
-          
-          // Track page view
-          analytics.trackPageView();
-          
-          console.log('✅ Landing page initialized successfully');
-          
-          // Show welcome message after short delay
-          setTimeout(() => {
-            utils.showToast('Welcome! Choose demo or subscribe to get started.', 'info', 3000);
-          }, 1000);
-
-        } catch (error) {
-          console.error('Initialization error:', error);
-          utils.showToast('Failed to initialize. Please refresh the page.', 'error');
-        }
-      };
-
-      // DOM ready handler
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
+    // Global functions for onclick handlers
+    window.handleSubscribeClick = (source) => {
+      // Track subscription click
+      if (typeof analytics !== 'undefined') {
+        analytics.track('subscription_clicked', { source });
       }
+      window.open(CONFIG.STRIPE_PORTAL_URL, '_blank');
+    };
 
-    })();
+    window.scrollToDemo = () => {
+      document.getElementById('demoSection').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    };
+
+    window.showSubscriptionModal = () => {
+      const modal = document.getElementById('subscriptionModal');
+      modal.classList.remove('hidden-element');
+      modal.classList.add('visible-flex');
+    };
+
+    window.closeSubscriptionModal = () => {
+      const modal = document.getElementById('subscriptionModal');
+      modal.classList.add('hidden-element');
+      modal.classList.remove('visible-flex');
+    };
+
+    window.confirmSubscription = () => {
+      window.handleSubscribeClick('modal');
+      window.closeSubscriptionModal();
+    };
+
+    window.showPrivacyModal = () => {
+      const modal = document.getElementById('privacyModal');
+      modal.classList.remove('hidden-element');
+      modal.classList.add('visible-flex');
+    };
+
+    window.closePrivacyModal = () => {
+      const modal = document.getElementById('privacyModal');
+      modal.classList.add('hidden-element');
+      modal.classList.remove('visible-flex');
+    };
+
+    // Privacy policy link handler
+    document.addEventListener('click', (e) => {
+      if (e.target.getAttribute('href') === '#privacy') {
+        e.preventDefault();
+        window.showPrivacyModal();
+      }
+    });
+
+    // Keyboard navigation support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        document.body.classList.add('keyboard-navigation');
+      }
+      if (e.key === 'Escape') {
+        window.closeSubscriptionModal();
+        window.closePrivacyModal();
+      }
+    });
+
+    document.addEventListener('mousedown', () => {
+      document.body.classList.remove('keyboard-navigation');
+    });
+
+    // Service Worker Registration (if available)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('SW registered'))
+          .catch(() => console.log('SW registration failed'));
+      });
+    }
   </script>
 
-  <!-- Schema.org structured data for SEO -->
+  <!-- Load demo functionality -->
+  <script src="demo.js"></script>
+
+  <!-- Schema.org structured data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "MedSpaSync Pro - Stop Losing Revenue to Unmatched Rewards",
-    "description": "AI-powered revenue recovery for medical spas. Find missing Allé and Aspire redemptions instantly.",
-    "url": "https://medspasyncpro.com",
-    "mainEntity": {
-      "@type": "SoftwareApplication",
-      "name": "MedSpaSync Pro",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web Browser",
-      "offers": [
-        {
-          "@type": "Offer",
-          "name": "Core Reconciliation",
-          "price": "299",
-          "priceCurrency": "USD",
-          "priceSpecification": {
-            "@type": "UnitPriceSpecification",
-            "price": "299",
-            "priceCurrency": "USD",
-            "unitCode": "MON"
-          }
-        },
-        {
-          "@type": "Offer",
-          "name": "Professional Suite",
-          "price": "499",
-          "priceCurrency": "USD",
-          "availability": "https://schema.org/PreOrder"
-        }
-      ]
-    }
+    "@type": "SoftwareApplication",
+    "name": "MedSpaSync Pro",
+    "description": "AI-powered reconciliation platform that automatically matches medical spa POS transactions with Allé and Aspire rewards program redemptions",
+    "applicationCategory": "HealthcareApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "name": "Core Reconciliation",
+      "price": "299",
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "299",
+        "priceCurrency": "USD",
+        "unitCode": "MON"
+      }
+    },
+    "featureList": [
+      "AI-powered reconciliation",
+      "HIPAA compliant processing", 
+      "Allé and Aspire integration",
+      "90% match accuracy",
+      "Automated revenue recovery"
+    ]
   }
-  </script>
-
-  <!-- Performance monitoring -->
-  <script>
-    // Track page load performance
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const perfData = performance.getEntriesByType('navigation')[0];
-        if (perfData) {
-          console.log('Page Load Performance:', {
-            loadTime: perfData.loadEventEnd - perfData.loadEventStart,
-            domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
-            totalTime: perfData.loadEventEnd - perfData.fetchStart
-          });
-        }
-      }, 0);
-    });
   </script>
 </body>
 </html>
+            Start $299/month
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main" class="container">
+    
+    <!-- Hero Section -->
+    <section class="section text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="hero-title text-4xl font-bold mb-6 text-gray-900">
+          Stop Losing Revenue to <br>
+          <span class="text-primary">Unmatched Rewards</span>
+        </h2>
+        
+        <p class="text-xl text-gray-600 mb-8">
+          See how AI finds missing Allé and Aspire redemptions instantly. 
+          Most spas lose <strong class="text-primary">$2,000+ monthly</strong> to unmatched rewards.
+        </p>
+        
+        <div class="bg-warning rounded-full text-white px-6 py-3 font-bold mb-8 inline-block">
+          💰 See your lost revenue in real time
+        </div>
+        
+        <button 
+          onclick="scrollToDemo()"
+          class="btn btn-primary text-lg px-8 py-4 rounded-xl"
+          aria-describedby="hero-cta-description"
+        >
+          🚀 See My Lost Revenue
+        </button>
+        <div id="hero-cta-description" class="sr-only">
+          Start the demo to see exactly how much revenue your medical spa is losing to unmatched rewards
+        </div>
+        
+        <p class="text-gray-600 mt-4">No credit card required • See results in 30 seconds</p>
+      </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="section">
+      <div class="grid md:grid-cols-3 gap-6 text-center">
+        <div class="card">
+          <div class="text-3xl mb-4">🔒</div>
+          <h3 class="font-semibold mb-2">HIPAA Compliant</h3>
+          <p class="text-gray-600">Enterprise-grade security with encrypted data processing and automatic deletion</p>
+        </div>
+        
+        <div class="card">
+          <div class="text-3xl mb-4">⚡</div>
+          <h3 class="font-semibold mb-2">90%+ Match Rate</h3>
+          <p class="text-gray-600">AI algorithms catch name variations and typos that manual processes miss</p>
+        </div>
+        
+        <div class="card">
+          <div class="text-3xl mb-4">💰</div>
+          <h3 class="font-semibold mb-2">$2,000+ Monthly Recovery</h3>
+          <p class="text-gray-600">Average revenue recovered per spa through automated reconciliation</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section">
+      <div class="text-center mb-8">
+        <h3 class="text-3xl font-bold mb-4">Choose Your Plan</h3>
+        <p class="text-xl text-gray-600">Start recovering lost revenue today</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <!-- Core Plan -->
+        <div id="corePlan" class="card border-2 border-primary cursor-pointer relative" tabindex="0" role="button" aria-pressed="true">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-primary text-white px-4 py-1 rounded-full text-sm font-bold">
+              MOST POPULAR
+            </span>
+          </div>
+          
+          <div class="text-center mb-6">
+            <h4 class="text-xl font-bold mb-2">Core Reconciliation</h4>
+            <div class="text-4xl font-bold text-primary mb-2">$299<span class="text-lg text-gray-600">/month</span></div>
+            <p class="text-gray-600">Perfect for small to medium spas</p>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              AI-powered reconciliation
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Allé & Aspire integration
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              HIPAA compliant processing
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              30-day money-back guarantee
+            </li>
+          </ul>
+          
+          <button 
+            onclick="handleSubscribeClick('core-plan')"
+            class="w-full btn subscription-cta text-white py-3 font-semibold"
+          >
+            Start Core Plan
+          </button>
+        </div>
+
+        <!-- Professional Plan -->
+        <div id="proPlan" class="card border-2 border-gray-200 cursor-pointer relative opacity-75" tabindex="0" role="button" aria-pressed="false">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-accent text-white px-4 py-1 rounded-full text-sm font-bold">
+              COMING SOON
+            </span>
+          </div>
+          
+          <div class="text-center mb-6">
+            <h4 class="text-xl font-bold mb-2">Professional Suite</h4>
+            <div class="text-4xl font-bold text-accent mb-2">$499<span class="text-lg text-gray-600">/month</span></div>
+            <p class="text-gray-600">Advanced tools for scaling medspas</p>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Everything in Core
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Multi-location support
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Advanced analytics
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Priority support
+            </li>
+          </ul>
+          
+          <button 
+            disabled
+            class="w-full btn bg-gray-100 text-gray-500 py-3 font-semibold cursor-not-allowed"
+          >

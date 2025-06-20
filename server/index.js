@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser'); // For specific raw body parsing
 require('dotenv').config(); // Load environment variables from .env file
+console.log('MONGO_URI:', process.env.MONGO_URI);
 
 const app = express();
 
@@ -58,15 +59,7 @@ app.use(cors({
 
 // --- Health Check Endpoint (before other middleware for quick response) ---
 app.get('/health', (req, res) => {
-  res.json({
-    success: true,
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    uptime: process.uptime(), // Server uptime in seconds
-    port: process.env.PORT || 5000,
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' // MongoDB connection status
-  });
+  res.json({ status: 'ok' });
 });
 
 // --- Body Parsers ---
@@ -98,12 +91,10 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/medspasync_db') /
 // --- API Routes ---
 // Mount your API route modules here
 try {
-  app.use('/api', require('./routes/demo'));        // Handles /api/reconcile, /api/export, /api/sample-data
-  app.use('/api', require('./routes/lead'));        // Handles /api/lead (new lead capture)
+  app.use('/api', require('./routes/Lead'));        // Handles /api/lead (new lead capture)
   app.use('/api/checkout', require('./routes/checkout')); // Handles /api/checkout/create-checkout-session
   app.use('/api/webhook', require('./routes/webhook')); // Handles Stripe webhooks and internal health checks
   app.use('/api', require('./routes/training'));    // Handles /api/training/upload
-  // Note: server/routes/reconciliation.js is no longer loaded as its logic is merged into server/routes/demo.js
 } catch (error) {
   console.error('Error loading API routes:', error.message);
 }

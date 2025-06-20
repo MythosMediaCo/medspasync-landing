@@ -85,7 +85,7 @@ app.use('/api/webhook', (req, res, next) => {
 app.use(express.json({ limit: '2mb' })); // Limit JSON payload size to 2MB
 
 // --- Serve Static Frontend Files ---
-// Serves files from the 'public' directory, and defaults to 'index.html' if a directory is requested.
+// // Serves files from the 'public' directory, and defaults to 'index.html' if a directory is requested.
 const PUBLIC_DIR = process.env.PUBLIC_DIR || path.join(__dirname, '../public');
 app.use(express.static(PUBLIC_DIR, { index: 'index.html' }));
 app.use(express.static(path.join(__dirname, '../public'), { index: 'index.html' }));

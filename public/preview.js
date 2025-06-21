@@ -126,66 +126,54 @@
     const { headers, rows } = data;
     const analysis = analyzeHeaders(headers);
 
-    return (
-      <div className="space-y-4">
-        {/* Header Mismatch Suggestions */}
-        {analysis.mismatched.length > 0 && (
-          <div className="bg-orange-50 border border-orange-200 text-orange-800 p-2 rounded text-sm">
-            <p className="font-semibold mb-1">Potential Header Mismatch Detected:</p>
-            <ul className="list-disc list-inside">
-              {analysis.mismatched.map(h => (
-                <li key={h}>
-                  "{h}"{' '}
-                  {analysis.suggestions[h] && `(Suggested: "${analysis.suggestions[h]}")`}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2">Ensure your CSV headers match the **expected format**: {expectedHeaders.join(', ')}</p>
-          </div>
-        )}
+    return React.createElement('div', { className: 'space-y-4' },
+      // Header Mismatch Suggestions
+      analysis.mismatched.length > 0 && React.createElement('div', { 
+        className: 'bg-orange-50 border border-orange-200 text-orange-800 p-2 rounded text-sm' 
+      },
+        React.createElement('p', { className: 'font-semibold mb-1' }, 'Potential Header Mismatch Detected:'),
+        React.createElement('ul', { className: 'list-disc list-inside' },
+          analysis.mismatched.map(h => React.createElement('li', { key: h },
+            `"${h}" `,
+            analysis.suggestions[h] && `(Suggested: "${analysis.suggestions[h]}")`
+          ))
+        ),
+        React.createElement('p', { className: 'mt-2' }, 
+          `Ensure your CSV headers match the expected format: ${expectedHeaders.join(', ')}`
+        )
+      ),
 
-        {/* Live Preview Table */}
-        <div className="overflow-x-auto border rounded border-gray-200 shadow-sm">
-          <table className="min-w-full divide-y divide-gray-200 text-xs">
-            <thead className="bg-gray-50">
-              <tr>
-                {headers.map(h => (
-                  <th
-                    key={h}
-                    className={`px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider ${
-                      analysis.mismatched.includes(h) ? 'text-red-600' : ''
-                    }`}
-                  >
-                    {h}
-                  </th>
-                ))}
-                <th className="px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider">
-                  Confidence
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {rows.map((row, i) => (
-                <tr key={i}>
-                  {headers.map(h => (
-                    <td
-                      key={h}
-                      className={`px-3 py-2 whitespace-nowrap ${
-                        analysis.mismatched.includes(h) ? 'text-red-600' : 'text-gray-800'
-                      }`}
-                    >
-                      {row[h]}
-                    </td>
-                  ))}
-                  <td className="px-3 py-2 whitespace-nowrap font-semibold text-gray-900">
-                    {rowConfidence(row, headers)}%
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      // Live Preview Table
+      React.createElement('div', { className: 'overflow-x-auto border rounded border-gray-200 shadow-sm' },
+        React.createElement('table', { className: 'min-w-full divide-y divide-gray-200 text-xs' },
+          React.createElement('thead', { className: 'bg-gray-50' },
+            React.createElement('tr', null,
+              headers.map(h => React.createElement('th', {
+                key: h,
+                className: `px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider ${
+                  analysis.mismatched.includes(h) ? 'text-red-600' : ''
+                }`
+              }, h)),
+              React.createElement('th', { 
+                className: 'px-3 py-2 text-left font-medium text-gray-700 uppercase tracking-wider' 
+              }, 'Confidence')
+            )
+          ),
+          React.createElement('tbody', { className: 'bg-white divide-y divide-gray-200' },
+            rows.map((row, i) => React.createElement('tr', { key: i },
+              headers.map(h => React.createElement('td', {
+                key: h,
+                className: `px-3 py-2 whitespace-nowrap ${
+                  analysis.mismatched.includes(h) ? 'text-red-600' : 'text-gray-800'
+                }`
+              }, row[h])),
+              React.createElement('td', { 
+                className: 'px-3 py-2 whitespace-nowrap font-semibold text-gray-900' 
+              }, `${rowConfidence(row, headers)}%`)
+            ))
+          )
+        )
+      )
     );
   };
 

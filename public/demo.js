@@ -21,9 +21,15 @@ const CONFIG = {
   },
   STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00',
   // Backend API Configuration
-  API_BASE_URL: process.env.NODE_ENV === 'production' 
-    ? 'https://your-backend-domain.com' 
-    : 'http://localhost:5000',
+  API_BASE_URL: (function() {
+    // Browser-compatible environment detection
+    const isProduction = window.location.hostname !== 'localhost' && 
+                        window.location.hostname !== '127.0.0.1' &&
+                        !window.location.hostname.includes('.local');
+    return isProduction 
+      ? 'https://api.medspasyncpro.com' 
+      : 'http://localhost:5000';
+  })(),
   API_ENDPOINTS: {
     reconciliation: {
       upload: '/api/reconciliation/upload',

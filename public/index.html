@@ -24,50 +24,14 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="canonical" href="https://medspasyncpro.com/">
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://billing.stripe.com https://api.stripe.com https://checkout.stripe.com https://q.stripe.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://status.medspasyncpro.com; connect-src 'self' https://api.medspasyncpro.com https://billing.stripe.com https://api.stripe.com https://checkout.stripe.com https://q.stripe.com; object-src 'none'; base-uri 'self';">
 
     <link rel="stylesheet" href="tailwind.css">
 
     <style>
-        @font-face {
-            font-display: swap;
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 400;
-            src: url('/fonts/inter-v19-latin-regular.woff2') format('woff2');
-        }
-        @font-face {
-            font-display: swap;
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 500;
-            src: url('/fonts/inter-v19-latin-500.woff2') format('woff2');
-        }
-        @font-face {
-            font-display: swap;
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 600;
-            src: url('/fonts/inter-v19-latin-600.woff2') format('woff2');
-        }
-        @font-face {
-            font-display: swap;
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 700;
-            src: url('/fonts/inter-v19-latin-700.woff2') format('woff2');
-        }
-        @font-face {
-            font-display: swap;
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 800;
-            src: url('/fonts/inter-v19-latin-800.woff2') format('woff2');
-        }
-
         body {
             line-height: 1.75;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
         }
 
         /* MedSpaSync Pro Design System Variables */
@@ -78,7 +42,7 @@
             --medspa-success: #10B981;
             --medspa-grey-100: #F8F9FA;
             --medspa-grey-500: #6C757D;
-            --medspa-font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --medspa-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             --medspa-spacing-xs: 4px;
             --medspa-spacing-sm: 8px;
             --medspa-spacing-md: 16px;
@@ -165,11 +129,6 @@
         }
     </style>
 
-    <link rel="preload" href="/fonts/inter-v19-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/inter-v19-latin-500.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/inter-v19-latin-600.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/inter-v19-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/fonts/inter-v19-latin-800.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://unpkg.com/react@18/umd/react.production.min.js" as="script" crossorigin>
     <link rel="preload" href="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" as="script" crossorigin>
     <link rel="preload" href="/preview.js" as="script">
@@ -283,28 +242,55 @@
     <main class="max-w-medspa-container mx-auto" id="main">
 
         <!-- MedSpaSync Pro Hero Section -->
-        <section class="medspa-hero">
-            <h1>Stop Losing 8+ Hours Weekly to Manual Reconciliation</h1>
-            <p class="text-body-large text-medspa-grey-500 mb-8">MedSpaSync Pro's AI matching achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.</p>
-            
-            <div class="medspa-trust-indicators">
-                <span class="medspa-trust-indicator">97% Match Rate Accuracy</span>
-                <span class="medspa-trust-indicator">HIPAA-Conscious Security</span>
-                <span class="medspa-trust-indicator">QuickBooks Integration</span>
-                <span class="medspa-trust-indicator">24-Hour Implementation</span>
+        <section class="py-24 px-4 bg-gradient-to-b from-gray-50 to-white">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-6xl font-bold text-gray-900 mb-8 leading-tight">
+                    Stop Losing <span class="text-blue-600">8+ Hours Weekly</span> to Manual Reconciliation
+                </h1>
+                <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                    MedSpaSync Pro's AI matching achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mb-12">
+                    <span class="bg-white px-6 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                        ✓ 97% Match Rate Accuracy
+                    </span>
+                    <span class="bg-white px-6 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                        ✓ HIPAA-Conscious Security
+                    </span>
+                    <span class="bg-white px-6 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                        ✓ QuickBooks Integration
+                    </span>
+                    <span class="bg-white px-6 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                        ✓ 24-Hour Implementation
+                    </span>
+                </div>
+                
+                <a href="#demo" class="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl">
+                    Start Reconciling in 24 Hours
+                    <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
             </div>
-            
-            <a href="#demo" class="medspa-btn-primary">Start Reconciling in 24 Hours</a>
         </section>
 
         <!-- MedSpaSync Pro Problem Section -->
-        <section class="py-16 px-4">
-            <div class="max-w-medspa-content mx-auto">
-                <h2 class="text-h1 font-semibold text-center mb-8">The Hidden Cost of Manual Reconciliation</h2>
-                <p class="text-body-large text-center mb-12">Manual reconciliation wastes 8+ hours weekly and costs medical spas $2,500+ monthly in missed revenue. Without AI matching, financial reports become inaccurate, leading to decision paralysis.</p>
+        <section class="py-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">The Hidden Cost of Manual Reconciliation</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Manual reconciliation wastes 8+ hours weekly and costs medical spas $2,500+ monthly in missed revenue. Without AI matching, financial reports become inaccurate, leading to decision paralysis.
+                    </p>
+                </div>
                 
-                <div class="bg-medspa-grey-100 border-l-4 border-medspa-primary p-6 rounded-medspa-lg mb-8">
-                    <p class="text-medspa-grey-500 italic">Our AI Intelligence Layer is designed to transform reconciliation from 6 hours weekly to just 15 minutes with 95%+ match rate accuracy.</p>
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center">
+                    <div class="max-w-2xl mx-auto">
+                        <p class="text-lg text-blue-900 font-medium">
+                            Our AI Intelligence Layer is designed to transform reconciliation from 6 hours weekly to just 15 minutes with 95%+ match rate accuracy.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>

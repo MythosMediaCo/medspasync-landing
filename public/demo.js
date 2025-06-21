@@ -1179,9 +1179,31 @@ const leadCapture = {
       });
 
       // Show the demo tool and hide the lead capture form
-      utils.hide(utils.$('leadCapture'));
-      utils.show(utils.$('demoTool'));
-      utils.scrollToElement('demoTool');
+      console.log('Hiding lead capture form...');
+      const leadCaptureElement = utils.$('leadCapture');
+      const demoToolElement = utils.$('demoTool');
+      
+      if (leadCaptureElement) {
+        leadCaptureElement.style.display = 'none';
+        leadCaptureElement.classList.add('hidden');
+        console.log('Lead capture form hidden');
+      } else {
+        console.error('Lead capture element not found');
+      }
+      
+      if (demoToolElement) {
+        demoToolElement.style.display = 'block';
+        demoToolElement.classList.remove('hidden');
+        console.log('Demo tool shown');
+        
+        // Scroll to demo tool with a slight delay to ensure it's visible
+        setTimeout(() => {
+          utils.scrollToElement('demoTool');
+          console.log('Scrolled to demo tool');
+        }, 200);
+      } else {
+        console.error('Demo tool element not found');
+      }
 
       return true;
     } catch (error) {
@@ -1202,9 +1224,31 @@ const leadCapture = {
       });
 
       // Show the demo tool and hide the lead capture form
-      utils.hide(utils.$('leadCapture'));
-      utils.show(utils.$('demoTool'));
-      utils.scrollToElement('demoTool');
+      console.log('Hiding lead capture form...');
+      const leadCaptureElement = utils.$('leadCapture');
+      const demoToolElement = utils.$('demoTool');
+      
+      if (leadCaptureElement) {
+        leadCaptureElement.style.display = 'none';
+        leadCaptureElement.classList.add('hidden');
+        console.log('Lead capture form hidden');
+      } else {
+        console.error('Lead capture element not found');
+      }
+      
+      if (demoToolElement) {
+        demoToolElement.style.display = 'block';
+        demoToolElement.classList.remove('hidden');
+        console.log('Demo tool shown');
+        
+        // Scroll to demo tool with a slight delay to ensure it's visible
+        setTimeout(() => {
+          utils.scrollToElement('demoTool');
+          console.log('Scrolled to demo tool');
+        }, 200);
+      } else {
+        console.error('Demo tool element not found');
+      }
 
       return false;
     }

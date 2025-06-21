@@ -1,3 +1,279 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* MedSpaSync Pro Design System */
+@layer base {
+  :root {
+    /* MedSpaSync Pro Brand Colors */
+    --medspa-primary: #000000;
+    --medspa-secondary: #FFFFFF;
+    --medspa-accent: #FF6B35;
+    --medspa-success: #10B981;
+    --medspa-warning: #F59E0B;
+    --medspa-error: #EF4444;
+    --medspa-info: #3B82F6;
+    
+    /* MedSpaSync Pro Neutral Palette */
+    --medspa-grey-100: #F8F9FA;
+    --medspa-grey-200: #E9ECEF;
+    --medspa-grey-300: #DEE2E6;
+    --medspa-grey-400: #CED4DA;
+    --medspa-grey-500: #6C757D;
+    --medspa-grey-600: #495057;
+    --medspa-grey-700: #343A40;
+    --medspa-grey-800: #212529;
+    --medspa-grey-900: #000000;
+    
+    /* MedSpaSync Pro Typography */
+    --medspa-font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --medspa-font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    
+    /* MedSpaSync Pro Type Scale */
+    --medspa-text-hero: 3.5rem;
+    --medspa-text-h1: 2.5rem;
+    --medspa-text-h2: 1.875rem;
+    --medspa-text-h3: 1.25rem;
+    --medspa-text-body-large: 1.125rem;
+    --medspa-text-body: 1rem;
+    --medspa-text-body-small: 0.875rem;
+    --medspa-text-caption: 0.75rem;
+    
+    /* MedSpaSync Pro Spacing Scale */
+    --medspa-space-xs: 4px;
+    --medspa-space-sm: 8px;
+    --medspa-space-md: 16px;
+    --medspa-space-lg: 24px;
+    --medspa-space-xl: 32px;
+    --medspa-space-2xl: 48px;
+    --medspa-space-3xl: 64px;
+    --medspa-space-4xl: 80px;
+    
+    /* MedSpaSync Pro Layout */
+    --medspa-container-max: 1200px;
+    --medspa-content-max: 800px;
+    --medspa-border-radius: 8px;
+    --medspa-border-radius-lg: 12px;
+    --medspa-border-radius-xl: 16px;
+    
+    /* MedSpaSync Pro Shadows */
+    --medspa-shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --medspa-shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    --medspa-shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+    
+    /* MedSpaSync Pro Transitions */
+    --medspa-transition-fast: 0.2s ease;
+    --medspa-transition-normal: 0.3s ease;
+  }
+
+  body {
+    font-family: var(--medspa-font);
+    line-height: 1.6;
+    color: var(--medspa-primary);
+    background: var(--medspa-secondary);
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer components {
+  /* MedSpaSync Pro Component Classes */
+  .medspa-hero {
+    padding: var(--medspa-space-4xl) var(--medspa-space-lg);
+    text-align: center;
+    background: linear-gradient(180deg, var(--medspa-grey-100) 0%, var(--medspa-secondary) 100%);
+    max-width: var(--medspa-container-max);
+    margin: 0 auto;
+  }
+
+  .medspa-hero h1 {
+    font-size: var(--medspa-text-hero);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--medspa-space-lg);
+  }
+
+  .medspa-section {
+    padding: var(--medspa-space-3xl) var(--medspa-space-lg);
+    max-width: var(--medspa-container-max);
+    margin: 0 auto;
+  }
+
+  .medspa-card {
+    background: var(--medspa-secondary);
+    border-radius: var(--medspa-border-radius-lg);
+    padding: var(--medspa-space-xl) var(--medspa-space-lg);
+    box-shadow: var(--medspa-shadow-sm);
+    border: 1px solid var(--medspa-grey-200);
+    transition: var(--medspa-transition-normal);
+  }
+
+  .medspa-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--medspa-shadow-lg);
+  }
+
+  .medspa-card-feature {
+    background: var(--medspa-secondary);
+    border-radius: var(--medspa-border-radius-xl);
+    padding: var(--medspa-space-2xl) var(--medspa-space-xl);
+    box-shadow: var(--medspa-shadow-md);
+    text-align: center;
+    transition: var(--medspa-transition-normal);
+  }
+
+  .medspa-card-testimonial {
+    background: var(--medspa-grey-100);
+    border-radius: var(--medspa-border-radius-lg);
+    padding: var(--medspa-space-xl) var(--medspa-space-lg);
+    border-left: 4px solid var(--medspa-primary);
+  }
+
+  .medspa-btn-primary {
+    background: var(--medspa-primary);
+    color: var(--medspa-secondary);
+    padding: var(--medspa-space-md) var(--medspa-space-xl);
+    border-radius: var(--medspa-border-radius);
+    font-size: var(--medspa-text-body);
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: var(--medspa-transition-fast);
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .medspa-btn-primary:hover {
+    background: #333333;
+    transform: translateY(-1px);
+  }
+
+  .medspa-btn-secondary {
+    background: transparent;
+    color: var(--medspa-primary);
+    padding: var(--medspa-space-md) var(--medspa-space-xl);
+    border-radius: var(--medspa-border-radius);
+    font-size: var(--medspa-text-body);
+    font-weight: 500;
+    border: 2px solid var(--medspa-primary);
+    cursor: pointer;
+    transition: var(--medspa-transition-fast);
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .medspa-btn-secondary:hover {
+    background: var(--medspa-primary);
+    color: var(--medspa-secondary);
+  }
+
+  .medspa-trust-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--medspa-space-lg);
+    flex-wrap: wrap;
+    margin: var(--medspa-space-xl) 0;
+  }
+
+  .medspa-trust-indicator {
+    background: var(--medspa-secondary);
+    border: 2px solid var(--medspa-grey-200);
+    border-radius: var(--medspa-border-radius);
+    padding: var(--medspa-space-md) var(--medspa-space-lg);
+    font-size: var(--medspa-text-body-small);
+    font-weight: 500;
+    color: var(--medspa-primary);
+  }
+
+  .medspa-metric-highlight {
+    background: var(--medspa-grey-100);
+    border-left: 4px solid var(--medspa-primary);
+    padding: var(--medspa-space-lg);
+    border-radius: var(--medspa-border-radius);
+    margin: var(--medspa-space-lg) 0;
+  }
+
+  .medspa-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--medspa-space-lg);
+    margin: var(--medspa-space-xl) 0;
+  }
+
+  /* MedSpaSync Pro Typography Classes */
+  .medspa-text-hero {
+    font-size: var(--medspa-text-hero);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .medspa-text-h1 {
+    font-size: var(--medspa-text-h1);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .medspa-text-h2 {
+    font-size: var(--medspa-text-h2);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .medspa-text-body-large {
+    font-size: var(--medspa-text-body-large);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* MedSpaSync Pro Form Styles */
+  .medspa-form-input {
+    padding: var(--medspa-space-md);
+    border-radius: var(--medspa-border-radius);
+    border: 2px solid var(--medspa-grey-200);
+    font-size: var(--medspa-text-body);
+    font-family: inherit;
+    background-color: var(--medspa-secondary);
+    transition: border-color var(--medspa-transition-fast);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .medspa-form-input:focus {
+    border-color: var(--medspa-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .medspa-form-label {
+    font-size: var(--medspa-text-body-small);
+    font-weight: 500;
+    color: var(--medspa-primary);
+    margin-bottom: var(--medspa-space-sm);
+    display: block;
+  }
+}
+
+@layer utilities {
+  /* MedSpaSync Pro Responsive Design */
+  @media (max-width: 768px) {
+    .medspa-text-hero { font-size: 2.5rem; }
+    .medspa-text-h1 { font-size: 2rem; }
+    .medspa-text-h2 { font-size: 1.5rem; }
+    
+    .medspa-hero { padding: var(--medspa-space-3xl) var(--medspa-space-md); }
+    .medspa-section { padding: var(--medspa-space-2xl) var(--medspa-space-md); }
+    
+    .medspa-trust-indicators { 
+      flex-direction: column; 
+      align-items: center; 
+    }
+    
+    .medspa-stats-grid {
+      grid-template-columns: 1fr;
+      gap: var(--medspa-space-md);
+    }
+  }
+}

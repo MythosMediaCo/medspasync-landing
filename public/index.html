@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MedSpaSync Pro automates reconciliation for medical spas, recovering lost revenue from loyalty programs like Alle & Aspire. Eliminate manual work and ensure accurate financial reporting.">
-    <meta name="keywords" content="medical spa, reconciliation, alle rewards, aspire rewards, pos system, revenue recovery, medspa software, financial automation, automated reconciliation">
-    <meta name="author" content="MedSpaSync Pro">
-    <meta name="theme-color" content="#059669">
+    <meta name="description" content="Stop losing 8+ hours weekly to manual reconciliation. MedSpaSync Pro's AI achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.">
+    <meta name="keywords" content="medical spa reconciliation, alle rewards, aspire rewards, pos system, revenue recovery, medspa software, financial automation, jacob hagood, spa veteran, ai matching">
+    <meta name="author" content="Jacob Hagood - 10-year Medical Spa Industry Veteran">
+    <meta name="theme-color" content="#000000">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://medspasyncpro.com/">
-    <meta property="og:title" content="MedSpaSync Pro - Automated Revenue Recovery for Medical Spas">
-    <meta property="og:description" content="MedSpaSync Pro automates reconciliation for medical spas, recovering lost revenue from loyalty programs like Alle & Aspire. Eliminate manual work and ensure accurate financial reporting.">
+    <meta property="og:title" content="Stop Losing 8+ Hours Weekly to Manual Reconciliation | MedSpaSync Pro">
+    <meta property="og:description" content="MedSpaSync Pro's AI matching achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.">
     <meta property="og:image" content="https://medspasyncpro.com/og-image.jpg">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://medspasyncpro.com/">
-    <meta property="twitter:title" content="MedSpaSync Pro - Automated Revenue Recovery for Medical Spas">
-    <meta property="twitter:description" content="MedSpaSync Pro automates reconciliation for medical spas, recovering lost revenue from loyalty programs like Alle & Aspire. Eliminate manual work and ensure accurate financial reporting.">
+    <meta property="twitter:title" content="Stop Losing 8+ Hours Weekly to Manual Reconciliation | MedSpaSync Pro">
+    <meta property="twitter:description" content="MedSpaSync Pro's AI matching achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.">
     <meta property="twitter:image" content="https://medspasyncpro.com/og-image.jpg">
 
-    <title>MedSpaSync Pro - Automated Revenue Recovery for Medical Spas</title>
+    <title>Stop Losing 8+ Hours Weekly to Manual Reconciliation | MedSpaSync Pro</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="canonical" href="https://medspasyncpro.com/">
 
@@ -70,12 +70,31 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         }
 
+        /* MedSpaSync Pro Design System Variables */
+        :root {
+            --medspa-primary: #000000;
+            --medspa-secondary: #FFFFFF;
+            --medspa-accent: #FF6B35;
+            --medspa-success: #10B981;
+            --medspa-grey-100: #F8F9FA;
+            --medspa-grey-500: #6C757D;
+            --medspa-font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --medspa-spacing-xs: 4px;
+            --medspa-spacing-sm: 8px;
+            --medspa-spacing-md: 16px;
+            --medspa-spacing-lg: 24px;
+            --medspa-spacing-xl: 32px;
+            --medspa-spacing-2xl: 48px;
+            --medspa-spacing-3xl: 64px;
+            --medspa-spacing-4xl: 80px;
+        }
+
         /* CSP-compliant utility classes & animations */
-        .hidden-element { display: none !important; } /* For forcing hide */
-        .visible-element { display: block; } /* For forcing show */
+        .hidden-element { display: none !important; }
+        .visible-element { display: block; }
         .spinner-medium {
             width: 24px; height: 24px; border: 3px solid #e5e7eb;
-            border-top-color: #059669; border-radius: 50%;
+            border-top-color: var(--medspa-primary); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -83,16 +102,60 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Subscription CTA styles */
-        .subscription-cta {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+        /* MedSpaSync Pro Hero Section */
+        .medspa-hero {
+            padding: var(--medspa-spacing-4xl) var(--medspa-spacing-lg);
+            text-align: center;
+            background: linear-gradient(180deg, var(--medspa-grey-100) 0%, var(--medspa-secondary) 100%);
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .subscription-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.4);
+        .medspa-hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--medspa-spacing-lg);
         }
+
+        .medspa-trust-indicators {
+            display: flex;
+            justify-content: center;
+            gap: var(--medspa-spacing-lg);
+            flex-wrap: wrap;
+            margin: var(--medspa-spacing-xl) 0;
+        }
+
+        .medspa-trust-indicator {
+            background: var(--medspa-secondary);
+            border: 2px solid var(--medspa-grey-100);
+            border-radius: 8px;
+            padding: var(--medspa-spacing-md) var(--medspa-spacing-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--medspa-primary);
+        }
+
+        .medspa-btn-primary {
+            background: var(--medspa-primary);
+            color: var(--medspa-secondary);
+            padding: var(--medspa-spacing-md) var(--medspa-spacing-xl);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .medspa-btn-primary:hover {
+            background: #333333;
+            transform: translateY(-1px);
+        }
+
         /* For FAQ accordion icons */
         .faq-question svg {
             transition: transform 0.3s ease;
@@ -112,7 +175,6 @@
     <link rel="preload" href="/preview.js" as="script">
     <link rel="preload" href="/demo.js" as="script">
 
-
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -125,10 +187,15 @@
             "price": "299",
             "priceCurrency": "USD"
         },
-        "description": "Reconciliation software for medical spas to match POS transactions with Alle, Aspire, and loyalty program rewards automatically.",
+        "description": "The AI Intelligence Layer for Medical Spas. Stop losing 8+ hours weekly to manual reconciliation with 95%+ AI accuracy.",
         "publisher": {
             "@type": "Organization",
-            "name": "MythosMedia.Co"
+            "name": "MedSpaSync Pro",
+            "founder": {
+                "@type": "Person",
+                "name": "Jacob Hagood",
+                "description": "10-year Medical Spa Industry Veteran"
+            }
         }
     }
     </script>
@@ -179,7 +246,7 @@
     <script defer src="preview.js"></script>
     <script defer src="demo.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-medspa-grey-100 text-medspa-primary">
     <noscript>
         <div class="bg-red-100 text-red-800 p-4 text-center">
             JavaScript is required to run this demo. Please enable it in your browser.
@@ -190,112 +257,54 @@
 
     <div id="toast" class="fixed bottom-4 right-4 z-50 max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg p-4 toast" role="status" aria-live="polite"></div>
 
-    <nav class="bg-white shadow sticky top-0 z-50" aria-label="Main navigation">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <nav class="bg-medspa-secondary shadow sticky top-0 z-50" aria-label="Main navigation">
+        <div class="max-w-medspa-container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center" aria-label="MedSpaSync Pro Logo">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div class="w-10 h-10 bg-medspa-primary rounded-lg flex items-center justify-center" aria-label="MedSpaSync Pro Logo">
+                    <svg class="w-6 h-6 text-medspa-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
-                <span class="text-xl font-bold">MedSpaSync Pro</span>
+                <span class="text-xl font-bold text-medspa-primary">MedSpaSync Pro</span>
             </div>
 
             <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-600 hidden sm:block">Seen enough?</span>
+                <span class="text-sm text-medspa-grey-500 hidden sm:block">Ready to save 8+ hours weekly?</span>
                 <button
                     id="headerSubscribeBtn"
-                    class="subscription-cta text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300"
+                    class="medspa-btn-primary"
                 >
-                    Subscribe Now
+                    Start Reconciling in 24 Hours
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto py-10 px-4" id="main">
+    <main class="max-w-medspa-container mx-auto" id="main">
 
-        <section id="heroSection" class="text-center mb-10">
-            <h2 class="text-3xl font-bold mb-3">Live Revenue Recovery Demo</h2>
-            <p class="text-lg text-gray-600 mb-3">Instantly detect unmatched rewards from POS, Alle, and Aspire data.</p>
-            <div class="inline-block px-4 py-2 rounded-full text-white bg-gradient-to-r from-yellow-400 to-yellow-500 font-semibold animate-pulse">
-                💰 See lost revenue in real time
+        <!-- MedSpaSync Pro Hero Section -->
+        <section class="medspa-hero">
+            <h1>Stop Losing 8+ Hours Weekly to Manual Reconciliation</h1>
+            <p class="text-body-large text-medspa-grey-500 mb-8">MedSpaSync Pro's AI matching achieves 95%+ accuracy, saving spa teams from hours of cross-checking while preventing $2,500+ monthly in missed revenue.</p>
+            
+            <div class="medspa-trust-indicators">
+                <span class="medspa-trust-indicator">97% Match Rate Accuracy</span>
+                <span class="medspa-trust-indicator">HIPAA-Conscious Security</span>
+                <span class="medspa-trust-indicator">QuickBooks Integration</span>
+                <span class="medspa-trust-indicator">24-Hour Implementation</span>
             </div>
-            <div class="mt-4">
-                <a href="#leadCapture" id="startDemoHeroBtn" class="btn bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg" aria-describedby="hero-cta-description">
-                    🚀 Start Revenue Recovery Demo
-                </a>
-                <div id="hero-cta-description" class="sr-only">
-                    Begin the interactive demo to see how MedSpaSync Pro finds missing revenue in your medical spa transactions
-                </div>
-            </div>
+            
+            <a href="#demo" class="medspa-btn-primary">Start Reconciling in 24 Hours</a>
         </section>
 
-        <section id="problem" class="section bg-red-50 py-12 px-4 rounded-xl shadow-md mb-12">
-            <div class="container mx-auto">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                        The Hidden Revenue Leak in Your Spa
-                    </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Every month, medical spas lose thousands of dollars to unmatched loyalty program rewards
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-8 mb-12">
-                    <div class="bg-white rounded-xl p-6 shadow-lg border border-red-100">
-                        <div class="text-red-600 mb-4">
-                            <svg class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M11 17h2v-6h-2v6zm0-8h2V7h-2v2zm1 11c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-18C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Manual Reconciliation Hell</h3>
-                        <p class="text-gray-600 mb-4">
-                            Spending hours every week manually matching POS transactions with Alle, Aspire, and other rewards programs.
-                        </p>
-                        <div class="text-sm text-red-600 font-medium">
-                            ⏰ 8+ hours per week lost
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl p-6 shadow-lg border border-red-100">
-                        <div class="text-red-600 mb-4">
-                            <svg class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15a5 5 0 110-10 5 5 0 010 10zM12 9a3 3 0 100 6 3 3 0 000-6z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Missed Revenue Recovery</h3>
-                        <p class="text-gray-600 mb-4">
-                            Unmatched transactions mean unclaimed revenue. When loyalty rewards don't match your POS, you lose money.
-                        </p>
-                        <div class="text-sm text-red-600 font-medium">
-                            💰 $2,500+ monthly losses
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl p-6 shadow-lg border border-red-100">
-                        <div class="text-red-600 mb-4">
-                            <svg class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Inaccurate Reporting</h3>
-                        <p class="text-gray-600 mb-4">
-                            Without proper reconciliation, your financial reports don't reflect reality, making business decisions harder.
-                        </p>
-                        <div class="text-sm text-red-600 font-medium">
-                            📊 Decision paralysis
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-red-500 to-red-600 rounded-xl p-8 text-white text-center">
-                    <h3 class="text-2xl font-bold mb-4">
-                        "We were losing $3,200 every month to unmatched Alle rewards alone"
-                    </h3>
-                    <p class="text-lg opacity-90">
-                        — Sarah M., Practice Manager at Elite MedSpa (Before MedSpaSync Pro)
-                    </p>
+        <!-- MedSpaSync Pro Problem Section -->
+        <section class="py-16 px-4">
+            <div class="max-w-medspa-content mx-auto">
+                <h2 class="text-h1 font-semibold text-center mb-8">The Hidden Cost of Manual Reconciliation</h2>
+                <p class="text-body-large text-center mb-12">Manual reconciliation wastes 8+ hours weekly and costs medical spas $2,500+ monthly in missed revenue. Without AI matching, financial reports become inaccurate, leading to decision paralysis.</p>
+                
+                <div class="bg-medspa-grey-100 border-l-4 border-medspa-primary p-6 rounded-medspa-lg mb-8">
+                    <p class="text-medspa-grey-500 italic">Real spa operators report transforming reconciliation from 6 hours weekly to just 15 minutes with 97% match rate accuracy using MedSpaSync Pro.</p>
                 </div>
             </div>
         </section>
@@ -387,276 +396,279 @@
             </div>
         </section>
 
-        <section id="demo" class="section py-12 px-4 rounded-xl shadow-md mb-12">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    Try It Now - No Email Required
-                </h2>
-                <p class="text-xl text-gray-600">
-                    Upload your files and see the reconciliation magic happen in real-time
-                </p>
-            </div>
-
-            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-6">
-                    <h3 class="text-xl font-semibold mb-2">Live Demo System</h3>
-                    <p class="opacity-90">Upload your CSV files or use our sample data to see MedSpaSync Pro in action</p>
-                </div>
-
-                <section id="leadCapture" class="p-6">
-                    <form id="leadForm" class="bg-white p-4 rounded-lg shadow-inner border border-gray-100">
-                        <div class="mb-3">
-                            <label for="leadEmail" class="block text-sm font-medium mb-1 text-gray-700">Work Email</label>
-                            <input id="leadEmail" type="email" required class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="your@email.com" />
-                            <div id="leadEmail-error" class="text-xs text-red-600 mt-1 hidden" role="alert">Please enter a valid email address.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="leadName" class="block text-sm font-medium mb-1 text-gray-700">Name <span class="text-gray-400">(optional)</span></label>
-                            <input id="leadName" type="text" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="John Doe" />
-                        </div>
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow w-full font-semibold transition-colors">Start Demo</button>
-                        <p id="leadNotice" class="text-sm mt-3 text-center text-gray-500">Your privacy is important. We only use this to send your demo results.</p>
-                    </form>
-                </section>
-
-
-                <div id="demoTool" class="p-6 hidden">
-                    <div id="usageBanner" class="hidden mb-4 text-center bg-yellow-100 text-yellow-800 p-2 rounded">
-                        <span id="usageText"></span>
-                    </div>
-
-                    <div id="uploadStep" class="space-y-6">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Step 1: Upload Your Data Files</h4>
-
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition-colors">
-                                <div class="text-gray-400 mb-4">
-                                    <svg class="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                                    </svg>
-                                </div>
-                                <h5 class="text-sm font-medium text-gray-900 mb-2">POS Transaction Data</h5>
-                                <p class="text-xs text-gray-500 mb-4">CSV export from your point-of-sale system</p>
-
-                                <input type="file" id="posFileInput" accept=".csv" class="hidden">
-                                <label for="posFileInput" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-emerald-700 transition">
-                                    Choose POS File
-                                </label>
-
-                                <div class="mt-4">
-                                    <button id="loadPosSample" class="text-emerald-600 text-sm hover:underline">
-                                        📄 Use Sample Data
-                                    </button>
-                                </div>
-                                <div id="posPreview" class="mt-4 text-left"></div>
-                                <div id="posFileStatus" class="mt-2 text-sm text-gray-600"></div>
-                            </div>
-
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-500 transition-colors">
-                                <div class="text-gray-400 mb-4">
-                                    <svg class="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                                    </svg>
-                                </div>
-                                <h5 class="text-sm font-medium text-gray-900 mb-2">Loyalty Program Data</h5>
-                                <p class="text-xs text-gray-500 mb-4">Alle, Aspire, or other rewards CSV</p>
-
-                                <input type="file" id="loyaltyFileInput" accept=".csv" class="hidden">
-                                <label for="loyaltyFileInput" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-emerald-700 transition">
-                                    Choose Loyalty File
-                                </label>
-
-                                <div class="mt-4 space-x-4">
-                                    <button id="loadAlleSample" class="text-emerald-600 text-sm hover:underline">
-                                        📄 Alle Sample
-                                    </button>
-                                    <button id="loadAspireSample" class="text-emerald-600 text-sm hover:underline">
-                                        📄 Aspire Sample
-                                    </button>
-                                </div>
-                                <div id="rewardPreview" class="mt-4 text-left"></div>
-                                <div id="loyaltyFileStatus" class="mt-2 text-sm text-gray-600"></div>
-                            </div>
-                        </div>
-
-                        <div class="text-center pt-6">
-                            <button id="runDemoBtn" disabled class="bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg cursor-not-allowed transition">
-                                📁 Select 2 files to continue
-                            </button>
-                            <p class="text-sm text-gray-500 mt-2">
-                                Your files are processed locally and never stored on our servers
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="processingStep" class="hidden text-center py-12">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-6" role="status" aria-label="Loading"></div>
-                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Processing Your Data</h4>
-                        <p class="text-gray-600">
-                            <span id="processingMessage">Analyzing transaction patterns...</span>
-                        </p>
-                        <div class="w-full bg-gray-200 rounded-full h-2 mt-4 max-w-md mx-auto">
-                            <div id="progressBar" class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                        <div id="progressPercent" class="text-sm text-gray-500 mt-2">0%</div>
-                    </div>
-
-                    <div id="resultsStep" class="hidden">
-                        <h4 class="text-lg font-semibold text-gray-900 mb-6">Reconciliation Results</h4>
-
-                        <div id="resultsGrid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                            </div>
-
-                        <div id="detailedResults" class="bg-gray-50 rounded-lg p-6">
-                            </div>
-
-                        <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                            <button id="exportBtn" class="bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition">
-                                📊 Export Results CSV
-                            </button>
-                            <button id="runAnotherDemoBtn" class="bg-gray-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-700 transition">
-                                🔄 Try Another Demo
-                            </button>
-                        </div>
-
-                        <div id="industryComparison" class="mt-6 p-4 bg-blue-50 rounded-lg">
-                            <p class="text-sm text-blue-800 text-center">
-                                <strong>Industry Benchmark:</strong> <span id="industryBenchmark">Average medical spa match rate: 65%</span>
-                            </p>
-                        </div>
+        <!-- MedSpaSync Pro Demo Section -->
+        <section id="demo" class="py-16 px-4">
+            <div class="max-w-medspa-container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-h1 font-semibold mb-6">Try MedSpaSync Pro - No Email Required</h2>
+                    <p class="text-body-large text-medspa-grey-500 mb-8">Upload your files and see how our AI Intelligence Layer achieves 95%+ accuracy in real-time</p>
+                    
+                    <div class="bg-medspa-grey-100 border-l-4 border-medspa-primary p-6 rounded-medspa-lg mb-8">
+                        <p class="text-medspa-grey-500">Built by 10-year medical spa veteran Jacob Hagood who lived the reconciliation nightmare. See the transformation from 6 hours weekly to 15 minutes.</p>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-gray-600">
-                            <span id="demosRemaining">5</span> demos remaining today
-                        </span>
-                        <span class="text-emerald-600 font-medium">
-                            No email required for demo
-                        </span>
+                <div class="max-w-4xl mx-auto bg-medspa-secondary rounded-medspa-xl shadow-medspa-lg border border-medspa-grey-200 overflow-hidden">
+                    <div class="bg-medspa-primary text-medspa-secondary p-6">
+                        <h3 class="text-xl font-semibold mb-2">AI Intelligence Layer Demo</h3>
+                        <p class="opacity-90">Upload your CSV files or use our sample data to see 95%+ accuracy in action</p>
+                    </div>
+
+                    <section id="leadCapture" class="p-6">
+                        <form id="leadForm" class="bg-medspa-grey-100 p-6 rounded-medspa-lg shadow-medspa-sm border border-medspa-grey-200">
+                            <div class="mb-4">
+                                <label for="leadEmail" class="block text-sm font-medium mb-2 text-medspa-primary">Work Email</label>
+                                <input id="leadEmail" type="email" required class="w-full border border-medspa-grey-300 rounded-medspa px-3 py-2 focus:ring-medspa-primary focus:border-medspa-primary" placeholder="your@email.com" />
+                                <div id="leadEmail-error" class="text-xs text-medspa-error mt-1 hidden" role="alert">Please enter a valid email address.</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="leadName" class="block text-sm font-medium mb-2 text-medspa-primary">Name <span class="text-medspa-grey-500">(optional)</span></label>
+                                <input id="leadName" type="text" class="w-full border border-medspa-grey-300 rounded-medspa px-3 py-2 focus:ring-medspa-primary focus:border-medspa-primary" placeholder="John Doe" />
+                            </div>
+                            <button type="submit" class="medspa-btn-primary w-full">Start Reconciling in 24 Hours</button>
+                            <p id="leadNotice" class="text-sm mt-3 text-center text-medspa-grey-500">Your privacy is important. We only use this to send your demo results.</p>
+                        </form>
+                    </section>
+
+                    <div id="demoTool" class="p-6 hidden">
+                        <div id="usageBanner" class="hidden mb-4 text-center bg-medspa-warning/10 text-medspa-warning p-3 rounded-medspa">
+                            <span id="usageText"></span>
+                        </div>
+
+                        <div id="uploadStep" class="space-y-6">
+                            <h4 class="text-lg font-semibold text-medspa-primary mb-4">Step 1: Upload Your Data Files</h4>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="border-2 border-dashed border-medspa-grey-300 rounded-medspa-lg p-6 text-center hover:border-medspa-primary transition-colors">
+                                    <div class="text-medspa-grey-400 mb-4">
+                                        <svg class="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-sm font-medium text-medspa-primary mb-2">POS Transaction Data</h5>
+                                    <p class="text-xs text-medspa-grey-500 mb-4">CSV export from your point-of-sale system</p>
+
+                                    <input type="file" id="posFileInput" accept=".csv" class="hidden">
+                                    <label for="posFileInput" class="medspa-btn-primary text-sm cursor-pointer">
+                                        Choose POS File
+                                    </label>
+
+                                    <div class="mt-4">
+                                        <button id="loadPosSample" class="text-medspa-primary text-sm hover:underline">
+                                            📄 Use Sample Data
+                                        </button>
+                                    </div>
+                                    <div id="posPreview" class="mt-4 text-left"></div>
+                                    <div id="posFileStatus" class="mt-2 text-sm text-medspa-grey-500"></div>
+                                </div>
+
+                                <div class="border-2 border-dashed border-medspa-grey-300 rounded-medspa-lg p-6 text-center hover:border-medspa-primary transition-colors">
+                                    <div class="text-medspa-grey-400 mb-4">
+                                        <svg class="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-sm font-medium text-medspa-primary mb-2">Loyalty Program Data</h5>
+                                    <p class="text-xs text-medspa-grey-500 mb-4">Alle, Aspire, or other rewards CSV</p>
+
+                                    <input type="file" id="loyaltyFileInput" accept=".csv" class="hidden">
+                                    <label for="loyaltyFileInput" class="medspa-btn-primary text-sm cursor-pointer">
+                                        Choose Loyalty File
+                                    </label>
+
+                                    <div class="mt-4 space-x-4">
+                                        <button id="loadAlleSample" class="text-medspa-primary text-sm hover:underline">
+                                            📄 Alle Sample
+                                        </button>
+                                        <button id="loadAspireSample" class="text-medspa-primary text-sm hover:underline">
+                                            📄 Aspire Sample
+                                        </button>
+                                    </div>
+                                    <div id="rewardPreview" class="mt-4 text-left"></div>
+                                    <div id="loyaltyFileStatus" class="mt-2 text-sm text-medspa-grey-500"></div>
+                                </div>
+                            </div>
+
+                            <div class="text-center pt-6">
+                                <button id="runDemoBtn" disabled class="bg-medspa-grey-300 text-medspa-grey-500 px-8 py-3 rounded-medspa font-semibold text-lg cursor-not-allowed transition">
+                                    📁 Select 2 files to continue
+                                </button>
+                                <p class="text-sm text-medspa-grey-500 mt-2">
+                                    Your files are processed locally and never stored on our servers
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="processingStep" class="hidden text-center py-12">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-medspa-primary mx-auto mb-6" role="status" aria-label="Loading"></div>
+                            <h4 class="text-lg font-semibold text-medspa-primary mb-2">Processing Your Data</h4>
+                            <p class="text-medspa-grey-500">
+                                <span id="processingMessage">Analyzing transaction patterns...</span>
+                            </p>
+                            <div class="w-full bg-medspa-grey-200 rounded-full h-2 mt-4 max-w-md mx-auto">
+                                <div id="progressBar" class="bg-medspa-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <div id="progressPercent" class="text-sm text-medspa-grey-500 mt-2">0%</div>
+                        </div>
+
+                        <div id="resultsStep" class="hidden">
+                            <h4 class="text-lg font-semibold text-medspa-primary mb-6">Reconciliation Results</h4>
+
+                            <div id="resultsGrid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            </div>
+
+                            <div id="detailedResults" class="bg-medspa-grey-100 rounded-medspa-lg p-6">
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                                <button id="exportBtn" class="medspa-btn-primary">
+                                    📊 Export Results CSV
+                                </button>
+                                <button id="runAnotherDemoBtn" class="bg-medspa-grey-600 text-medspa-secondary px-6 py-3 rounded-medspa font-medium hover:bg-medspa-grey-700 transition">
+                                    🔄 Try Another Demo
+                                </button>
+                            </div>
+
+                            <div id="industryComparison" class="mt-6 p-4 bg-medspa-info/10 rounded-medspa-lg">
+                                <p class="text-sm text-medspa-info text-center">
+                                    <strong>Industry Benchmark:</strong> <span id="industryBenchmark">Average medical spa match rate: 65%</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-medspa-grey-100 px-6 py-3 border-t border-medspa-grey-200">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-medspa-grey-500">
+                                <span id="demosRemaining">5</span> demos remaining today
+                            </span>
+                            <span class="text-medspa-primary font-medium">
+                                No email required for demo
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="pricingSection" class="section py-12 px-4 rounded-xl shadow-md mb-12">
-            <div class="container mx-auto">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                        Simple, Transparent Pricing
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        Choose the plan that fits your spa's reconciliation needs
-                    </p>
+        <!-- MedSpaSync Pro Pricing Section -->
+        <section id="pricingSection" class="py-16 px-4">
+            <div class="max-w-medspa-container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-h1 font-semibold mb-6">Simple, Honest Pricing</h2>
+                    <p class="text-body-large text-medspa-grey-500 mb-8">$299/month to stop losing 8+ hours weekly and $2,500+ monthly in missed revenue</p>
+                    
+                    <div class="bg-medspa-grey-100 border-l-4 border-medspa-primary p-6 rounded-medspa-lg mb-8">
+                        <p class="text-medspa-grey-500">Built by 10-year medical spa veteran Jacob Hagood. No hidden fees, no complex tiers. Just proven results.</p>
+                    </div>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <div id="corePlan" class="plan-card bg-white rounded-xl shadow-lg p-8 cursor-pointer transition-all hover:shadow-xl">
+                    <div id="corePlan" class="plan-card bg-medspa-secondary rounded-medspa-xl shadow-medspa-lg p-8 cursor-pointer transition-all hover:shadow-medspa-xl border border-medspa-grey-200">
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Core Reconciliation</h3>
-                            <div class="text-4xl font-bold text-blue-600 mb-1">$299</div>
-                            <div class="text-gray-500 mb-6">per month</div>
+                            <h3 class="text-2xl font-bold text-medspa-primary mb-2">AI Intelligence Layer</h3>
+                            <div class="text-4xl font-bold text-medspa-primary mb-1">$299</div>
+                            <div class="text-medspa-grey-500 mb-6">per month</div>
 
-                            <div class="status-badge mb-6 inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                            <div class="status-badge mb-6 inline-block bg-medspa-success/10 text-medspa-success px-4 py-2 rounded-full text-sm font-medium">
                                 ✅ Available Now
                             </div>
                         </div>
 
                         <ul class="space-y-4 mb-8">
                             <li class="flex items-center">
-                                <svg class="h-5 w-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="h-5 w-5 text-medspa-success mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                Unlimited reconciliation runs
+                                95%+ AI matching accuracy
                             </li>
                             <li class="flex items-center">
-                                <svg class="h-5 w-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="h-5 w-5 text-medspa-success mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 All loyalty programs (Alle, Aspire, etc.)
                             </li>
                             <li class="flex items-center">
-                                <svg class="h-5 w-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="h-5 w-5 text-medspa-success mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                CSV export of results
+                                QuickBooks integration
                             </li>
                             <li class="flex items-center">
-                                <svg class="h-5 w-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="h-5 w-5 text-medspa-success mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                Email support
+                                24-hour implementation
                             </li>
                             <li class="flex items-center">
-                                <svg class="h-5 w-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="h-5 w-5 text-medspa-success mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 HIPAA-conscious security
                             </li>
                         </ul>
 
-                        <button id="corePlanSubscribeBtn" class="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition">
-                            Start Core Plan
+                        <button id="corePlanSubscribeBtn" class="medspa-btn-primary w-full">
+                            Start Reconciling in 24 Hours
                         </button>
                     </div>
 
-                    <div id="proPlan" class="plan-card coming-soon bg-white rounded-xl shadow-lg p-8 relative">
-                        <div class="absolute top-4 right-4 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">
+                    <div id="proPlan" class="plan-card coming-soon bg-medspa-secondary rounded-medspa-xl shadow-medspa-lg p-8 relative border border-medspa-grey-200">
+                        <div class="absolute top-4 right-4 bg-medspa-accent text-medspa-secondary text-xs font-medium px-3 py-1 rounded-full">
                             Coming Soon
                         </div>
 
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Professional Suite</h3>
-                            <div class="text-4xl font-bold text-purple-600 mb-1">$499</div>
-                            <div class="text-gray-500 mb-6">per month</div>
+                            <h3 class="text-2xl font-bold text-medspa-primary mb-2">Professional Suite</h3>
+                            <div class="text-4xl font-bold text-medspa-accent mb-1">$499</div>
+                            <div class="text-medspa-grey-500 mb-6">per month</div>
 
-                            <div class="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                            <div class="inline-block bg-medspa-accent/10 text-medspa-accent px-4 py-2 rounded-full text-sm font-medium mb-6">
                                 🚧 Q3 2025
                             </div>
                         </div>
 
                         <ul class="space-y-4 mb-8">
-                            <li class="flex items-center text-gray-500">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-center text-medspa-grey-500">
+                                <svg class="h-5 w-5 text-medspa-grey-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                Everything in Core Plan
+                                Everything in AI Intelligence Layer
                             </li>
-                            <li class="flex items-center text-gray-500">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-center text-medspa-grey-500">
+                                <svg class="h-5 w-5 text-medspa-grey-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 Automated scheduling
                             </li>
-                            <li class="flex items-center text-gray-500">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-center text-medspa-grey-500">
+                                <svg class="h-5 w-5 text-medspa-grey-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 Advanced analytics dashboard
                             </li>
-                            <li class="flex items-center text-gray-500">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-center text-medspa-grey-500">
+                                <svg class="h-5 w-5 text-medspa-grey-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 API integrations
                             </li>
-                            <li class="flex items-center text-gray-500">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <li class="flex items-center text-medspa-grey-500">
+                                <svg class="h-5 w-5 text-medspa-grey-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 Priority phone support
                             </li>
                         </ul>
 
-                        <button id="proPlanSubscribeBtn" disabled class="w-full bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold cursor-not-allowed">
+                        <button id="proPlanSubscribeBtn" disabled class="w-full bg-medspa-grey-300 text-medspa-grey-500 py-3 px-6 rounded-medspa font-semibold cursor-not-allowed">
                             Get Notified
                         </button>
                     </div>
                 </div>
 
                 <div class="text-center mt-12">
-                    <div class="inline-flex items-center bg-emerald-100 text-emerald-800 px-6 py-3 rounded-full">
+                    <div class="inline-flex items-center bg-medspa-success/10 text-medspa-success px-6 py-3 rounded-full">
                         <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                         </svg>
@@ -666,158 +678,164 @@
             </div>
         </section>
 
-        <section id="testimonials" class="section py-12 px-4 rounded-xl shadow-md mb-12">
-            <div class="container mx-auto">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                        Trusted by Medical Spa Professionals
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        See how MedSpaSync Pro has transformed reconciliation workflows
-                    </p>
+        <!-- MedSpaSync Pro Testimonials Section -->
+        <section id="testimonials" class="py-16 px-4">
+            <div class="max-w-medspa-container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-h1 font-semibold mb-6">Real Spa Transformations</h2>
+                    <p class="text-body-large text-medspa-grey-500 mb-8">See how medical spas are saving 8+ hours weekly with 97% match rate accuracy</p>
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="bg-medspa-secondary rounded-medspa-xl p-6 shadow-medspa-lg hover:shadow-medspa-xl transition-shadow border border-medspa-grey-200">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-emerald-600 font-semibold text-lg">SM</span>
+                            <div class="w-12 h-12 bg-medspa-success/10 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-medspa-success font-semibold text-lg">SM</span>
                             </div>
                             <div>
-                                <div class="font-semibold text-gray-900">Sarah Martinez</div>
-                                <div class="text-sm text-gray-500">Practice Manager, Elite MedSpa</div>
+                                <div class="font-semibold text-medspa-primary">Sarah Martinez</div>
+                                <div class="text-sm text-medspa-grey-500">Practice Manager, Elite MedSpa</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-medspa-grey-600 mb-4">
                             "We were losing $3,200 monthly to unmatched Alle rewards. MedSpaSync Pro identified every discrepancy and saved us from continuing losses. ROI was immediate."
                         </p>
-                        <div class="flex text-emerald-500">
+                        <div class="flex text-medspa-success">
                             ★★★★★
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="bg-medspa-secondary rounded-medspa-xl p-6 shadow-medspa-lg hover:shadow-medspa-xl transition-shadow border border-medspa-grey-200">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-emerald-600 font-semibold text-lg">DR</span>
+                            <div class="w-12 h-12 bg-medspa-success/10 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-medspa-success font-semibold text-lg">DR</span>
                             </div>
                             <div>
-                                <div class="font-semibold text-gray-900">Dr. Rachel Kim</div>
-                                <div class="text-sm text-gray-500">Owner, Luxe Aesthetics</div>
+                                <div class="font-semibold text-medspa-primary">Dr. Rachel Kim</div>
+                                <div class="text-sm text-medspa-grey-500">Owner, Luxe Aesthetics</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-medspa-grey-600 mb-4">
                             "Manual reconciliation took my manager 6 hours weekly. Now it's 15 minutes. The accuracy is incredible - 97% match rate with our complex Aspire data."
                         </p>
-                        <div class="flex text-emerald-500">
+                        <div class="flex text-medspa-success">
                             ★★★★★
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="bg-medspa-secondary rounded-medspa-xl p-6 shadow-medspa-lg hover:shadow-medspa-xl transition-shadow border border-medspa-grey-200">
                         <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-emerald-600 font-semibold text-lg">MJ</span>
+                            <div class="w-12 h-12 bg-medspa-success/10 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-medspa-success font-semibold text-lg">MJ</span>
                             </div>
                             <div>
-                                <div class="font-semibold text-gray-900">Michael Johnson</div>
-                                <div class="text-sm text-gray-500">Finance Director, Rejuvenation Clinic</div>
+                                <div class="font-semibold text-medspa-primary">Michael Johnson</div>
+                                <div class="text-sm text-medspa-grey-500">Finance Director, Rejuvenation Clinic</div>
                             </div>
                         </div>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-medspa-grey-600 mb-4">
                             "Finally, accurate financial reporting. The reconciliation reports integrate perfectly with QuickBooks. Our accountant loves the detailed CSV exports."
                         </p>
-                        <div class="flex text-emerald-500">
+                        <div class="flex text-medspa-success">
                             ★★★★★
                         </div>
                     </div>
+                </div>
+
+                <!-- Real Transformation Example from Reference -->
+                <div class="mt-12 bg-medspa-grey-100 border-l-4 border-medspa-primary p-8 rounded-medspa-lg">
+                    <blockquote class="text-center">
+                        <p class="text-body-large text-medspa-primary mb-4 italic">
+                            "We reduced reconciliation from 6 hours weekly to just 15 minutes with 97% match rate accuracy. Our operations manager can now focus on patient experience instead of spreadsheets."
+                        </p>
+                        <cite class="text-medspa-grey-500 font-medium">
+                            — Multi-location Med Spa, Atlanta
+                        </cite>
+                    </blockquote>
                 </div>
             </div>
         </section>
 
-        <section id="faq" class="section bg-gray-50 py-12 px-4 rounded-xl shadow-md mb-12">
-            <div class="container mx-auto">
-                <div class="text-center mb-10">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                        Frequently Asked Questions
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        Everything you need to know about MedSpaSync Pro
-                    </p>
+        <!-- MedSpaSync Pro FAQ Section -->
+        <section id="faq" class="py-16 px-4 bg-medspa-grey-100">
+            <div class="max-w-medspa-container mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-h1 font-semibold mb-6">Frequently Asked Questions</h2>
+                    <p class="text-body-large text-medspa-grey-500 mb-8">Everything you need to know about the AI Intelligence Layer for Medical Spas</p>
                 </div>
 
                 <div class="max-w-3xl mx-auto space-y-6">
-                    <div class="bg-white rounded-lg shadow-md">
-                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    <div class="bg-medspa-secondary rounded-medspa-lg shadow-medspa-sm border border-medspa-grey-200">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-medspa-primary"
                                 data-target="faq1">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900">
+                                <h3 class="text-lg font-semibold text-medspa-primary">
                                     How long does setup take?
                                 </h3>
-                                <svg class="h-5 w-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-medspa-grey-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
                         </button>
                         <div id="faq1" class="faq-answer hidden px-6 pb-6">
-                            <p class="text-gray-600">
+                            <p class="text-medspa-grey-600">
                                 Most medical spas are reconciling within 24 hours. Simply export your POS data and loyalty program reports as CSV files, upload them to MedSpaSync Pro, and start matching transactions immediately. No complex integrations required.
                             </p>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-lg shadow-md">
-                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    <div class="bg-medspa-secondary rounded-medspa-lg shadow-medspa-sm border border-medspa-grey-200">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-medspa-primary"
                                 data-target="faq2">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900">
+                                <h3 class="text-lg font-semibold text-medspa-primary">
                                     Will this work with our POS system?
                                 </h3>
-                                <svg class="h-5 w-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-medspa-grey-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
                         </button>
                         <div id="faq2" class="faq-answer hidden px-6 pb-6">
-                            <p class="text-gray-600">
+                            <p class="text-medspa-grey-600">
                                 If your POS system can export transaction data as CSV files, MedSpaSync Pro can reconcile it. We support all major medical spa POS systems including Aesthetic Pro, Nextech, Spring, Zenoti, and many others. Our universal CSV approach means no custom integrations needed.
                             </p>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-lg shadow-md">
-                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    <div class="bg-medspa-secondary rounded-medspa-lg shadow-medspa-sm border border-medspa-grey-200">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-medspa-primary"
                                 data-target="faq3">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900">
+                                <h3 class="text-lg font-semibold text-medspa-primary">
                                     How secure is our data?
                                 </h3>
-                                <svg class="h-5 w-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-medspa-grey-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
                         </button>
                         <div id="faq3" class="faq-answer hidden px-6 pb-6">
-                            <p class="text-gray-600">
+                            <p class="text-medspa-grey-600">
                                 We follow HIPAA-conscious design principles with enterprise-grade security. All file uploads are encrypted in transit using TLS 1.3. Files are automatically deleted after processing and never stored permanently. Our demo requires no email registration for your privacy.
                             </p>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-lg shadow-md">
-                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    <div class="bg-medspa-secondary rounded-medspa-lg shadow-medspa-sm border border-medspa-grey-200">
+                        <button class="faq-question w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-medspa-primary"
                                 data-target="faq4">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900">
+                                <h3 class="text-lg font-semibold text-medspa-primary">
                                     What loyalty programs do you support?
                                 </h3>
-                                <svg class="h-5 w-5 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="h-5 w-5 text-medspa-grey-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
                             </div>
                         </button>
                         <div id="faq4" class="faq-answer hidden px-6 pb-6">
-                            <p class="text-gray-600">
+                            <p class="text-medspa-grey-600">
                                 MedSpaSync Pro supports all major aesthetic loyalty programs including Alle (Allergan), Aspire (Galderma), and others that provide CSV exportable data.
                             </p>
                         </div>
@@ -826,35 +844,36 @@
             </div>
         </section>
 
+        <!-- MedSpaSync Pro Final CTA Section -->
         <section id="subscriptionCTA" class="mt-16 hidden">
-            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-8">
+            <div class="bg-medspa-grey-100 rounded-medspa-xl p-8">
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">
-                        Ready to Start Saving Time?
+                    <h3 class="text-2xl font-bold text-medspa-primary mb-4">
+                        Ready to Save 8+ Hours Weekly?
                     </h3>
-                    <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                    <p class="text-body-large text-medspa-grey-600 mb-6 max-w-2xl mx-auto">
                         You've seen how MedSpaSync Pro can recover your lost revenue.
                         Start your subscription today and eliminate manual reconciliation forever.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-green-600">$299</div>
-                            <div class="text-sm text-gray-500">per month</div>
-                            <div class="text-xs text-gray-400">Core Reconciliation</div>
+                            <div class="text-3xl font-bold text-medspa-primary">$299</div>
+                            <div class="text-sm text-medspa-grey-500">per month</div>
+                            <div class="text-xs text-medspa-grey-400">AI Intelligence Layer</div>
                         </div>
 
                         <button
                             id="mainCtaSubscribeBtn"
-                            class="subscription-cta text-white font-bold px-8 py-4 rounded-xl text-lg transition-all duration-300"
+                            class="medspa-btn-primary text-lg px-8 py-4"
                         >
-                            🚀 Subscribe Now
+                            🚀 Start Reconciling in 24 Hours
                         </button>
                     </div>
 
-                    <div class="text-sm text-gray-500 space-y-1">
+                    <div class="text-sm text-medspa-grey-500 space-y-1">
                         <p>✅ 30-day money-back guarantee</p>
-                        <p>✅ HIPAA-compliant processing</p>
+                        <p>✅ HIPAA-conscious processing</p>
                         <p>✅ Cancel anytime</p>
                     </div>
                 </div>
@@ -862,29 +881,35 @@
         </section>
     </main>
 
-    <footer class="text-center text-sm text-gray-400 py-6 border-t">
-        &copy; 2025 MedSpaSync Pro. All rights reserved.
+    <!-- MedSpaSync Pro Footer -->
+    <footer class="text-center text-sm text-medspa-grey-500 py-8 border-t border-medspa-grey-200 bg-medspa-secondary">
+        <div class="max-w-medspa-container mx-auto px-4">
+            <p class="mb-2">&copy; 2025 MedSpaSync Pro. All rights reserved.</p>
+            <p class="text-xs">Built by Jacob Hagood, 10-year medical spa industry veteran</p>
+            <p class="text-xs mt-2">The AI Intelligence Layer for Medical Spas</p>
+        </div>
     </footer>
 
     <div id="sr-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
+    <!-- MedSpaSync Pro Subscription Modal -->
     <div id="subscriptionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
-            <h3 class="text-xl font-bold mb-4">Ready to Save Hours Every Day?</h3>
-            <p class="text-gray-600 mb-6">
+        <div class="bg-medspa-secondary rounded-medspa-lg p-8 max-w-md mx-4 border border-medspa-grey-200">
+            <h3 class="text-xl font-bold mb-4 text-medspa-primary">Ready to Save 8+ Hours Weekly?</h3>
+            <p class="text-medspa-grey-600 mb-6">
                 You've seen the power of MedSpaSync Pro. Start your subscription and
                 eliminate manual reconciliation forever.
             </p>
             <div class="flex space-x-3">
                 <button
                     id="modalSubscribeBtn"
-                    class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors"
+                    class="flex-1 medspa-btn-primary"
                 >
-                    Subscribe Now
+                    Start Reconciling in 24 Hours
                 </button>
                 <button
                     id="closeSubscriptionModalBtn"
-                    class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition-colors"
+                    class="flex-1 bg-medspa-grey-300 text-medspa-grey-700 py-2 px-4 rounded-medspa hover:bg-medspa-grey-400 transition-colors"
                 >
                     Maybe Later
                 </button>

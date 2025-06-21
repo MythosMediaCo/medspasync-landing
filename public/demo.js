@@ -1435,10 +1435,24 @@ function setupEventListeners() {
     loadAspireSample.addEventListener('click', () => fileHandler.loadSampleData('aspire'));
   }
 
-  // Main demo button
-  const runDemoBtn = utils.$('runDemoBtn');
-  if (runDemoBtn) {
-    runDemoBtn.addEventListener('click', () => reconciliation.run());
+  // Stripe checkout button - replaces the demo button
+  const stripeCheckoutBtn = utils.$('stripeCheckoutBtn');
+  if (stripeCheckoutBtn) {
+    stripeCheckoutBtn.addEventListener('click', () => {
+      // Track the click for analytics
+      analytics.track('stripe_checkout_clicked', {
+        source: 'reconciliation_card',
+        action: 'redirect_to_stripe'
+      });
+      
+      // Show loading message
+      utils.showToast('Redirecting to secure checkout...', 'info');
+      
+      // Redirect to Stripe checkout
+      setTimeout(() => {
+        window.open(CONFIG.STRIPE_PORTAL_URL, '_blank');
+      }, 1000);
+    });
   }
 
   // Results action buttons

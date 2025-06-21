@@ -231,7 +231,7 @@
                 <span class="text-sm text-medspa-grey-500 hidden sm:block">Ready to save 8+ hours weekly?</span>
                 <button
                     id="headerSubscribeBtn"
-                    class="medspa-btn-primary"
+                    class="medspa-btn-primary start-demo-btn"
                 >
                     Start Reconciling in 24 Hours
                 </button>
@@ -266,12 +266,9 @@
                     </span>
                 </div>
                 
-                <a href="#demo" class="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl">
+                <button class="medspa-btn-primary start-demo-btn px-8 py-4 text-lg">
                     Start Reconciling in 24 Hours
-                    <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                    </svg>
-                </a>
+                </button>
             </div>
         </section>
 
@@ -474,29 +471,55 @@
                             </div>
 
                             <div class="text-center pt-6">
-                                <button id="stripeCheckoutBtn" class="medspa-btn-primary px-8 py-3 text-lg font-semibold transition-all hover:scale-105">
-                                    💳 Start Reconciling in 24 Hours
+                                <button id="runDemoBtn" class="medspa-btn-primary px-8 py-3 text-lg font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                    🔄 Run AI Reconciliation Demo
                                 </button>
                                 <p class="text-sm text-medspa-grey-500 mt-2">
-                                    Secure checkout powered by Stripe • 30-day money-back guarantee
+                                    Upload both files to see 95%+ accuracy in action
                                 </p>
                             </div>
                         </div>
 
                         <div id="processingStep" class="hidden text-center py-12">
-                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-medspa-primary mx-auto mb-6" role="status" aria-label="Loading"></div>
-                            <h4 class="text-lg font-semibold text-medspa-primary mb-2">Processing Your Data</h4>
-                            <p class="text-medspa-grey-500">
-                                <span id="processingMessage">Analyzing transaction patterns...</span>
-                            </p>
-                            <div class="w-full bg-medspa-grey-200 rounded-full h-2 mt-4 max-w-md mx-auto">
-                                <div id="progressBar" class="bg-medspa-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            <div class="max-w-2xl mx-auto">
+                                <div class="animate-spin rounded-full h-16 w-16 border-4 border-medspa-grey-200 border-t-medspa-primary mx-auto mb-8" role="status" aria-label="Loading"></div>
+                                <h4 class="text-2xl font-bold text-medspa-primary mb-4">AI Intelligence Layer Processing</h4>
+                                <p class="text-lg text-medspa-grey-600 mb-6">
+                                    <span id="processingMessage">Initializing medical spa reconciliation engine...</span>
+                                </p>
+                                
+                                <div class="bg-medspa-grey-50 rounded-xl p-6 mb-8">
+                                    <div class="w-full bg-medspa-grey-200 rounded-full h-3 mb-4">
+                                        <div id="progressBar" class="bg-gradient-to-r from-medspa-primary to-blue-600 h-3 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span id="progressPercent" class="text-lg font-semibold text-medspa-primary">0%</span>
+                                        <span class="text-sm text-medspa-grey-500">Processing...</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                    <div class="bg-white rounded-lg p-4 border border-medspa-grey-200">
+                                        <div class="text-medspa-primary font-semibold">95%+ Accuracy</div>
+                                        <div class="text-medspa-grey-500">AI matching rate</div>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border border-medspa-grey-200">
+                                        <div class="text-medspa-primary font-semibold">8+ Hours Saved</div>
+                                        <div class="text-medspa-grey-500">Weekly time reduction</div>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border border-medspa-grey-200">
+                                        <div class="text-medspa-primary font-semibold">$2,500+ Protected</div>
+                                        <div class="text-medspa-grey-500">Monthly revenue</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="progressPercent" class="text-sm text-medspa-grey-500 mt-2">0%</div>
                         </div>
 
                         <div id="resultsStep" class="hidden">
-                            <h4 class="text-lg font-semibold text-medspa-primary mb-6">Reconciliation Results</h4>
+                            <div class="text-center mb-8">
+                                <h4 class="text-3xl font-bold text-medspa-primary mb-4">🎉 Your Reconciliation Results</h4>
+                                <p class="text-lg text-medspa-grey-600">See how MedSpaSync Pro can transform your medical spa operations</p>
+                            </div>
 
                             <div id="resultsGrid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                             </div>
@@ -504,19 +527,24 @@
                             <div id="detailedResults" class="bg-medspa-grey-100 rounded-medspa-lg p-6">
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                                <button id="exportBtn" class="medspa-btn-primary">
-                                    📊 Export Results CSV
-                                </button>
-                                <button id="runAnotherDemoBtn" class="bg-medspa-grey-600 text-medspa-secondary px-6 py-3 rounded-medspa font-medium hover:bg-medspa-grey-700 transition">
-                                    🔄 Try Another Demo
-                                </button>
+                            <div class="bg-gradient-to-r from-medspa-primary to-blue-600 rounded-xl p-8 text-center text-white mt-8">
+                                <h5 class="text-2xl font-bold mb-4">Ready to Save 8+ Hours Weekly?</h5>
+                                <p class="text-lg mb-6 opacity-90">Join medical spas already using MedSpaSync Pro to eliminate manual reconciliation</p>
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                                    <button id="startSubscriptionBtn" class="bg-white text-medspa-primary px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors">
+                                        💳 Start Reconciling in 24 Hours
+                                    </button>
+                                    <button id="exportBtn" class="bg-transparent border-2 border-white text-white px-6 py-4 rounded-lg font-medium hover:bg-white hover:text-medspa-primary transition-colors">
+                                        📊 Export Results
+                                    </button>
+                                </div>
+                                <p class="text-sm opacity-75 mt-4">30-day money-back guarantee • Cancel anytime</p>
                             </div>
 
-                            <div id="industryComparison" class="mt-6 p-4 bg-medspa-info/10 rounded-medspa-lg">
-                                <p class="text-sm text-medspa-info text-center">
-                                    <strong>Industry Benchmark:</strong> <span id="industryBenchmark">Average medical spa match rate: 65%</span>
-                                </p>
+                            <div class="flex justify-center mt-6">
+                                <button id="runAnotherDemoBtn" class="text-medspa-primary hover:text-medspa-accent font-medium transition-colors">
+                                    🔄 Try Another Demo
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -592,7 +620,7 @@
                             </li>
                         </ul>
 
-                        <button id="corePlanSubscribeBtn" class="medspa-btn-primary w-full">
+                        <button id="corePlanSubscribeBtn" class="medspa-btn-primary start-demo-btn w-full">
                             Start Reconciling in 24 Hours
                         </button>
                     </div>
@@ -771,9 +799,9 @@
 
                         <button
                             id="mainCtaSubscribeBtn"
-                            class="medspa-btn-primary text-lg px-8 py-4"
+                            class="medspa-btn-primary start-demo-btn text-lg px-8 py-4"
                         >
-                            🚀 Start Reconciling in 24 Hours
+                            Start Reconciling in 24 Hours
                         </button>
                     </div>
 
@@ -809,7 +837,7 @@
             <div class="flex space-x-3">
                 <button
                     id="modalSubscribeBtn"
-                    class="flex-1 medspa-btn-primary"
+                    class="flex-1 medspa-btn-primary start-demo-btn"
                 >
                     Start Reconciling in 24 Hours
                 </button>

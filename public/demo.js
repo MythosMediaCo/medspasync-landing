@@ -225,6 +225,7 @@ const utils = {
 
     if (progressBar) {
       progressBar.style.width = `${percentage}%`;
+      progressBar.style.transition = 'width 0.5s ease-out';
     }
 
     if (progressPercent) {
@@ -233,6 +234,15 @@ const utils = {
 
     if (processingMessage && message) {
       processingMessage.textContent = message;
+    }
+
+    // Add visual feedback for completion
+    if (percentage >= 100) {
+      setTimeout(() => {
+        if (progressBar) {
+          progressBar.style.background = 'linear-gradient(to right, #10B981, #059669)';
+        }
+      }, 500);
     }
   },
 
@@ -416,26 +426,17 @@ const fileHandler = {
 
   updateUI() {
     const filesCount = Object.keys(demoState.uploadedFiles).length;
-    const runBtn = utils.$('runDemoBtn');
-    // usageCount updates handled by usageTracking module directly
-    // demosRemaining is part of usageTracking.updateDisplay()
-
-    // Update run button state
-    if (runBtn) {
-      const canRun = filesCount >= 2 && !demoState.processing;
-
-      runBtn.disabled = !canRun;
-
-      if (demoState.processing) {
-        runBtn.textContent = '⏳ Processing...';
-        runBtn.className = 'bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg cursor-not-allowed transition';
-      } else if (canRun) {
-        runBtn.textContent = '🚀 Run AI Reconciliation';
-        runBtn.className = 'bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-emerald-700 transition cursor-pointer';
+    const runDemoBtn = utils.$('runDemoBtn');
+    
+    if (runDemoBtn) {
+      if (filesCount >= 2) {
+        runDemoBtn.disabled = false;
+        runDemoBtn.textContent = '🔄 Run AI Reconciliation Demo';
+        runDemoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       } else {
-        const needed = 2 - filesCount;
-        runBtn.textContent = `📁 Select ${needed} more file${needed > 1 ? 's' : ''} to continue`;
-        runBtn.className = 'bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold text-lg cursor-not-allowed transition';
+        runDemoBtn.disabled = true;
+        runDemoBtn.textContent = 'Upload both files to continue';
+        runDemoBtn.classList.add('opacity-50', 'cursor-not-allowed');
       }
     }
   },
@@ -603,14 +604,14 @@ const reconciliation = {
 
   async simulateProcessing() {
     const progressSteps = [
-      { progress: 10, message: 'Loading POS transaction data from your spa system...' },
-      { progress: 25, message: 'Processing loyalty program data (Alle, Aspire, etc.)...' },
-      { progress: 40, message: 'Initializing MedSpaSync Pro AI matching algorithm...' },
-      { progress: 55, message: 'Analyzing medical spa transaction patterns...' },
-      { progress: 70, message: 'Running fuzzy matching logic for name variations...' },
-      { progress: 85, message: 'Validating matches with 95%+ accuracy threshold...' },
-      { progress: 95, message: 'Generating comprehensive reconciliation report...' },
-      { progress: 100, message: 'Finalizing results - ready to save you 8+ hours weekly...' }
+      { progress: 10, message: '🔍 Loading POS transaction data from your medical spa system...' },
+      { progress: 25, message: '💳 Processing Alle, Aspire, and loyalty program data...' },
+      { progress: 40, message: '🤖 Initializing MedSpaSync Pro AI Intelligence Layer...' },
+      { progress: 55, message: '📊 Analyzing medical spa transaction patterns and timing...' },
+      { progress: 70, message: '🎯 Running fuzzy matching for patient name variations...' },
+      { progress: 85, message: '✅ Validating matches with 95%+ accuracy threshold...' },
+      { progress: 95, message: '📋 Generating comprehensive reconciliation report...' },
+      { progress: 100, message: '🎉 Results ready! See how you can save 8+ hours weekly...' }
     ];
 
     for (let i = 0; i < progressSteps.length; i++) {
@@ -626,7 +627,7 @@ const reconciliation = {
       await new Promise(resolve => setTimeout(resolve, delay));
 
       // Show intermediate toast for key steps
-      if ([25, 55, 85].includes(step.progress)) {
+      if ([25, 55, 85, 100].includes(step.progress)) {
         utils.showToast(step.message, 'info', 2000);
       }
     }
@@ -1629,6 +1630,21 @@ function setupEventListeners() {
     }
   });
 
+  // Add event handlers for new buttons
+  const startSubscriptionBtn = utils.$('startSubscriptionBtn');
+  if (startSubscriptionBtn) {
+    startSubscriptionBtn.addEventListener('click', () => {
+      subscription.redirectToPortal('demo_results');
+    });
+  }
+
+  const runDemoBtn = utils.$('runDemoBtn');
+  if (runDemoBtn) {
+    runDemoBtn.addEventListener('click', () => {
+      reconciliation.run();
+    });
+  }
+
   console.log('✅ Event listeners setup complete');
 }
 
@@ -1704,3 +1720,28 @@ if (typeof window !== 'undefined') {
 }
 
 console.log('📋 MedSpaSync Pro Demo System v2.1 Loaded Successfully');
+
+// Attach unified handler for all 'Start Reconciling in 24 Hours' buttons
+function setupStartDemoButtons() {
+  const buttons = document.querySelectorAll('.start-demo-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const leadCapture = document.getElementById('leadCapture');
+      if (leadCapture) {
+        leadCapture.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const emailInput = document.getElementById('leadEmail');
+        if (emailInput) {
+          setTimeout(() => emailInput.focus(), 400);
+        }
+      }
+    });
+  });
+}
+
+// Call this on DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupStartDemoButtons);
+} else {
+  setupStartDemoButtons();
+}

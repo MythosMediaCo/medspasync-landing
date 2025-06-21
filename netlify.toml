@@ -1,11 +1,11 @@
 [build.environment]
   NODE_VERSION = "18"
-  VITE_API_BASE = "https://api.medspasyncpro.com"
+  BACKEND_API_URL = "https://api.medspasyncpro.com"
   VITE_STRIPE_PORTAL_URL = "https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00"
 
 [build]
   command = "npm run build"
-  publish = "dist"
+  publish = "public"
 
 [[redirects]]
   from = "/*"

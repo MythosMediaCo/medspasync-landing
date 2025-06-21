@@ -5,8 +5,10 @@ const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser'); // For specific raw body parsing
+const config = require('../config'); // Import configuration
 require('dotenv').config(); // Load environment variables from .env file
 console.log('MONGO_URI:', process.env.MONGO_URI);
+console.log('Backend API URL:', config.backend.baseUrl);
 
 const app = express();
 
@@ -95,6 +97,35 @@ try {
   app.use('/api/checkout', require('./routes/checkout')); // Handles /api/checkout/create-checkout-session
   app.use('/api/webhook', require('./routes/webhook')); // Handles Stripe webhooks and internal health checks
   app.use('/api', require('./routes/training'));    // Handles /api/training/upload
+  
+  // Proxy reconciliation API calls to backend
+  app.use('/api/reconciliation', async (req, res, next) => {
+    try {
+      const backendUrl = `${config.backend.baseUrl}${req.path}`;
+      console.log(`🔄 Proxying to backend: ${backendUrl}`);
+      
+      // Forward the request to backend
+      const response = await fetch(backendUrl, {
+        method: req.method,
+        headers: {
+          'Content-Type': req.get('Content-Type') || 'application/json',
+          ...req.headers
+        },
+        body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined
+      });
+      
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error('Backend proxy error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: 'Backend service unavailable',
+        message: 'Please try again later or contact support.'
+      });
+    }
+  });
+  
 } catch (error) {
   console.error('Error loading API routes:', error.message);
 }

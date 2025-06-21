@@ -19,15 +19,19 @@ const CONFIG = {
     MIN: 600,
     MAX: 1000
   },
-  // Update to call backend API for checkout session
-  STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00', // Used as fallback or direct link if create-checkout-session not preferred
+  // Backend API Configuration
+  API_BASE_URL: process.env.BACKEND_API_URL || 'http://localhost:5000',
+  STRIPE_PORTAL_URL: 'https://billing.stripe.com/p/login/aFabJ23SRavo12mcJ44Vy00',
   API_ENDPOINTS: {
     // Backend API endpoints
-    reconcile: '/api/reconcile', // Main reconciliation API (from server/routes/demo.js)
-    export: '/api/export',       // Export API (from server/routes/demo.js)
-    lead: '/api/lead',           // Lead capture API (new server/routes/lead.js)
-    checkoutSession: '/api/checkout/create-checkout-session', // Stripe checkout session creation
-    analytics: '/api/analytics'  // Dedicated analytics endpoint (if implemented on backend)
+    reconciliation: {
+      upload: '/api/reconciliation/upload',
+      process: '/api/reconciliation/process',
+      results: '/api/reconciliation/jobs',
+      health: '/api/reconciliation/health'
+    },
+    contact: '/api/contact',
+    analytics: '/api/analytics'
   },
   ANALYTICS: {
     enabled: true,
@@ -569,7 +573,7 @@ const reconciliation = {
 
       utils.updateProgress(5, 'Preparing data for secure transfer...');
 
-      const response = await fetch(CONFIG.API_ENDPOINTS.reconcile, {
+      const response = await fetch(CONFIG.API_ENDPOINTS.reconciliation.upload, {
         method: 'POST',
         body: formData // FormData handles Content-Type: multipart/form-data automatically
       });
@@ -886,7 +890,7 @@ const reconciliation = {
       utils.showToast('Preparing results for export...', 'info', 3000);
       analytics.track('export_started', { format: 'csv' });
 
-      const response = await fetch(CONFIG.API_ENDPOINTS.export, {
+      const response = await fetch(CONFIG.API_ENDPOINTS.reconciliation.results, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ results: demoState.results, format: 'csv' }) // Send raw backend results
@@ -1064,7 +1068,7 @@ const subscription = {
 
     try {
       // --- INTEGRATION: Call backend to create Stripe Checkout Session ---
-      const response = await fetch(CONFIG.API_ENDPOINTS.checkoutSession, {
+      const response = await fetch(CONFIG.API_ENDPOINTS.reconciliation.health, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: plan })
@@ -1142,7 +1146,7 @@ const leadCapture = {
       utils.showToast('Saving your info...', 'info', 3000);
       analytics.track('lead_submission_initiated');
 
-      const response = await fetch(CONFIG.API_ENDPOINTS.lead, {
+      const response = await fetch(CONFIG.API_ENDPOINTS.contact, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

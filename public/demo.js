@@ -1113,10 +1113,10 @@ const subscription = {
 // Enhanced lead capture system
 const leadCapture = {
   init() {
-    // Check for email parameter in URL
+    // Check for email parameter in URL (for tracking)
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
-
+    
     if (emailParam) {
       demoState.userEmail = emailParam;
       this.populateEmailField(emailParam);
@@ -1173,6 +1173,7 @@ const leadCapture = {
 
       analytics.track('lead_captured', {
         email: formData.email.replace(/(.{2})(.*)(@.*)/, '$1***$3'), // Anonymize for analytics
+        name: formData.name || 'Anonymous',
         source: 'demo_page',
         backend_submitted: true
       });
@@ -1194,6 +1195,7 @@ const leadCapture = {
 
       analytics.track('lead_captured', {
         email: formData.email.replace(/(.{2})(.*)(@.*)/, '$1***$3'),
+        name: formData.name || 'Anonymous',
         source: 'demo_page',
         backend_submitted: false,
         error: error.message

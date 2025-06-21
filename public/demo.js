@@ -100,16 +100,31 @@ const analytics = {
         gtag('event', event, properties);
       }
 
-      // Custom analytics endpoint - send to backend
-      if (CONFIG.API_ENDPOINTS.analytics) {
-        fetch(`${CONFIG.API_BASE_URL}${CONFIG.API_ENDPOINTS.analytics}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventData)
-        }).catch(err => console.warn('Analytics error:', err));
+      // Custom analytics endpoint - send to backend (only if endpoint exists)
+      if (CONFIG.API_ENDPOINTS.analytics && CONFIG.API_BASE_URL) {
+        // Only make the request if we're in production and the endpoint is available
+        const isProduction = window.location.hostname !== 'localhost' && 
+                           window.location.hostname !== '127.0.0.1' &&
+                           !window.location.hostname.includes('.local');
+        
+        if (isProduction) {
+          fetch(`${CONFIG.API_BASE_URL}${CONFIG.API_ENDPOINTS.analytics}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventData)
+          }).catch(err => {
+            // Silently handle analytics errors to avoid console spam
+            if (CONFIG.ANALYTICS.debug) {
+              console.warn('Analytics endpoint error:', err);
+            }
+          });
+        }
       }
     } catch (error) {
-      console.warn('Analytics tracking error:', error);
+      // Silently handle analytics errors to avoid console spam
+      if (CONFIG.ANALYTICS.debug) {
+        console.warn('Analytics tracking error:', error);
+      }
     }
   }
 };
@@ -1389,13 +1404,33 @@ const performance = {
     if ('performance' in window) {
       window.addEventListener('load', () => {
         setTimeout(() => {
-          const perfData = performance.getEntriesByType('navigation')[0];
+          try {
+            // Check if getEntriesByType is available
+            if (performance.getEntriesByType && performance.getEntriesByType('navigation').length > 0) {
+              const perfData = performance.getEntriesByType('navigation')[0];
 
-          analytics.track('page_performance', {
-            load_time: perfData.loadEventEnd - perfData.loadEventStart,
-            dom_content_loaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
-            total_page_load: perfData.loadEventEnd - perfData.fetchStart
-          });
+              analytics.track('page_performance', {
+                load_time: perfData.loadEventEnd - perfData.loadEventStart,
+                dom_content_loaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+                total_page_load: perfData.loadEventEnd - perfData.fetchStart
+              });
+            } else {
+              // Fallback for browsers that don't support getEntriesByType
+              analytics.track('page_performance', {
+                load_time: performance.now(),
+                dom_content_loaded: performance.now(),
+                total_page_load: performance.now()
+              });
+            }
+          } catch (error) {
+            console.warn('Performance measurement failed:', error);
+            // Fallback tracking without performance data
+            analytics.track('page_performance', {
+              load_time: 0,
+              dom_content_loaded: 0,
+              total_page_load: 0
+            });
+          }
         }, 0);
       });
     }
@@ -1428,6 +1463,90 @@ const performance = {
         throw error;
       }
     };
+  }
+};
+
+// Mobile optimizations
+const mobileOptimizations = {
+  init() {
+    this.setupTouchHandlers();
+    this.optimizeForMobile();
+  },
+
+  setupTouchHandlers() {
+    // Add touch-friendly interactions for mobile devices
+    if (utils.isMobile()) {
+      // Increase touch targets
+      document.querySelectorAll('button, input, select').forEach(element => {
+        element.style.minHeight = '44px';
+        element.style.minWidth = '44px';
+      });
+    }
+  },
+
+  optimizeForMobile() {
+    // Mobile-specific optimizations
+    if (utils.isMobile()) {
+      // Reduce animations on mobile for better performance
+      document.body.style.setProperty('--animation-duration', '0.2s');
+      
+      // Optimize file upload for mobile
+      const fileInputs = document.querySelectorAll('input[type="file"]');
+      fileInputs.forEach(input => {
+        input.setAttribute('accept', '.csv,.xlsx,.xls');
+        input.setAttribute('capture', 'false');
+      });
+    }
+  }
+};
+
+// Accessibility features
+const accessibility = {
+  init() {
+    this.setupKeyboardNavigation();
+    this.addAriaLabels();
+    this.setupFocusManagement();
+  },
+
+  setupKeyboardNavigation() {
+    // Ensure all interactive elements are keyboard accessible
+    document.querySelectorAll('button, input, select, textarea').forEach(element => {
+      if (!element.hasAttribute('tabindex')) {
+        element.setAttribute('tabindex', '0');
+      }
+    });
+  },
+
+  addAriaLabels() {
+    // Add ARIA labels for better screen reader support
+    const elements = {
+      'posFileInput': 'Upload POS system CSV file',
+      'loyaltyFileInput': 'Upload loyalty program CSV file',
+      'leadEmail': 'Enter your email address',
+      'leadName': 'Enter your name',
+      'runDemoBtn': 'Run reconciliation demo'
+    };
+
+    Object.entries(elements).forEach(([id, label]) => {
+      const element = utils.$(id);
+      if (element && !element.hasAttribute('aria-label')) {
+        element.setAttribute('aria-label', label);
+      }
+    });
+  },
+
+  setupFocusManagement() {
+    // Manage focus for better accessibility
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        // Ensure focus is visible
+        document.body.classList.add('keyboard-navigation');
+      }
+    });
+
+    document.addEventListener('mousedown', () => {
+      document.body.classList.remove('keyboard-navigation');
+    });
   }
 };
 

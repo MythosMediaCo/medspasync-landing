@@ -24,11 +24,6 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "functions": {
-    "server/index.js": {
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
